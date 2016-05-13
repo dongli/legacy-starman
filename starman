@@ -1,0 +1,7 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH << "#{ENV['STARMAN_ROOT']}/framework"
+require 'starman'
+
+a = STARMAN::Openssl.new
+p a.homepage
