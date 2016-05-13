@@ -15,5 +15,9 @@ module STARMAN
         load_package name
       end
     end
+
+    def self.has_package? name
+      @@packages.has_key? name.to_s.downcase.to_sym
+    end
   end
 end

@@ -1,7 +1,7 @@
 module STARMAN
   class Package
     include PackageDSL
-    include PackageInstallParams
+    include PackageParams
 
     extend Forwardable
     def_delegators :@latest, :homepage, :url, :mirror, :sha256, :version, :dependencies

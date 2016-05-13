@@ -3,5 +3,5 @@
 $LOAD_PATH << "#{ENV['STARMAN_ROOT']}/framework"
 require 'starman'
 
-a = STARMAN::Openssl.new
-p a.homepage
+STARMAN::CommandLine.parse
+eval("STARMAN::Command::#{STARMAN::CommandLine.command.capitalize}").run
