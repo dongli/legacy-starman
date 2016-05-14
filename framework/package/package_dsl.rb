@@ -12,8 +12,51 @@ module STARMAN
       EOT
     end
 
-    def depends_on other_package, **options
-      latest.depends_on other_package, options
+    def create_option_helpers name, spec
+      option = self.send(spec).options[name]
+      if option[:accept_value].class == Symbol
+        accept_values = [opton[:accept_value]]
+      else
+        accept_values = option[:accept_value]
+      end
+      accept_values.each_key do |value_type|
+        case value_type
+        when :boolean
+          class_eval <<-EOT
+            def self.#{name}?
+              #{spec}.options[:#{name}][:value] || #{spec}.options[:#{name}][:accept_value][:#{value_type}]
+            end
+            def #{name}?
+              #{spec}.options[:#{name}][:value] || #{spec}.options[:#{name}][:accept_value][:#{value_type}]
+            end
+          EOT
+        when :package
+          if name =~ /^use_/
+            class_eval <<-EOT
+              def self.#{name.to_s.gsub('use_', '')}
+                #{spec}.options[:#{name}][:value] || #{spec}.options[:#{name}][:accept_value][:#{value_type}]
+              end
+              def #{name.to_s.gsub('use_', '')}
+                #{spec}.options[:#{name}][:value] || #{spec}.options[:#{name}][:accept_value][:#{value_type}]
+              end
+            EOT
+          else
+            CLI.report_error "When package option is a package, the option name should be 'use_*'!"
+          end
+        else
+          CLI.report_error "Package option #{CLI.red name} is invalid!"
+        end
+      end
+    end
+
+    def option val, **options
+      latest.option val, options
+      # Only allow latest spec can have options.
+      create_option_helpers val, :latest
+    end
+
+    def depends_on val, **options
+      latest.depends_on val, options
     end
 
     def latest

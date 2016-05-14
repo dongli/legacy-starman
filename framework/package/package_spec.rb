@@ -10,14 +10,20 @@ module STARMAN
       EOT
     end
 
-    attr_reader :dependencies
+    attr_reader :options, :dependencies
 
     def initialize
+      @options = {}
       @dependencies = {}
     end
 
-    def depends_on other_package, **options
-      @dependencies[other_package] = options
+    def option val, **options
+      # Should not override option.
+      @options[val] = options if not @options.has_key? val
+    end
+
+    def depends_on val, **options
+      @dependencies[val] = options
     end
   end
 end

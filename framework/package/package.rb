@@ -2,9 +2,12 @@ module STARMAN
   class Package
     include PackageDSL
     include PackageParams
+    include PackageDefaultMethods
+    include System::Command
 
     extend Forwardable
-    def_delegators :@latest, :homepage, :url, :mirror, :sha256, :version, :dependencies
+    def_delegators :@latest, :homepage, :url, :mirror, :sha256, :version
+    def_delegators :@latest, :options, :dependencies
 
     attr_reader :latest, :history
 

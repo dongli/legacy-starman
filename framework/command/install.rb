@@ -14,10 +14,13 @@ module STARMAN
         }
       end
 
+      def self.packages_to_install
+        @@packages_to_install ||= []
+      end
+
       def self.run
-        CommandLine.packages.each do |name|
-          package = eval("#{name.capitalize}").new
-          debugger
+        packages_to_install.reverse.each do |package|
+          package.check_system
         end
       end
     end
