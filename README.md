@@ -1,3 +1,5 @@
+[![Code Climate](https://codeclimate.com/github/dongli/starman/badges/gpa.svg)](https://codeclimate.com/github/dongli/starman)
+
 # Introduction
 
 STARMAN helps you to rock your computer, no matter what OS it has. The star in the name means anything, but currently, it focuses on package installation and management to liberate us from boring tasks. Do you remember how many times some packages drive you crazy? STARMAN will rule them for you!
