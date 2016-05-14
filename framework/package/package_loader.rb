@@ -15,7 +15,7 @@ module STARMAN
         else
           accept_values = package.options[option][:accept_value]
         end
-        accept_values.each do |value_type, default_value|
+        accept_values.each_key do |value_type|
           case value_type
           when :boolean
             if value.class == TrueClass or value.class == FalseClass
@@ -32,7 +32,7 @@ module STARMAN
       end
     end
 
-    def self.load_package name
+    def self.load_package name, options = {}
       return if packages[name][:instance]
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
@@ -43,7 +43,7 @@ module STARMAN
       Command::Install.packages_to_install << package # Record the package to install.
       packages[name][:instance] = package
       package.dependencies.each do |depend_name, options|
-        load_package depend_name
+        load_package depend_name, options
       end
     end
 

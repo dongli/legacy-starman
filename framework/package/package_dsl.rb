@@ -70,7 +70,7 @@ module STARMAN
       eval "@@#{name}_history ||= {}"
       return eval "@@#{name}_history" if not block_given?
       spec = PackageSpec.new
-      spec.instance_eval &block
+      spec.instance_eval(&block)
       eval "@@#{name}_history[spec.version.to_s] = spec"
     end
   end

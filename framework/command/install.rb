@@ -10,6 +10,10 @@ module STARMAN
           :version => {
             :desc => 'Select which version to install.',
             :accept_value => true
+          },
+          :force => {
+            :desc => 'Force to install packages no matter other conditions.',
+            :accept_value => false
           }
         }
       end
@@ -19,8 +23,8 @@ module STARMAN
       end
 
       def self.run
-        packages_to_install.reverse.each do |package|
-          package.check_system
+        packages_to_install.reverse_each do |package|
+          next if not CommandLine.has_option? :force and package.check_system
         end
       end
     end

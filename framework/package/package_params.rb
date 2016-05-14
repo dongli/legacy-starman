@@ -23,7 +23,7 @@ module STARMAN
     end
 
     def persist
-      name, spec = __get_data
+      name, _spec = __get_data
       "#{DEFAULT_INSTALL_ROOT}/#{name}/persist"
     end
   end

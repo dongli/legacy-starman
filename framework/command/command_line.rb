@@ -7,7 +7,7 @@ module STARMAN
         elsif @@command
           if arg =~ /^-/
             option = arg.gsub(/(^-)|(=.*$)/, '').to_sym
-            value = arg.gsub(/^-[^=]+/, '').gsub('=', '')
+            value = arg.gsub(/^-[^=]+/, '').delete('=')
             @@options ||= {}
             @@options[option] = value
           elsif PackageLoader.has_package? arg
