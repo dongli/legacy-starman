@@ -3,18 +3,14 @@ module STARMAN
     class Install
       def self.accepted_options
         {
-          :debug => {
-            :desc => 'Turn on debug stuffs, may output more information.',
-            :accept_value => false
-          },
-          :version => {
+          :version => OptionSpec.new(
             :desc => 'Select which version to install.',
-            :accept_value => true
-          },
-          :force => {
+            :accept_value => :string
+          ),
+          :force => OptionSpec.new(
             :desc => 'Force to install packages no matter other conditions.',
-            :accept_value => false
-          }
+            :accept_value => { :boolean => false }
+          )
         }
       end
 
@@ -25,6 +21,7 @@ module STARMAN
       def self.run
         packages_to_install.reverse_each do |package|
           next if not CommandLine.has_option? :force and package.check_system
+          PackageDownloader.run package
         end
       end
     end

@@ -4,7 +4,7 @@ module STARMAN
       base.extend self
     end
 
-    [:homepage, :url, :mirror, :sha256, :version].each do |attr|
+    [:homepage, :url, :mirror, :sha256, :version, :filename].each do |attr|
       class_eval <<-EOT
         def #{attr} val
           latest.#{attr} val
@@ -13,39 +13,32 @@ module STARMAN
     end
 
     def create_option_helpers name, spec
-      option = self.send(spec).options[name]
-      if option[:accept_value].class == Symbol
-        accept_values = [opton[:accept_value]]
-      else
-        accept_values = option[:accept_value]
-      end
-      accept_values.each_key do |value_type|
-        case value_type
-        when :boolean
+      option_spec = self.send(spec).options[name]
+      case option_spec.type
+      when :boolean
+        class_eval <<-EOT
+          def self.#{name}?
+            #{spec}.options[:#{name}].value || #{spec}.options[:#{name}].default
+          end
+          def #{name}?
+            #{spec}.options[:#{name}].value || #{spec}.options[:#{name}].default
+          end
+        EOT
+      when :package
+        if name =~ /^use_/
           class_eval <<-EOT
-            def self.#{name}?
-              #{spec}.options[:#{name}][:value] || #{spec}.options[:#{name}][:accept_value][:#{value_type}]
+            def self.#{name.to_s.gsub('use_', '')}
+              #{spec}.options[:#{name}].value || #{spec}.options[:#{name}].default
             end
-            def #{name}?
-              #{spec}.options[:#{name}][:value] || #{spec}.options[:#{name}][:accept_value][:#{value_type}]
+            def #{name.to_s.gsub('use_', '')}
+              #{spec}.options[:#{name}].value || #{spec}.options[:#{name}].default
             end
           EOT
-        when :package
-          if name =~ /^use_/
-            class_eval <<-EOT
-              def self.#{name.to_s.gsub('use_', '')}
-                #{spec}.options[:#{name}][:value] || #{spec}.options[:#{name}][:accept_value][:#{value_type}]
-              end
-              def #{name.to_s.gsub('use_', '')}
-                #{spec}.options[:#{name}][:value] || #{spec}.options[:#{name}][:accept_value][:#{value_type}]
-              end
-            EOT
-          else
-            CLI.report_error "When package option is a package, the option name should be 'use_*'!"
-          end
         else
-          CLI.report_error "Package option #{CLI.red name} is invalid!"
+          CLI.report_error "When package option is a package, the option name should be 'use_*'!"
         end
+      else
+        CLI.report_error "Package option #{CLI.red name} is invalid!"
       end
     end
 

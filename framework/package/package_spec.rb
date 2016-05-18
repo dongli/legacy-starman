@@ -1,6 +1,6 @@
 module STARMAN
   class PackageSpec
-    [:homepage, :url, :mirror, :sha256, :version].each do |attr|
+    [:homepage, :mirror, :sha256, :version, :filename].each do |attr|
       attr_reader attr
       class_eval <<-EOT
         def #{attr} val = nil
@@ -10,16 +10,21 @@ module STARMAN
       EOT
     end
 
-    attr_reader :options, :dependencies
+    attr_reader :url, :options, :dependencies
 
     def initialize
       @options = {}
       @dependencies = {}
     end
 
+    def url val
+      @url = val
+      @filename = File.basename(URI.parse(val).path) if not @filename
+    end
+
     def option val, **options
       # Should not override option.
-      @options[val] = options if not @options.has_key? val
+      @options[val] = OptionSpec.new(options) if not @options.has_key? val
     end
 
     def depends_on val, **options

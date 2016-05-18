@@ -1,9 +1,20 @@
 module STARMAN
   class CommandLine
+    CommonOptions = {
+      :debug => OptionSpec.new(
+        :desc => 'Turn on debug stuffs, may output more information.',
+        :accept_value => { :boolean => false }
+      ),
+      :config => OptionSpec.new(
+        :desc => 'Configuration file.',
+        :accept_value => { :path => "#{ENV['STARMAN_ROOT']}/starman.config" }
+      )
+    }
+
     def self.run
       ARGV.each do |arg|
         if not defined? @@command and Command.constants.include? arg.capitalize.to_sym
-          @@command = arg
+          @@command = arg.to_sym
         elsif @@command
           if arg =~ /^-/
             option = arg.gsub(/(^-)|(=.*$)/, '').to_sym
@@ -22,17 +33,24 @@ module STARMAN
     end
 
     def self.check_options
-      options.each do |option, value|
+      options.each do |name, value|
         option_spec = nil
         packages.each do |package|
-          option_spec = PackageLoader.packages[package][:instance].options[option]
+          option_spec = PackageLoader.packages[package][:instance].options[name]
           break if option_spec
         end
-        option_spec = eval("Command::#{@@command.capitalize.to_sym}").accepted_options[option] if not option_spec
-        CLI.report_error "Option #{CLI.red option} is invalid!" if not option_spec
-        CLI.report_error "Option #{CLI.red option} does not accept value!" if value != '' and not option_spec[:accept_value]
-        CLI.report_error "Option #{CLI.red option} needs value!" if value == '' and option_spec[:accept_value] and not option_spec[:accept_value].has_key? :boolean
+        option_spec ||= eval("Command::#{@@command.capitalize.to_sym}").accepted_options[name]
+        option_spec ||= CommonOptions[name]
+        CLI.report_error "Option #{CLI.red name} is invalid!" if not option_spec
+        begin
+          option_spec.check value
+        rescue => e
+          CLI.report_error "Command option #{CLI.red name}: #{e}"
+        end
+        options[name] = option_spec
       end
+      @@options = eval("Command::#{@@command.capitalize.to_sym}").accepted_options.merge(@@options)
+      @@options = CommonOptions.merge(@@options)
     end
 
     def self.command

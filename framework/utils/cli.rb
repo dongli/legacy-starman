@@ -89,7 +89,7 @@ module STARMAN
     def self.report_error message, options = nil
       options = [options] if not options or options.class != Array
       print "[#{red 'Error'}]: #{message}\n"
-      print_call_stack if CommandLine.has_option? :debug
+      print_call_stack if CommandLine.options[:debug].value
       if not options.include? :keep_pid_file
         pid_file = "#{ENV['PACKMAN_ROOT']}/.pid"
         PACKMAN.rm pid_file if File.exist? pid_file and CommandLine.process_exclusive?

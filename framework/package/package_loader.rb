@@ -8,26 +8,12 @@ module STARMAN
 
     def self.transfer_command_line_options_to package
       # Check command line options for package options.
-      CommandLine.options.each do |option, value|
-        next unless package.options.has_key? option
-        if package.options[option][:accept_value].class == Symbol
-          accept_values = [package.options[option][:accept_value]]
-        else
-          accept_values = package.options[option][:accept_value]
-        end
-        accept_values.each_key do |value_type|
-          case value_type
-          when :boolean
-            if value.class == TrueClass or value.class == FalseClass
-              package.options[option][:value] = value
-            elsif value == ''
-              package.options[option][:value] = true
-            end
-          when :package
-            if has_package? value
-              package.options[option][:value] = value
-            end
-          end
+      CommandLine.options.each do |name, value|
+        next unless package.options.has_key? name
+        begin
+          package.options[name].check value
+        rescue => e
+          CLI.report_error "Package option #{CLI.red name}: #{e}"
         end
       end
     end
