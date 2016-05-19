@@ -9,16 +9,16 @@ module STARMAN
     def_delegators :@latest, :homepage, :url, :mirror, :sha256, :version
     def_delegators :@latest, :filename, :options, :dependencies
 
-    attr_reader :latest, :history
+    attr_reader :name, :latest, :history
 
     def initialize
-      name = self.class.name.split('::').last
-      @latest = eval("@@#{name}_latest")
-      @history = eval("defined? @@#{name}_history") ? eval("@@#{name}_history") : {}
+      @name = self.class.name.split('::').last.downcase.to_sym
+      @latest = eval("@@#{@name}_latest")
+      @history = eval("defined? @@#{@name}_history") ? eval("@@#{@name}_history") : {}
     end
 
-    def name
-      @name ||= self.class.name.downcase.split('::').last
+    def self.package_name
+      self.name.split('::').last.downcase.to_sym
     end
   end
 end

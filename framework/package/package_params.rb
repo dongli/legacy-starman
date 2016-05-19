@@ -6,24 +6,15 @@ module STARMAN
 
     DEFAULT_INSTALL_ROOT = '/opt/starman/software'
 
-    def __get_data
-      if self.class == Class
-        name = self.name.split('::').last.downcase
-        spec = self.latest
-      else
-        name = self.class.name.split('::').last.downcase
-        spec = self
-      end
-      return name, spec
-    end
-
     def prefix
-      name, spec = __get_data
+      name = self.class == Class ? package_name : name
+      spec = self.class == Class ? self.latest : self
       "#{DEFAULT_INSTALL_ROOT}/#{name}/#{spec.version}"
     end
 
     def persist
-      name, _spec = __get_data
+      name = self.class == Class ? package_name : name
+      spec = self.class == Class ? self.latest : self
       "#{DEFAULT_INSTALL_ROOT}/#{name}/persist"
     end
   end

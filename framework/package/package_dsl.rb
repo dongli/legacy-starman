@@ -53,18 +53,17 @@ module STARMAN
     end
 
     def latest
-      eval "@@#{self.name.split('::').last}_latest ||= PackageSpec.new"
+      eval "@@#{package_name}_latest ||= PackageSpec.new"
     end
 
     # To support multiple versions of package, but the history versions should
     # be limited.
     def history &block
-      name = self.name.split('::').last
-      eval "@@#{name}_history ||= {}"
-      return eval "@@#{name}_history" if not block_given?
+      eval "@@#{package_name}_history ||= {}"
+      return eval "@@#{package_name}_history" if not block_given?
       spec = PackageSpec.new
       spec.instance_eval(&block)
-      eval "@@#{name}_history[spec.version.to_s] = spec"
+      eval "@@#{package_name}_history[spec.version.to_s] = spec"
     end
   end
 end

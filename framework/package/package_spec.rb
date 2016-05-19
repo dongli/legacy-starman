@@ -17,9 +17,12 @@ module STARMAN
       @dependencies = {}
     end
 
-    def url val
-      @url = val
-      @filename = File.basename(URI.parse(val).path) if not @filename
+    def url val = nil
+      if val
+        @url = val
+        @filename = File.basename(URI.parse(val).path) if not @filename
+      end
+      @url
     end
 
     def option val, **options
