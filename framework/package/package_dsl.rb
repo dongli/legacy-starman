@@ -12,8 +12,12 @@ module STARMAN
       EOT
     end
 
-    def languages *val
-      latest.languages val
+    [:label, :language].each do |attr|
+      class_eval <<-EOT
+        def #{attr} *val
+          latest.#{attr} *val
+        end
+      EOT
     end
 
     def revision val, **options
@@ -26,10 +30,10 @@ module STARMAN
       when :boolean
         class_eval <<-EOT
           def self.#{name.to_s.gsub('-', '_')}?
-            #{spec}.options[:'#{name}'].value || #{spec}.options[:'#{name}'].default
+            #{spec}.options[:'#{name}'].value
           end
           def #{name.to_s.gsub('-', '_')}?
-            #{spec}.options[:'#{name}'].value || #{spec}.options[:'#{name}'].default
+            #{spec}.options[:'#{name}'].value
           end
         EOT
       when :package
@@ -72,6 +76,19 @@ module STARMAN
       spec = PackageSpec.new
       spec.instance_eval(&block)
       eval "@@#{package_name}_history[spec.version.to_s] = spec"
+    end
+
+    # Clean the internal data for reevaluating class definition, especially when
+    # setting options like 'use-mpi' or 'with-cxx'.
+    def clean package_name
+      eval "@@#{package_name}_latest.clean if defined? @@#{package_name}_latest"
+      eval <<-EOT
+        if defined? @@#{package_name}_history
+          @@#{package_name}_history.each do |spec|
+            spec.clean
+          end
+        end
+      EOT
     end
   end
 end

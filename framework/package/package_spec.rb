@@ -2,9 +2,16 @@ module STARMAN
   class PackageSpec
     def initialize
       @revision = {}
+      @languages = []
+      @labels = {}
       @options = {}
       @dependencies = {}
+    end
+
+    # Data need to be cleaned between load statements.
+    def clean
       @languages = []
+      @dependencies = {}
     end
 
     [:homepage, :mirror, :sha256, :version, :filename].each do |attr|
@@ -16,13 +23,17 @@ module STARMAN
       EOT
     end
 
-    def languages *val
-      val.flatten!
-      if not val.empty?
-        @languages.concat val
-        @languages.uniq!
-      end
-      @languages
+    [:label, :language].each do |attr|
+      class_eval <<-EOT
+        attr_reader :#{attr}s
+        def #{attr} *val, **options
+          val.flatten!
+          if not val.empty?
+            @#{attr}s.concat val
+            @#{attr}s.uniq!
+          end
+        end
+      EOT
     end
 
     def url val = nil

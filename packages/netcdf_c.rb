@@ -5,9 +5,9 @@ module STARMAN
     mirror 'http://www.gfd-dennou.org/library/netcdf/unidata-mirror/netcdf-4.3.3.1.tar.gz'
     sha256 'bdde3d8b0e48eed2948ead65f82c5cfb7590313bc32c4cf6c6546e4cea47ba19'
     version '4.3.3.1'
-    revision 1, :reason => 'Follow update of HDF5.'
+    language :c
 
-    option :use_mpi, {
+    option 'use-mpi', {
       :desc => 'Build with parallel IO. MPI library is needed.',
       :accept_value => { :boolean => false }
     }

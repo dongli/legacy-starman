@@ -18,12 +18,14 @@ module STARMAN
       end
     end
 
-    def self.load_package name, options = {}
-      return if packages[name][:instance]
+    def self.load_package name, *options
+      return if packages[name][:instance] and not options.include? :force
+      Package.clean name
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
       transfer_command_line_options_to package
       # Reload package, since the options may change dependencies.
+      Package.clean name
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
       CommandLine.packages[name] = package # Record the package to install.

@@ -18,9 +18,9 @@ module STARMAN
       :accept_value => { :boolean => true }
     }
 
-    languages :c
-    languages :cxx if with_cxx?
-    languages :fortran if with_fortran?
+    language :c
+    language :cxx if with_cxx?
+    language :fortran if with_fortran?
 
     depends_on :szip
     depends_on :zlib
