@@ -1,11 +1,5 @@
 module STARMAN
   class CLI
-    def self.delegated_methods
-      [:green, :blue, :red, :yellow, :bold, :caveat, :pause,
-       :report_notice, :report_error, :report_warning,
-       :blue_arrow, :under_construction!, :ask, :get_answer]
-    end
-
     @@color_map = {
       :red    => 31,
       :green  => 32,
@@ -22,11 +16,7 @@ module STARMAN
     end
 
     def self.width
-      if not PACKMAN.does_command_exist? 'tput'
-        80
-      else
-        `tput cols`.strip.to_i
-      end
+      `tput cols`.strip.to_i
     end
 
     def self.truncate str
@@ -83,17 +73,14 @@ module STARMAN
 
     def self.report_warning message
       print "[#{yellow 'Warning'}]: #{message}\n"
-      print_call_stack if CommandLine.has_option? :debug
+      print_call_stack if CommandLine.options[:debug].value
     end
 
     def self.report_error message, options = nil
       options = [options] if not options or options.class != Array
       print "[#{red 'Error'}]: #{message}\n"
       print_call_stack if CommandLine.options[:debug].value
-      if not options.include? :keep_pid_file
-        pid_file = "#{ENV['PACKMAN_ROOT']}/.pid"
-        PACKMAN.rm pid_file if File.exist? pid_file and CommandLine.process_exclusive?
-      end
+      System::Bash.final
       exit
     end
 
@@ -119,7 +106,7 @@ module STARMAN
     end
 
     def self.under_construction!
-      print ":( PACKMAN is under construction for this function! Thank you for your support!\n"
+      print ":( STARMAN is under construction for this function! Thank you for your support!\n"
       print_call_stack if CommandLine.has_option? :debug
       exit
     end

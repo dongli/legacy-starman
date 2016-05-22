@@ -5,6 +5,10 @@ module STARMAN
         :desc => 'Turn on debug stuffs, may output more information.',
         :accept_value => { :boolean => false }
       ),
+      :verbose => OptionSpec.new(
+        :desc => 'Show more outputs, such as command run output.',
+        :accept_value => { :boolean => false }
+      ),
       :config => OptionSpec.new(
         :desc => 'Configuration file.',
         :accept_value => { :path => "#{ENV['STARMAN_ROOT']}/starman.config" }
@@ -22,8 +26,8 @@ module STARMAN
             @@options ||= {}
             @@options[option] = value
           elsif PackageLoader.has_package? arg
-            @@packages ||= []
-            @@packages << arg.to_sym
+            @@packages ||= {}
+            @@packages[arg.to_sym] = nil
           end
         end
       end
@@ -35,8 +39,8 @@ module STARMAN
     def self.check_options
       options.each do |name, value|
         option_spec = nil
-        packages.each do |package|
-          option_spec = PackageLoader.packages[package][:instance].options[name]
+        packages.values.each do |package|
+          option_spec = package.options[name]
           break if option_spec
         end
         option_spec ||= eval("Command::#{@@command.capitalize.to_sym}").accepted_options[name]
@@ -66,7 +70,7 @@ module STARMAN
     end
 
     def self.packages
-      @@packages ||= []
+      @@packages ||= {}
     end
   end
 end

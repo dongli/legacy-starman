@@ -3,6 +3,10 @@ module STARMAN
     class Install
       def self.accepted_options
         {
+          :'local-build' => OptionSpec.new(
+            :desc => 'Force to build package locally from source codes.',
+            :accept_value => { :boolean => false }
+          ),
           :version => OptionSpec.new(
             :desc => 'Select which version to install.',
             :accept_value => :string
@@ -14,14 +18,14 @@ module STARMAN
         }
       end
 
-      def self.packages_to_install
-        @@packages_to_install ||= []
-      end
-
       def self.run
-        packages_to_install.reverse_each do |package|
-          next if not CommandLine.has_option? :force and package.check_system
-          PackageDownloader.run package
+        CommandLine.packages.values.reverse_each do |package|
+          case PackageDownloader.run package
+          when :binary
+            PackageBinary.run package
+          when :source
+            PackageInstaller.run package
+          end
         end
       end
     end

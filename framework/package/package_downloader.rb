@@ -1,34 +1,29 @@
 module STARMAN
   class PackageDownloader
     extend System::Command
-
-    def self.sha256_same? file_path, expect
-      if File.file? file_path
-        expect.eql? Digest::SHA256.hexdigest(File.read(file_path))
-      elsif File.directory? file_path
-        tmp = []
-        Dir.glob("#{file_path}/**/*").each do |file|
-          next if File.directory? file
-          tmp << Digest::SHA256.hexdigest(File.read(file))
-        end
-        current = Digest::SHA256.hexdigest(tmp.sort.join)
-        if expect.eql? current
-          return true
-        else
-          CLI.report_warning "Directory #{file_path} SHA256 is #{current}."
-          return false
-        end
-      else
-        CLI.report_error "Unknown file type \"#{file_path}\"!"
-      end
-    end
+    extend Utils
 
     def self.run package
+      # Check if there is a precompiled binary first.
+      if not CommandLine.options[:'local-build'].value
+        record = PackageBinary.read_record package
+        file_path = "#{ConfigStore.package_root}/#{Storage.tar_name package}"
+        if File.exist? file_path
+          return :binary if sha_same? file_path, record[package.tag]
+          if Storage.uploaded? package
+            CLI.report_notice "Downloading precompiled package #{CLI.blue package.name}."
+            Storage.download package
+            return :binary
+          end
+        end
+      end
+      # Package is not compiled before.
       file_path = "#{ConfigStore.package_root}/#{package.filename}"
-      if not ( File.exist? file_path and sha256_same? file_path, package.sha256 )
+      if not ( File.exist? file_path and sha_same? file_path, package.sha256 )
         CLI.report_notice "Downloading package #{CLI.blue package.name}."
         curl package.url, ConfigStore.package_root, rename: package.filename
       end
+      return :source
     end
   end
 end

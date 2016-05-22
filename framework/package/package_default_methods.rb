@@ -4,7 +4,14 @@ module STARMAN
       base.extend self
     end
 
-    def check_system
+    def pre_install
+    end
+
+    def install
+      CLI.report_error "Package #{CLI.red self.name} does not provide install method!"
+    end
+
+    def post_install
     end
   end
 end

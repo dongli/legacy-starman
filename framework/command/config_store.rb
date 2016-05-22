@@ -43,6 +43,25 @@ module STARMAN
       FileUtils.mkdir_p @@package_root if not Dir.exist? @@package_root
       FileUtils.mkdir_p @@install_root if not Dir.exist? @@install_root
       @@download_command = @@download_command.to_sym
+      set_compilers
+    end
+
+    def self.set_compilers
+      command_hash_array = []
+      ( self.methods.select { |m| m.to_s =~ /compiler_set_\d$/ } ).each do |m|
+        command_hash = self.method(m).call
+        if command_hash != nil
+          if command_hash.has_key? :installed_by_starman
+            command_hash[:installed_by_starman].downcase!
+          end
+          command_hash_array << command_hash
+        end
+      end
+      if command_hash_array.empty?
+        CLI.report_error "There is no compiler set defined in #{CommandLine.config_file}!"
+      end
+      CompilerStore.set_compiler_sets command_hash_array
+      CompilerStore.set_active_compiler_set @@defaults[:compiler_set_index]
     end
 
     def self.template file_path

@@ -12,26 +12,34 @@ module STARMAN
       EOT
     end
 
+    def languages *val
+      latest.languages val
+    end
+
+    def revision val, **options
+      latest.revision val, options
+    end
+
     def create_option_helpers name, spec
-      option_spec = self.send(spec).options[name]
+      option_spec = self.send(spec).options[name.to_sym]
       case option_spec.type
       when :boolean
         class_eval <<-EOT
-          def self.#{name}?
-            #{spec}.options[:#{name}].value || #{spec}.options[:#{name}].default
+          def self.#{name.to_s.gsub('-', '_')}?
+            #{spec}.options[:'#{name}'].value || #{spec}.options[:'#{name}'].default
           end
-          def #{name}?
-            #{spec}.options[:#{name}].value || #{spec}.options[:#{name}].default
+          def #{name.to_s.gsub('-', '_')}?
+            #{spec}.options[:'#{name}'].value || #{spec}.options[:'#{name}'].default
           end
         EOT
       when :package
-        if name =~ /^use_/
+        if name =~ /^use-/
           class_eval <<-EOT
-            def self.#{name.to_s.gsub('use_', '')}
-              #{spec}.options[:#{name}].value || #{spec}.options[:#{name}].default
+            def self.#{name.to_s.gsub('use-', '')}
+              #{spec}.options[:'#{name}'].value || #{spec}.options[:'#{name}'].default
             end
-            def #{name.to_s.gsub('use_', '')}
-              #{spec}.options[:#{name}].value || #{spec}.options[:#{name}].default
+            def #{name.to_s.gsub('use-', '')}
+              #{spec}.options[:'#{name}'].value || #{spec}.options[:'#{name}'].default
             end
           EOT
         else

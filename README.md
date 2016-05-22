@@ -6,12 +6,12 @@ STARMAN helps you to rock your computer, no matter what OS it has. The star in t
 
 This is the rewrite of my previous work [PACKMAN](https://github.com/dongli/packman). There are some flaws in PACKMAN, so I want to eliminate them in STARMAN, and bring some new features:
 
-- Remote installation
 - Precompiled binary
-- Be nice with system packages
+- Remote installation
 
 I try to use the best practices in Ruby, so if you are a Rubyist, join me.
 
 # Authors
 
 - Li Dong <dongli.init@gmail.com>
+- WAIT FOR YOU :seat:

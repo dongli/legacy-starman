@@ -26,7 +26,7 @@ module STARMAN
       # Reload package, since the options may change dependencies.
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
-      Command::Install.packages_to_install << package # Record the package to install.
+      CommandLine.packages[name] = package # Record the package to install.
       packages[name][:instance] = package
       package.dependencies.each do |depend_name, options|
         load_package depend_name, options
@@ -34,7 +34,7 @@ module STARMAN
     end
 
     def self.run
-      CommandLine.packages.each do |name|
+      CommandLine.packages.keys.each do |name|
         load_package name.to_s.downcase.to_sym
       end
     end
