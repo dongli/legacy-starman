@@ -6,7 +6,8 @@ module STARMAN
     include PackageDefaultMethods
 
     extend Forwardable
-    def_delegators :@latest, :homepage, :url, :mirror, :sha256, :version, :languages
+    def_delegators :@latest, :homepage, :url, :mirror, :sha256, :version
+    def_delegators :@latest, :labels, :languages
     def_delegators :@latest, :filename, :revision, :options, :dependencies
 
     attr_reader :name, :latest, :history

@@ -3,7 +3,7 @@ module STARMAN
     def initialize
       @revision = {}
       @languages = []
-      @labels = {}
+      @labels = []
       @options = {}
       @dependencies = {}
     end
@@ -11,6 +11,7 @@ module STARMAN
     # Data need to be cleaned between load statements.
     def clean
       @languages = []
+      @labels = []
       @dependencies = {}
     end
 

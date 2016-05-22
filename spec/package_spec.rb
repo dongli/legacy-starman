@@ -13,6 +13,12 @@ module STARMAN
   end
 
   RSpec.describe 'Netcdf' do
+    it 'has group_master label.' do
+      PackageLoader.load_package :netcdf
+      netcdf = PackageLoader.packages[:netcdf][:instance]
+      expect(netcdf.labels).to eq [:group_master]
+    end
+
     it 'has correct dependencies.' do
       PackageLoader.load_package :netcdf_c
       netcdf_c = PackageLoader.packages[:netcdf_c][:instance]
