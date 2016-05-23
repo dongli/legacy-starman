@@ -4,7 +4,7 @@ module STARMAN
       base.extend self
     end
 
-    [:homepage, :url, :mirror, :sha256, :version, :filename].each do |attr|
+    [:homepage, :url, :mirror, :sha256, :version, :filename, :group_master].each do |attr|
       class_eval <<-EOT
         def #{attr} val
           latest.#{attr} val
@@ -22,6 +22,10 @@ module STARMAN
 
     def revision val, **options
       latest.revision val, options
+    end
+
+    def belongs_to val
+      latest.group_master val
     end
 
     def create_option_helpers name, spec
@@ -65,7 +69,15 @@ module STARMAN
     end
 
     def latest
-      eval "@@#{package_name}_latest ||= PackageSpec.new"
+      if eval "not defined? @@#{package_name}_latest"
+        eval "@@#{package_name}_latest ||= PackageSpec.new"
+        eval <<-EOT
+          @@#{package_name}_latest.options.each do |option_name, option_options|
+            create_option_helpers option_name, :latest
+          end
+        EOT
+      end
+      eval "@@#{package_name}_latest"
     end
 
     # To support multiple versions of package, but the history versions should
@@ -79,7 +91,7 @@ module STARMAN
     end
 
     # Clean the internal data for reevaluating class definition, especially when
-    # setting options like 'use-mpi' or 'with-cxx'.
+    # setting options like 'with-mpi' or 'with-cxx'.
     def clean package_name
       eval "@@#{package_name}_latest.clean if defined? @@#{package_name}_latest"
       eval <<-EOT

@@ -14,6 +14,7 @@ module STARMAN
         cmd_str = "#{cmd} #{options.join(' ')}"
         if CommandLine.options[:debug].value
           CLI.blue_arrow cmd_str
+          print File.open(System::Bash.shell_board_file, 'r').read
         else
           CLI.blue_arrow cmd_str, :truncate
         end

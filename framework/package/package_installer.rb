@@ -4,7 +4,7 @@ module STARMAN
 
     class << self
       def read_profile package
-        profile_file = "#{package.prefix}/starman.profile"
+        profile_file = "#{package.prefix}/#{package.name}.profile"
         File.exist?(profile_file) ? YAML.load(File.open(profile_file, 'r').read) : {}
       end
 
@@ -15,7 +15,7 @@ module STARMAN
           profile[:dependencies] ||= {}
           profile[:dependencies][depend_name] = depend.profile
         end
-        profile_file = "#{package.prefix}/starman.profile"
+        profile_file = "#{package.prefix}/#{package.name}.profile"
         File.new(profile_file, 'w').write profile.to_yaml
       end
 

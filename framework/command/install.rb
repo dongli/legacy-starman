@@ -20,12 +20,16 @@ module STARMAN
 
       def self.run
         CommandLine.packages.values.reverse_each do |package|
+          next if package.has_label? :group_master
           case PackageDownloader.run package
           when :binary
             PackageBinary.run package
           when :source
             PackageInstaller.run package
           end
+          # Set environment variables for later packages that depend on it.
+          System::Bash.append 'CPPFLAGS', "-I#{package.inc}" if package.inc
+          System::Bash.append 'LDFLAGS', "-L#{package.lib}" if package.lib
         end
       end
     end

@@ -4,8 +4,15 @@ module STARMAN
       @revision = {}
       @languages = []
       @labels = []
-      @options = {}
       @dependencies = {}
+      @slaves = []
+      # Common options.
+      @options = {
+        :'skip-test' => OptionSpec.new(
+          :desc => 'Skip the build test.',
+          :accept_value => { :boolean => false }
+        )
+      }
     end
 
     # Data need to be cleaned between load statements.
@@ -13,9 +20,10 @@ module STARMAN
       @languages = []
       @labels = []
       @dependencies = {}
+      @slaves = []
     end
 
-    [:homepage, :mirror, :sha256, :version, :filename].each do |attr|
+    [:homepage, :mirror, :sha256, :version, :filename, :group_master].each do |attr|
       class_eval <<-EOT
         def #{attr} val = nil
           @#{attr} = val if val
@@ -33,6 +41,10 @@ module STARMAN
             @#{attr}s.concat val
             @#{attr}s.uniq!
           end
+        end
+
+        def has_#{attr}? val
+          #{attr}s.include? val
         end
       EOT
     end
@@ -55,7 +67,11 @@ module STARMAN
       @revision
     end
 
-    attr_reader :options, :dependencies
+    def slave val
+      @slaves << val if not @slaves.include? val
+    end
+
+    attr_reader :options, :dependencies, :slaves
 
     def option val, **options
       # Should not override option.

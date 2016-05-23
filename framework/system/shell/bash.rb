@@ -28,7 +28,7 @@ module STARMAN
         content = File.open(shell_board_file, 'r').read
         separator = options[:separator] || ' '
         Array(keys).each do |key|
-          if not content.gsub!(/export #{key}="([^\)"]+)"/, "export #{key}=\"\1#{separator}#{value}\"")
+          if not content.gsub!(/export #{key}="([^\)"]+)"/, "export #{key}=\"\\1#{separator}#{value}\"")
             content << "export #{key}=\"#{value}\"\n"
           end
         end

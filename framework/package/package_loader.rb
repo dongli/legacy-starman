@@ -28,6 +28,11 @@ module STARMAN
       Package.clean name
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
+      # Connect group master and slave.
+      if package.group_master
+        package.group_master packages[package.group_master][:instance]
+        package.group_master.slave package
+      end
       CommandLine.packages[name] = package # Record the package to install.
       packages[name][:instance] = package
       package.dependencies.each do |depend_name, options|

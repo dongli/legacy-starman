@@ -5,7 +5,7 @@ module STARMAN
     sha256 '13aaae5ba10b70749ee1718816a4b4bfead897c2fcb72c24176e759aec4598c6'
     version '1.8.16'
 
-    option 'use-mpi', {
+    option 'with-mpi', {
       :desc => 'Build with parallel IO. MPI library is needed.',
       :accept_value => { :boolean => false }
     }
@@ -24,7 +24,7 @@ module STARMAN
 
     depends_on :szip
     depends_on :zlib
-    depends_on :mpi if use_mpi?
+    depends_on :mpi if with_mpi?
 
     def install
       args = %W[
