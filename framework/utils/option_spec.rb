@@ -1,6 +1,6 @@
 module STARMAN
   class OptionSpec
-    attr_reader :desc, :type, :default
+    attr_reader :desc, :type, :default, :extra
     attr_writer :value
 
     OptionTypes = [
@@ -23,6 +23,7 @@ module STARMAN
         @type = options[:accept_value].keys.first
         @default = options[:accept_value].values.first
       end
+      @extra = options[:extra] || {}
     end
 
     def check value

@@ -25,10 +25,7 @@ module STARMAN
       end
 
       def run package
-        if installed? package
-          CLI.report_notice "Package #{CLI.blue package.name} has been installed."
-          return
-        end
+        return if installed? package
         CLI.report_notice "Install package #{CLI.blue package.name}."
         dir = "#{ConfigStore.package_root}/#{package.name}"
         FileUtils.mkdir dir, :force => true

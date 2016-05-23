@@ -11,7 +11,8 @@ module STARMAN
       end
 
       def self.run
-        CommandLine.packages.values.each do |package|
+        CommandLine.packages.values.reverse_each do |package|
+          next if package.group_master
           if Storage.uploaded? package
             if CommandLine.options[:force].value
               begin
@@ -27,7 +28,7 @@ module STARMAN
           begin
             Storage.upload! package
             PackageBinary.write_record package
-          rescue
+          rescue => e
             CLI.report_error "Failed to upload #{CLI.red package.name} to Qiniu!\n#{e}"
           end
         end

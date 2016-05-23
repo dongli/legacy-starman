@@ -10,7 +10,8 @@ module STARMAN
       @options = {
         :'skip-test' => OptionSpec.new(
           :desc => 'Skip the build test.',
-          :accept_value => { :boolean => false }
+          :accept_value => { :boolean => false },
+          :extra => { :common => true }
         )
       }
     end

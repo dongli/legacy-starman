@@ -19,16 +19,6 @@ module STARMAN
       @history = eval("defined? @@#{@name}_history") ? eval("@@#{@name}_history") : {}
     end
 
-    def tag
-      res = "#{self.name}-#{self.version}-#{OS.tag}"
-      self.languages.each do |language|
-        next if not CompilerStore.active_compiler_set.compiler(language)
-        res << "-#{CompilerStore.active_compiler_set.compiler(language).tag(language)}"
-      end
-      res << "-#{revision.keys.last}" if not revision.empty?
-      res
-    end
-
     def profile
       {
         :name => self.name,
