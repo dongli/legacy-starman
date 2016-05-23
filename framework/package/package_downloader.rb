@@ -12,7 +12,7 @@ module STARMAN
         if File.exist? file_path
           return :binary if sha_same? file_path, record[_package.tag]
         end
-        if Storage.uploaded? _package
+        if not record.empty? and Storage.uploaded? _package
           CLI.report_notice "Downloading precompiled package #{CLI.blue _package.name}."
           Storage.download _package
           return :binary

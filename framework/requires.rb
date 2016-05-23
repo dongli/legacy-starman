@@ -24,6 +24,7 @@ require 'system/command/tar'
 require 'system/command/decompress'
 
 require 'system/shell/bash'
+require 'system/shell/shell'
 
 require 'system/os/os_spec'
 require 'system/os/os_dsl'
@@ -43,6 +44,7 @@ require 'compiler/compiler_store'
 require 'command/config'
 require 'command/install'
 require 'command/upload'
+require 'command/shell'
 require 'command/command_line'
 require 'command/config_store'
 

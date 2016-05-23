@@ -46,7 +46,7 @@ module STARMAN
       self.group_master.slaves.each do |slave|
         slave_tags << "#{slave.name}_#{slave.version.to_s}"
       end
-      "#{DEFAULT_INSTALL_ROOT}/#{self.group_master.name}/#{slave_tags.join('-')}/#{CompilerStore.active_compiler_set_index}"
+      "#{DEFAULT_INSTALL_ROOT}/#{self.group_master.name}/#{slave_tags.join('-')}/#{slave_option_tag}/#{CompilerStore.active_compiler_set_index}"
     end
 
     def master_prefix
@@ -54,32 +54,58 @@ module STARMAN
       self.slaves.each do |slave|
         slave_tags << "#{slave.name}_#{slave.version.to_s}"
       end
-      "#{DEFAULT_INSTALL_ROOT}/#{self.name}/#{slave_tags.join('-')}/#{CompilerStore.active_compiler_set_index}"
+      "#{DEFAULT_INSTALL_ROOT}/#{self.name}/#{slave_tags.join('-')}/#{master_option_tag}/#{CompilerStore.active_compiler_set_index}"
     end
 
     def normal_prefix
       name = self.class == Class ? package_name : self.name
       spec = self.class == Class ? self.latest : self
-      "#{DEFAULT_INSTALL_ROOT}/#{name}/#{spec.version}/#{CompilerStore.active_compiler_set_index}"
+      "#{DEFAULT_INSTALL_ROOT}/#{name}/#{spec.version}/#{normal_option_tag}/#{CompilerStore.active_compiler_set_index}"
+    end
+
+    def slave_option_tag
+      res = ''
+      self.group_master.slaves.each do |slave|
+        slave.options.each do |option_name, option_options|
+          next if option_options.extra[:common]
+          res << "#{option_name}_#{option_options.value}"
+        end
+      end
+      Digest::SHA1.hexdigest(res)
+    end
+
+    def master_option_tag
+      res = ''
+      self.slaves.each do |slave|
+        slave.options.each do |option_name, option_options|
+          next if option_options.extra[:common]
+          res << "#{option_name}_#{option_options.value}"
+        end
+      end
+      Digest::SHA1.hexdigest(res)
+    end
+
+    def normal_option_tag
+      res = ''
+      self.options.each do |option_name, option_options|
+        next if option_options.extra[:common]
+        res << "#{option_name}_#{option_options.value}"
+      end
+      Digest::SHA1.hexdigest(res)
     end
 
     def master_tag
       res = "#{self.name}"
-      option_tag = ''
       self.slaves.each do |slave|
         res << "-#{slave.name}_#{slave.version}"
         res << "-#{slave.revision.keys.last}" if not slave.revision.empty?
-        slave.options.each do |option_name, option_options|
-          next if option_options.extra[:common]
-          option_tag << "#{option_name}_#{option_options.value}"
-        end
       end
       res << "-#{OS.tag}"
       self.slaves.map { |slave| slave.languages }.flatten.uniq.each do |language|
         next if not CompilerStore.active_compiler_set.compiler(language)
         res << "-#{CompilerStore.active_compiler_set.compiler(language).tag(language)}"
       end
-      res << "-#{Digest::SHA1.hexdigest(option_tag)}"
+      res << "-#{master_option_tag}"
     end
 
     def normal_tag
@@ -88,13 +114,8 @@ module STARMAN
         next if not CompilerStore.active_compiler_set.compiler(language)
         res << "-#{CompilerStore.active_compiler_set.compiler(language).tag(language)}"
       end
-      option_tag = ''
-      self.options.each do |option_name, option_options|
-        next if option_options.extra[:common]
-        option_tag << "#{option_name}_#{option_options.value}"
-      end
       res << "-#{revision.keys.last}" if not revision.empty?
-      res << "-#{Digest::SHA1.hexdigest(option_tag)}"
+      res << "-#{normal_option_tag}"
     end
   end
 end

@@ -18,7 +18,7 @@ module STARMAN
         @@active_compiler_set_index = compiler_set_index
         @@active_compiler_set = @@compiler_sets[compiler_set_index]
         @@active_compiler_set.compilers.each do |language, compiler|
-          System::Bash.set LanguageCompilerVariableNames[language], compiler.languages[language][:command]
+          System::Shell.set LanguageCompilerVariableNames[language], compiler.languages[language][:command]
         end
       end
 

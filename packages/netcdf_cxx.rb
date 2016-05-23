@@ -14,8 +14,6 @@ module STARMAN
       :accept_value => { :boolean => false }
     }
 
-    depends_on :netcdf_c
-
     def install
       args = %W[
         --prefix=#{prefix}

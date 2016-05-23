@@ -14,11 +14,11 @@ module STARMAN
         cmd_str = "#{cmd} #{options.join(' ')}"
         if CommandLine.options[:debug].value
           CLI.blue_arrow cmd_str
-          print File.open(System::Bash.shell_board_file, 'r').read
+          print File.open(System::Shell.shell_board_file, 'r').read
         else
           CLI.blue_arrow cmd_str, :truncate
         end
-        cmd_str = "source #{System::Bash.shell_board_file} && #{cmd_str}"
+        cmd_str = "source #{System::Shell.shell_board_file} && #{cmd_str}"
         if not CommandLine.options[:verbose].value
           cmd_str << " 1>#{ConfigStore.package_root}/stdout.#{Process.pid}" +
                      " 2>#{ConfigStore.package_root}/stderr.#{Process.pid}"

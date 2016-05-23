@@ -20,11 +20,17 @@ module STARMAN
     end
 
     def profile
+      option_profile = {}
+      self.options.each_key do |name|
+        next if self.options[name].extra[:common]
+        option_profile[name] = self.options[name].value
+      end
       {
         :name => self.name,
         :version => self.version.to_s,
         :revision => self.revision,
-        :sha256 => self.sha256
+        :sha256 => self.sha256,
+        :options => option_profile
       }
     end
 

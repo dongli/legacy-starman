@@ -6,13 +6,13 @@ module STARMAN
 
     [:homepage, :url, :mirror, :sha256, :version, :filename, :group_master].each do |attr|
       class_eval <<-EOT
-        def #{attr} val
+        def #{attr} val = nil
           latest.#{attr} val
         end
       EOT
     end
 
-    [:label, :language].each do |attr|
+    [:label, :has_label?, :language].each do |attr|
       class_eval <<-EOT
         def #{attr} *val
           latest.#{attr} *val
@@ -20,7 +20,15 @@ module STARMAN
       EOT
     end
 
-    def revision val, **options
+    [:languages, :options].each do |attr|
+      class_eval <<-EOT
+        def #{attr}
+          latest.#{attr}
+        end
+      EOT
+    end
+
+    def revision val = nil, **options
       latest.revision val, options
     end
 

@@ -2,7 +2,11 @@ module STARMAN
   module System
     class Bash
       def self.shell_board_file
-        @@shell_board_file ||= "#{ENV['STARMAN_ROOT']}/.starman.bash.#{Process.pid}"
+        if CommandLine.command == :shell
+          @@shell_board_file ||= "#{ConfigStore.install_root}/starman.bashrc.#{CompilerStore.active_compiler_set_index}"
+        else
+          @@shell_board_file ||= "#{ENV['STARMAN_ROOT']}/.starman.bash.#{Process.pid}"
+        end
       end
 
       def self.init
@@ -10,7 +14,7 @@ module STARMAN
       end
 
       def self.final
-        return if not File.exist? shell_board_file
+        return if not File.exist? shell_board_file or CommandLine.command == :shell
         FileUtils.rm shell_board_file
       end
 

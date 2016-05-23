@@ -28,8 +28,8 @@ module STARMAN
             PackageInstaller.run package
           end
           # Set environment variables for later packages that depend on it.
-          System::Bash.append 'CPPFLAGS', "-I#{package.inc}" if package.inc
-          System::Bash.append 'LDFLAGS', "-L#{package.lib}" if package.lib
+          System::Shell.append 'CPPFLAGS', "-I#{package.inc}" if package.inc
+          System::Shell.append 'LDFLAGS', "-L#{package.lib}" if package.lib
         end
       end
     end

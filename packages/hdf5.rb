@@ -42,17 +42,15 @@ module STARMAN
       else
         args << '--disable-cxx'
       end
-      if CompilerStore.compiler :fortran
-        if with_fortran?
-          args << '--enable-fortran'
-          args << '--enable-fortran2003' if CompilerStore.compiler(:fortran).feature_fortran2003?
-        else
-          args << '--disable-fortran'
-        end
+      if with_fortran?
+        args << '--enable-fortran'
+        args << '--enable-fortran2003' if CompilerStore.compiler(:fortran).feature_fortran2003?
+      else
+        args << '--disable-fortran'
       end
       run './configure', *args
       run 'make'
-      run 'make', 'check'
+      run 'make', 'check' if not skip_test?
       run 'make', 'install'
     end
   end

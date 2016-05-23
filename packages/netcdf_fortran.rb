@@ -14,12 +14,7 @@ module STARMAN
       :accept_value => { :boolean => false }
     }
 
-    depends_on :netcdf_c
-
     def install
-      if not CompilerStore.compiler(:fortran)
-        CLI.report_error 'Fortran compiler is not available in this compiler set!'
-      end
       args = %W[
         --prefix=#{prefix}
         --disable-dependency-tracking
