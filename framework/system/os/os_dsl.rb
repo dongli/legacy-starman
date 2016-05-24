@@ -4,7 +4,7 @@ module STARMAN
       base.extend self
     end
 
-    [:type, :version].each do |attr|
+    [:type, :version, :soname, :ld_library_path].each do |attr|
       class_eval <<-EOT
         def #{attr} val = nil, &block
           spec.#{attr} val, &block

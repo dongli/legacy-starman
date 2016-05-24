@@ -11,38 +11,18 @@ STARMAN::System::Shell.init
 STARMAN::ConfigStore.run
 STARMAN::Storage.init :qiniu
 
+STARMAN::DirtyWorks.handle_absent_compiler STARMAN::CommandLine.packages
 
-################################################################################
-# The following codes are really mess! They are just used to handle edge cases.
-# Change command line and package options that set build language bindings.
-[:c, :cxx, :fortran].each do |language|
-  next if STARMAN::CompilerStore.compiler(language)
-  STARMAN::CommandLine.packages.each_value do |package|
-    if package.languages == [language]
-      # The package only provides bindings in this language, we should exclude it.
-      STARMAN::CommandLine.packages.each_value do |other_package|
-        next if other_package == package
-        other_package.dependencies.delete(package.name)
-        other_package.slaves.delete(package)
-      end
-      STARMAN::CommandLine.packages.delete package.name
-    end
-    next if not package.options[:"with-#{language}"]
-    package.options[:"with-#{language}"].check 'false'
-  end
-  next if not STARMAN::CommandLine.options[:"with-#{language}"]
-  STARMAN::CommandLine.options[:"with-#{language}"].check 'false'
+def clean
+  STARMAN::System::Shell.final
+  FileUtils.rm_f "#{STARMAN::ConfigStore.package_root}/stdout.#{Process.pid}"
+  FileUtils.rm_f "#{STARMAN::ConfigStore.package_root}/stderr.#{Process.pid}"
 end
-################################################################################
 
 Kernel.trap('INT') do
   print "GOOD BYE!\n"
-  STARMAN::System::Shell.final
+  clean
   exit
 end
 
-at_exit {
-  if $!
-    STARMAN::System::Shell.final
-  end
-}
+at_exit { clean if $! }

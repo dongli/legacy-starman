@@ -1,6 +1,6 @@
 module STARMAN
   class OsSpec
-    [:type].each do |attr|
+    [:type, :soname, :ld_library_path].each do |attr|
       class_eval <<-EOT
         def #{attr} val = nil, &block
           if block_given?

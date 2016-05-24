@@ -16,12 +16,16 @@ module STARMAN
           EOT
         end
 
-        [:set, :append].each do |action|
+        [:set, :append, :prepend].each do |action|
           class_eval <<-EOT
             def #{action} keys, value, **options
               @@shell.#{action} keys, value, **options
             end
           EOT
+        end
+
+        def shell_command
+          ConfigStore.defaults[:shell]
         end
       end
     end

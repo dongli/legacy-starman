@@ -43,6 +43,10 @@ module STARMAN
         "#{@@os.type}_#{@@os.version.major_minor}"
       end
 
+      def mac?
+        @@os.type == :mac
+      end
+
       protected
 
       def os_name

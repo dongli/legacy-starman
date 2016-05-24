@@ -13,11 +13,11 @@ module STARMAN
     end
 
     def inc
-      "#{prefix}/include" if Dir.exist? "#{prefix}/include"
+      "#{prefix}/include"
     end
 
     def lib
-      "#{prefix}/lib" if Dir.exist? "#{prefix}/lib"
+      "#{prefix}/lib"
     end
   end
 end

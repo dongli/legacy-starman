@@ -33,7 +33,26 @@ module STARMAN
         separator = options[:separator] || ' '
         Array(keys).each do |key|
           if not content.gsub!(/export #{key}="([^\)"]+)"/, "export #{key}=\"\\1#{separator}#{value}\"")
-            content << "export #{key}=\"#{value}\"\n"
+            if options[:system]
+              content << "export #{key}=\"$#{key}#{separator}#{value}\"\n"
+            else
+              content << "export #{key}=\"#{value}\"\n"
+            end
+          end
+        end
+        write content
+      end
+
+      def self.prepend keys, value, **options
+        content = File.open(shell_board_file, 'r').read
+        separator = options[:separator] || ' '
+        Array(keys).each do |key|
+          if not content.gsub!(/export #{key}="([^\)"]+)"/, "export #{key}=\"#{value}#{separator}\\1\"")
+            if options[:system]
+              content << "export #{key}=\"#{value}#{separator}$#{key}\"\n"
+            else
+              content << "export #{key}=\"#{value}\"\n"
+            end
           end
         end
         write content

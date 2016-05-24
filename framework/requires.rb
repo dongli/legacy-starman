@@ -15,6 +15,7 @@ require 'utils/cli'
 require 'utils/option_spec'
 require 'utils/version_spec'
 require 'utils/helpers'
+require 'utils/dirty_works'
 
 require 'system/command/helpers'
 require 'system/command/pkgconfig'

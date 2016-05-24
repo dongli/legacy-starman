@@ -4,5 +4,3 @@ $LOAD_PATH << "#{ENV['STARMAN_ROOT']}/framework"
 require 'starman'
 
 eval("STARMAN::Command::#{STARMAN::CommandLine.command.capitalize}").run
-
-STARMAN::System::Shell.final

@@ -53,5 +53,24 @@ module STARMAN
     def self.packages
       @@packages
     end
+
+    def self.installed_packages
+      if not defined? @@installed_packages
+        @@installed_packages ||= {}
+        Dir.glob("#{ConfigStore.install_root}/*").each do |dir|
+          next if not File.directory? dir
+          name = File.basename(dir).to_sym
+          load_package name
+          package = packages[name][:instance]
+          @@installed_packages[name] = package
+          if package.has_label? :group_master
+            package.slaves.each do |slave|
+              @@installed_packages[slave.name] = slave
+            end
+          end
+        end
+      end
+      @@installed_packages
+    end
   end
 end
