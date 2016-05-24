@@ -1,2 +1,8 @@
 ---
-szip-2.1-mac_10.11-clang_7.0-0-da39a3ee5e6b4b0d3255bfef95601890afd80709: 33e0bf981c1ccef4dc0a687d6e0e18e87a46441b19e4373ed82a540b85f9d754
+02cd3b765ddb18cac77692a5472174bb22b860dee5f6011f16f4171935680b93:
+  :name: :szip
+  :version: '2.1'
+  :revision:
+    0: {}
+  :sha256: a816d95d5662e8279625abdbea7d0e62157d7d1f028020b1075500bf483ed5ef
+  :options: {}

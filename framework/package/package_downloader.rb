@@ -6,15 +6,11 @@ module STARMAN
     def self.run package
       # Check if there is a precompiled binary first.
       if not CommandLine.options[:'local-build'].value
-        _package = package.group_master || package
-        record = PackageBinary.read_record _package
-        file_path = "#{ConfigStore.package_root}/#{Storage.tar_name _package}"
-        if File.exist? file_path
-          return :binary if sha_same? file_path, record[_package.tag]
-        end
-        if not record.empty? and Storage.uploaded? _package
-          CLI.report_notice "Downloading precompiled package #{CLI.blue _package.name}."
-          Storage.download _package
+        if PackageBinary.has? package
+          if not PackageBinary.match? package
+            CLI.report_notice "Downloading precompiled package #{CLI.blue _package.name}."
+            Storage.download _package
+          end
           return :binary
         end
       end

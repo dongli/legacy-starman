@@ -11,9 +11,23 @@ module STARMAN
       def write_record package
         file = record_file package
         record = File.exist?(file) ? YAML.load(File.open(file, 'r').read) : {}
-        record[package.tag] = Digest::SHA256.hexdigest(File.read("#{ConfigStore.package_root}/#{package.tag}.tgz"))
+        sha = Digest::SHA256.hexdigest(File.read "#{ConfigStore.package_root}/#{package.tag}.tgz")
+        record[sha] = package.profile
         CLI.report_notice "Record binary #{CLI.blue package.tag}."
         File.open(file, 'w').write record.to_yaml
+      end
+
+      def has? package
+        _package = package.group_master || package
+        record = PackageBinary.read_record _package
+        not record.empty? and Storage.uploaded? _package
+      end
+
+      def match? package
+        _package = package.group_master || package
+        record = PackageBinary.read_record _package
+        file_path = "#{ConfigStore.package_root}/#{Storage.tar_name _package}"
+        File.exist? file_path and record.keys.include? Digest::SHA256.hexdigest(File.read file_path)
       end
 
       def run package

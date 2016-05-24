@@ -1,2 +1,10 @@
 ---
-netcdf-netcdf_cxx_4.3.0-0-netcdf_c_4.4.0-0-mac_10.11-clang++_7.0-clang_7.0-0ddd90d59f2dca5730c910a35542c5f898718b27: 3e11f66b75b3e9785c8527f3fe20f8b8dfdf59b02e7e66b2e032bacac7c1e193
+43cb723aed37aa8ed631fe3cc531360965f081414836362513a9058413fe23f5:
+  :name: :netcdf
+  :version: 4.4.0
+  :revision:
+    0: {}
+  :sha256: 
+  :options:
+    :with-cxx: true
+    :with-fortran: false

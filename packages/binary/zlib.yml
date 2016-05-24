@@ -1,2 +1,8 @@
 ---
-zlib-1.2.8-mac_10.11-clang_7.0-0-da39a3ee5e6b4b0d3255bfef95601890afd80709: 41770c9e0613037008937de3ae706265989832ae54d73216e886449b4a77e5c5
+75fce1fbf7fbb91ddfc47d97e8ce546be7a832c32b8186f0ef4a8def9ea21f79:
+  :name: :zlib
+  :version: 1.2.8
+  :revision:
+    0: {}
+  :sha256: 36658cb768a54c1d4dec43c3116c27ed893e88b02ecfcb44f2166f9c0b7f2a0d
+  :options: {}

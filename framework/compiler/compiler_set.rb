@@ -36,5 +36,13 @@ module STARMAN
     def compilers
       @compilers ||= {}
     end
+
+    def tag
+      res = ''
+      @compilers.each do |language, compiler|
+        res << "-#{compiler.tag language}"
+      end
+      res
+    end
   end
 end

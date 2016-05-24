@@ -1,2 +1,11 @@
 ---
-hdf5-1.8.16-mac_10.11-clang_7.0-clang++_7.0-0-006c320efd1c250024959184da950a176e0e3180: c2693365a6e8ee27e713f7ae6a9247c1fbe062cb28ea8c8178c853bf8b016eaf
+ab57d093652e41b2ff9f2ac1529288e98aec818f37e0c8f2280afde7c68dabf7:
+  :name: :hdf5
+  :version: 1.8.16
+  :revision:
+    0: {}
+  :sha256: 13aaae5ba10b70749ee1718816a4b4bfead897c2fcb72c24176e759aec4598c6
+  :options:
+    :with-mpi: false
+    :with-cxx: true
+    :with-fortran: false
