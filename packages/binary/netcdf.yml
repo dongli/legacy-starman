@@ -8,3 +8,12 @@
   :options:
     :with-cxx: true
     :with-fortran: false
+08bbab0be41d5518d42031505dab6081de05070850182158956758fea13a6370:
+  :name: :netcdf
+  :version: 4.4.0
+  :revision:
+    0: {}
+  :sha256: 
+  :options:
+    :with-cxx: true
+    :with-fortran: false

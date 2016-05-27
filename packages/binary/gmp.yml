@@ -1,0 +1,15 @@
+---
+7e6bd825795673095a12538532c6a0e49bff0c282a278a829cee17b26425016a:
+  :name: :gmp
+  :version: 6.1.0
+  :revision:
+    0: {}
+  :sha256: 68dadacce515b0f8a54f510edf07c1b636492bcdb8e8d54c56eb216225d16989
+  :options: {}
+20e19215110eedd1803cf45af2f2a8f29ba05e2d126fdf034a90cc50ca691f69:
+  :name: :gmp
+  :version: 6.1.0
+  :revision:
+    0: {}
+  :sha256: 68dadacce515b0f8a54f510edf07c1b636492bcdb8e8d54c56eb216225d16989
+  :options: {}

@@ -5,6 +5,7 @@ module STARMAN
         if system_command? :curl
           filename = options[:rename] ? options[:rename] : File.basename(URI.parse(url).path)
           system "curl -f#L -C - -o #{root}/#{filename} #{url}"
+          CLI.report_error "Failed to download #{CLI.red url}!" if not $?.success?
         end
       end
     end

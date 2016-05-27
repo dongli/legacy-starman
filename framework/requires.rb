@@ -22,6 +22,7 @@ require 'system/command/pkgconfig'
 require 'system/command/curl'
 require 'system/command/cd'
 require 'system/command/tar'
+require 'system/command/replace'
 require 'system/command/decompress'
 
 require 'system/shell/bash'

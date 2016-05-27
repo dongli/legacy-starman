@@ -11,5 +11,6 @@ module STARMAN
     flag :openmp => '-fopenmp'
     flag :pic => '-fPIC'
     flag :libcxx => '-lc++'
+    flag :cxx11 => '-std=c++11 -stdlib=libc++'
   end
 end

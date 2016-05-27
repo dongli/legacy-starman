@@ -1,0 +1,15 @@
+---
+4477e3a9bc847267f1611978495ecccaf349d1ecfb2e9f023d60b3cc1106bc91:
+  :name: :isl
+  :version: 0.17.1
+  :revision:
+    0: {}
+  :sha256: d6307bf9a59514087abac3cbaab3d99393a0abb519354f7e7834a8c842310daa
+  :options: {}
+372c9aa874d4b484e09c561fd689830d58a01839e82c29dbc75934b3116b6564:
+  :name: :isl
+  :version: 0.17.1
+  :revision:
+    0: {}
+  :sha256: d6307bf9a59514087abac3cbaab3d99393a0abb519354f7e7834a8c842310daa
+  :options: {}

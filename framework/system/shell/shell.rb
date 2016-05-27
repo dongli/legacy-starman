@@ -8,7 +8,7 @@ module STARMAN
           @@shell.init
         end
 
-        [:shell_board_file, :final].each do |action|
+        [:rc_file, :final].each do |action|
           class_eval <<-EOT
             def #{action}
               @@shell.#{action}

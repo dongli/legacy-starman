@@ -5,18 +5,23 @@ module STARMAN
     class << self
       def read_profile package
         profile_file = "#{package.prefix}/#{package.name}.profile"
-        File.exist?(profile_file) ? YAML.load(File.open(profile_file, 'r').read) : {}
+        File.exist?(profile_file) ? YAML.load(File.read(profile_file)) : {}
       end
 
       def write_profile package
         profile = package.profile
+        profile[:os_tag] = OS.tag
+        profile[:compiler_tag] = CompilerStore.active_compiler_set.tag.sub('-', '')
         package.dependencies.each do |depend_name, options|
           depend = CommandLine.packages[depend_name]
           profile[:dependencies] ||= {}
           profile[:dependencies][depend_name] = depend.profile
         end
         profile_file = "#{package.prefix}/#{package.name}.profile"
-        File.new(profile_file, 'w').write profile.to_yaml
+        File.open(profile_file, 'w') do |file|
+          file.write(profile.to_yaml)
+          file.close
+        end
       end
 
       def installed? package
@@ -43,6 +48,7 @@ module STARMAN
             CLI.report_error "There are multiple directories in #{CLI.red dir}."
           end
         end
+        FileUtils.rm_r dir
       end
     end
   end

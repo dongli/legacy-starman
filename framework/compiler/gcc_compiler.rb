@@ -7,5 +7,6 @@ module STARMAN
     flag :openmp => '-fopenmp'
     flag :pic => '-fPIC'
     flag :libcxx => '-lstdc++'
+    flag :cxx11 => '-std=c++11'
   end
 end
