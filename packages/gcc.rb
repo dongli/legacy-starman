@@ -10,7 +10,8 @@ module STARMAN
 
     option 'with-fortran', {
       desc: 'Build gfortran compiler.',
-      accept_value: { boolean: true }
+      accept_value: { boolean: true },
+      extra: { need_compiler: false }
     }
 
     depends_on :gmp
@@ -18,11 +19,19 @@ module STARMAN
     depends_on :mpc
     depends_on :isl
 
+    def shipped_compilers
+      compilers = {
+        c: 'gcc',
+        cxx: 'g++'
+      }
+      compilers[:fortran] = 'gfortran' if with_fortran?
+      compilers
+    end
+
     def install
-      languages = %W[c c++ fortran]
       args = %W[
         --prefix=#{prefix}
-        --enable-languages=#{languages.join(',')}
+        --enable-languages=#{shipped_compilers.keys.join(',').gsub('cxx', 'c++')}
         --with-gmp=#{Gmp.prefix}
         --with-mpfr=#{Mpfr.prefix}
         --with-mpc=#{Mpc.prefix}
@@ -40,7 +49,7 @@ module STARMAN
       work_in 'build' do
         run '../configure', *args
         run 'make', 'bootstrap'
-        run 'make', 'install'
+        run 'make', 'install', :single_job
       end
     end
   end

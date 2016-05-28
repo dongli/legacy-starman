@@ -11,10 +11,6 @@ module STARMAN
       end
       @compilers = {}
       command_hash.each do |language, command|
-        if language == :install_by_starman
-
-          next
-        end
         if language.to_s =~ /^mpi_(c|cxx|fortran)/
           actual_language = language.to_s.gsub('mpi_', '').to_sym
         else

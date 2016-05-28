@@ -1,17 +1,21 @@
 module STARMAN
   class CommandLine
     CommonOptions = {
-      :debug => OptionSpec.new(
-        :desc => 'Turn on debug stuffs, may output more information.',
-        :accept_value => { :boolean => false }
+      debug: OptionSpec.new(
+        desc: 'Turn on debug stuffs, may output more information.',
+        accept_value: { boolean: false }
       ),
-      :verbose => OptionSpec.new(
-        :desc => 'Show more outputs, such as command run output.',
-        :accept_value => { :boolean => false }
+      verbose: OptionSpec.new(
+        desc: 'Show more outputs, such as command run output.',
+        accept_value: { boolean: false }
       ),
-      :config => OptionSpec.new(
-        :desc => 'Configuration file.',
-        :accept_value => { :path => "#{ENV['STARMAN_ROOT']}/starman.config" }
+      config: OptionSpec.new(
+        desc: 'Configuration file.',
+        accept_value: { path: "#{ENV['STARMAN_ROOT']}/starman.config" }
+      ),
+      :'make-jobs' => OptionSpec.new(
+        desc: 'Make job number.',
+        accept_value: { integer: 1 }
       )
     }
 

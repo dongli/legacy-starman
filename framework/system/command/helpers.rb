@@ -11,6 +11,10 @@ module STARMAN
       end
 
       def run cmd, *options
+        if cmd == 'make' and not options.include? :single_job
+          options << "-j#{CommandLine.options[:'make-jobs'].value}"
+        end
+        options.delete(:single_job)
         cmd_str = "#{cmd} #{options.join(' ')}"
         if CommandLine.options[:debug].value
           CLI.blue_arrow cmd_str

@@ -32,6 +32,14 @@ module STARMAN
           System::Shell.prepend OS.ld_library_path, package.lib, separator: ':' if Dir.exist? package.lib
           System::Shell.append 'CPPFLAGS', "-I#{package.inc}" if Dir.exist? package.inc
           System::Shell.append 'LDFLAGS', "-L#{package.lib}" if Dir.exist? package.lib
+          # Handle compiler package.
+          next if not package.has_label? :compiler
+          new_compiler_set_index = :"compiler_set_#{CompilerStore.compiler_sets.size}"
+          ConfigStore.config[new_compiler_set_index] = {}
+          package.shipped_compilers.each do |language, command|
+            ConfigStore.config[new_compiler_set_index][language] = "#{package.bin}/#{command}"
+          end
+          ConfigStore.write
         end
       end
     end

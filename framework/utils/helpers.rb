@@ -20,5 +20,13 @@ module STARMAN
         CLI.report_error "Unknown file type \"#{file_path}\"!"
       end
     end
+
+    def symbolize_keys hash
+      hash = hash.inject({}) { |memo, (k,v)| memo[k.to_sym] = v; memo }
+    end
+
+    def stringfy_keys hash
+      hash = hash.inject({}) { |memo, (k,v)| memo[k.to_s] = v; memo }
+    end
   end
 end

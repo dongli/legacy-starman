@@ -23,9 +23,13 @@ module STARMAN
 
     def version val = nil, &block
       if block_given?
-        @version = VersionSpec.new block.call
+        @version = block
       else
-        @version = VersionSpec.new val if val
+        if val
+          @version = VersionSpec.new val
+        elsif @version.class == Proc
+          @version = VersionSpec.new @version.call
+        end
       end
       @version
     end

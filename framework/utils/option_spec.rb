@@ -7,7 +7,8 @@ module STARMAN
       :package,
       :path,
       :boolean,
-      :string
+      :string,
+      :integer
     ].freeze
 
     def initialize **options
@@ -43,6 +44,12 @@ module STARMAN
         end
       when :string
         raise 'String value is needed!' if value == ''
+      when :integer
+        begin
+          value = Integer(value)
+        rescue => e
+          raise 'Integer value is needed!'
+        end
       end
       @value = value
     end

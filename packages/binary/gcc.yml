@@ -1,9 +1,9 @@
 ---
-f45729f836721e0690e084dc7b08b6c27c789356e8faeabd311c9267b7c3f593:
+f38904cb66505d7bdc271823c8b4d5dd5a4b8fddf34caf7fd86e7bf31e577801:
   :name: :gcc
   :version: 6.1.0
   :revision:
     0: {}
   :sha256: 09c4c85cabebb971b1de732a0219609f93fc0af5f86f6e437fd8d7f832f1a351
   :options:
-    :with-fortran: false
+    :with-fortran: true

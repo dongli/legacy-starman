@@ -1,6 +1,7 @@
 module STARMAN
   module DirtyWorks
     def self.handle_absent_compiler packages
+      return if CommandLine.command == :config
       ################################################################################
       # The following codes are really mess! They are just used to handle edge cases.
       # Change command line and package options that set build language bindings.
@@ -17,7 +18,9 @@ module STARMAN
             packages.delete package.name
           end
           next if not package.options[:"with-#{language}"]
-          package.options[:"with-#{language}"].check 'false'
+          if package.options[:"with-#{language}"].extra[:need_compiler] != false
+            package.options[:"with-#{language}"].check 'false'
+          end
         end
         next if not CommandLine.options[:"with-#{language}"]
         CommandLine.options[:"with-#{language}"].check 'false'

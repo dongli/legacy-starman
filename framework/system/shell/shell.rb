@@ -8,10 +8,10 @@ module STARMAN
           @@shell.init
         end
 
-        [:rc_file, :final].each do |action|
+        [:rc_file, :reset_rc_file, :final].each do |action|
           class_eval <<-EOT
             def #{action}
-              @@shell.#{action}
+              @@shell.#{action} if defined? @@shell
             end
           EOT
         end

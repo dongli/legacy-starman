@@ -5,6 +5,10 @@ module STARMAN
         @@rc_file ||= "#{ConfigStore.install_root}/starman.bashrc.#{CompilerStore.active_compiler_set_index}"
       end
 
+      def self.reset_rc_file
+        @@rc_file = "#{ConfigStore.install_root}/starman.bashrc.#{CompilerStore.active_compiler_set_index}"
+      end
+
       def self.mode
         @@mode ||= CommandLine.command == :shell ? :file : :env
       end
