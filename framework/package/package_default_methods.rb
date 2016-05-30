@@ -4,6 +4,10 @@ module STARMAN
       base.extend self
     end
 
+    def export_env
+      {}
+    end
+
     def pre_install
     end
 

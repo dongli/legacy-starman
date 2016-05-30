@@ -11,7 +11,12 @@ module STARMAN
       CommandLine.options.each do |name, value|
         next unless package.options.has_key? name
         begin
-          package.options[name].check value
+          if value.class == String
+            package.options[name].check value
+            CommandLine.options[name] = package.options[name]
+          else
+            package.options[name] = value
+          end
         rescue => e
           CLI.report_error "Package option #{CLI.red name}: #{e}"
         end
@@ -36,6 +41,8 @@ module STARMAN
       CommandLine.packages[name] = package # Record the package to install.
       packages[name][:instance] = package
       package.dependencies.each do |depend_name, options|
+        # TODO: Change package.dependencies.
+        depend_name = PackageAlias.lookup depend_name if not packages.has_key? depend_name
         load_package depend_name, options
       end
     end

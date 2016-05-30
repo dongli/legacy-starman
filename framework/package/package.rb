@@ -5,6 +5,7 @@ module STARMAN
     include PackageParams
     include PackageDefaultMethods
     include PackageShortcuts
+    include PackageHelpers
 
     extend Forwardable
     def_delegators :@latest, :homepage, :url, :mirror, :sha256, :version

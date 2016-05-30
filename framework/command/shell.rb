@@ -28,8 +28,11 @@ module STARMAN
           PackageLoader.installed_packages.each_value do |package|
             next if not Dir.exist? package.prefix
             System::Shell.prepend 'PATH', package.bin, separator: ':', system: true if Dir.exist? package.bin
-            System::Shell.prepend OS.ld_library_path, package.lib, separator: ':', system: true if Dir.exist? package.lib
+            System::Shell.prepend OS.ld_library_path, package.lib, separator: ':', system: true if Dir.exist? package.lib and not package.has_label? :system_conflict
             System::Shell.set "#{package.name.to_s.upcase}_ROOT", package.prefix
+            package.export_env.each do |key, value|
+              System::Shell.set key, value
+            end
           end
           System::Shell.set 'PS1', '\e[0;34m\u\e[m@\e[0;32mstarman\e[m \W$ '
           System::Shell.set 'CLICOLOR', 'xterm-color'

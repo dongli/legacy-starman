@@ -3,7 +3,7 @@ module STARMAN
     LanguageCompilerVariableNames = {
       :c => 'CC',
       :cxx => 'CXX',
-      :fortran => 'FC'
+      :fortran => ['FC', 'F77']
     }
 
     class << self

@@ -17,3 +17,12 @@
   :options:
     :with-cxx: true
     :with-fortran: false
+a185684184f5aff49230636c6bf1d7d433eda46e55b35cb729984a5fc2b6b503:
+  :name: :netcdf
+  :version: 4.4.0
+  :revision:
+    0: {}
+  :sha256: 
+  :options:
+    :with-cxx: true
+    :with-fortran: true

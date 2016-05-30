@@ -43,7 +43,9 @@ module STARMAN
         res << "-#{slave.revision.keys.last}" if not slave.revision.empty?
       end
       res << "-#{OS.tag}"
-      res << "-#{CompilerStore.active_compiler_set.tag}" if not self.group_master.has_label? :compiler
+      if not self.group_master.has_label? :compiler and not self.group_master.has_label? :compiler_agnostic
+        res << "-#{CompilerStore.active_compiler_set.tag}"
+      end
       self.group_master.slaves.each do |slave|
         slave.options.each do |option_name, option_options|
           next if option_options.extra[:common]
@@ -62,7 +64,9 @@ module STARMAN
         res << "-#{slave.revision.keys.last}" if not slave.revision.empty?
       end
       res << "-#{OS.tag}"
-      res << "-#{CompilerStore.active_compiler_set.tag}" if not self.has_label? :compiler
+      if not self.has_label? :compiler and not self.has_label? :compiler_agnostic
+        res << "-#{CompilerStore.active_compiler_set.tag}"
+      end
       self.slaves.each do |slave|
         slave.options.each do |option_name, option_options|
           next if option_options.extra[:common]
@@ -76,7 +80,9 @@ module STARMAN
     def normal_tag debug = false
       name = self.class == Class ? package_name : self.name
       res = "#{name}-#{self.version}-#{OS.tag}"
-      res << "-#{CompilerStore.active_compiler_set.tag}" if not self.has_label? :compiler
+      if not self.has_label? :compiler and not self.has_label? :compiler_agnostic
+        res << "-#{CompilerStore.active_compiler_set.tag}"
+      end
       res << "-#{revision.keys.last}" if not revision.empty?
       self.options.each do |option_name, option_options|
         next if option_options.extra[:common]

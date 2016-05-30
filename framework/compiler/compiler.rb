@@ -3,7 +3,7 @@ module STARMAN
     include CompilerDSL
 
     extend Forwardable
-    def_delegators :spec, :vendor, :version, :languages, :flags
+    def_delegators :spec, :vendor, :version, :languages, :flags, :feature?
 
     attr_reader :spec
 

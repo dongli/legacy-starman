@@ -22,14 +22,13 @@ module STARMAN
         else
           CLI.blue_arrow cmd_str, :truncate
         end
-        cmd_str = "source #{System::Shell.rc_file} && #{cmd_str}"
         if not CommandLine.options[:verbose].value
           cmd_str << " 1>#{ConfigStore.package_root}/stdout.#{Process.pid}" +
                      " 2>#{ConfigStore.package_root}/stderr.#{Process.pid}"
         end
         system cmd_str
         if not $?.success?
-          CLI.report_error "Failed to run #{cmd}.\n"
+          CLI.report_error "Failed to run #{cmd_str}.\n"
         end
       end
 

@@ -13,5 +13,9 @@ module STARMAN
     flag :pic => '-fPIC'
     flag :libcxx => '-lstdc++'
     flag :cxx11 => '-std=c++11'
+    feature :fortran2003 do
+      res = `#{spec.languages[:fortran][:command]} -std=f2003 2>&1`.match(/-std=f2003/)
+      not res
+    end
   end
 end

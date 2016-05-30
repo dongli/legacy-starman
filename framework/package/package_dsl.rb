@@ -28,7 +28,7 @@ module STARMAN
       EOT
     end
 
-    def revision val = nil, **options
+    def revision val = nil, options = {}
       latest.revision val, options
     end
 
@@ -66,13 +66,13 @@ module STARMAN
       end
     end
 
-    def option val, **options
+    def option val, options = {}
       latest.option val, options
       # Only allow latest spec can have options.
       create_option_helpers val, :latest
     end
 
-    def depends_on val, **options
+    def depends_on val, options = {}
       latest.depends_on val, options
     end
 

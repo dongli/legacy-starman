@@ -1,0 +1,15 @@
+---
+c5104d8070a8c03610777eae59fcfece16b5a5a6f7e353b9a1e59f193589a838:
+  :name: :bzip2
+  :version: 1.0.6
+  :revision:
+    0: {}
+  :sha256: a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd
+  :options: {}
+e1a2239d03d1707966a32457885400c6127c16a309da29956669e250b0c8aefe:
+  :name: :bzip2
+  :version: 1.0.6
+  :revision:
+    0: {}
+  :sha256: a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd
+  :options: {}

@@ -58,7 +58,7 @@ module STARMAN
       @url
     end
 
-    def revision val = nil, **options
+    def revision val = nil, options = {}
       if val
         @revision[val] = options
       elsif @revision.empty?
@@ -74,12 +74,12 @@ module STARMAN
 
     attr_reader :options, :dependencies, :slaves
 
-    def option val, **options
+    def option val, options = {}
       # Should not override option.
       @options[val.to_sym] = OptionSpec.new(options) if not @options.has_key? val.to_sym
     end
 
-    def depends_on val, **options
+    def depends_on val, options = {}
       @dependencies[val] = options
     end
   end

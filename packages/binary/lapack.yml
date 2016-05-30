@@ -1,0 +1,8 @@
+---
+e856146b0f9d58abd7d873d56e03dc125a7c0026864fc93e38b3f33ac22d5e5d:
+  :name: :lapack
+  :version: 3.6.0
+  :revision:
+    0: {}
+  :sha256: a9a0082c918fe14e377bbd570057616768dca76cbdc713457d8199aaa233ffc3
+  :options: {}

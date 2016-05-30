@@ -90,6 +90,18 @@ module STARMAN
         end
       end
 
+      def self.whitelist keys, **options
+        separator = options[:separator] || ' '
+        Array(keys).each do |key|
+          new_value = []
+          ENV[key].split(separator).each do |value|
+            next if not System::Shell.whitelists[key].include? value
+            new_value << value
+          end
+          ENV[key] = new_value.join(separator)
+        end
+      end
+
       private
 
       def self.write content

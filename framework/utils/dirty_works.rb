@@ -16,6 +16,9 @@ module STARMAN
               other_package.slaves.delete(package)
             end
             packages.delete package.name
+            if CommandLine.command == :install
+              CLI.report_warning "Package #{CLI.red package.name} cannot be installed due to no #{language} compiler."
+            end
           end
           next if not package.options[:"with-#{language}"]
           if package.options[:"with-#{language}"].extra[:need_compiler] != false

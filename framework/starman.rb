@@ -4,9 +4,8 @@ $LOAD_PATH << "#{ENV['STARMAN_ROOT']}/packages"
 
 STARMAN::OS.init
 STARMAN::CommandLine.run
-STARMAN::PackageLoader.run
-STARMAN::CommandLine.check_options
 STARMAN::ConfigStore.init
+STARMAN::PackageLoader.run
 STARMAN::System::Shell.init
 STARMAN::ConfigStore.run
 STARMAN::Storage.init :qiniu

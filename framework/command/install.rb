@@ -19,6 +19,7 @@ module STARMAN
       end
 
       def self.run
+        System::Shell.whitelist ['PATH', OS.ld_library_path], separator: ':'
         CommandLine.packages.values.reverse_each do |package|
           next if package.has_label? :group_master
           case PackageDownloader.run package
@@ -29,7 +30,7 @@ module STARMAN
           end
           # Set environment variables for later packages that depend on it.
           System::Shell.prepend 'PATH', package.bin, separator: ':' if Dir.exist? package.bin
-          System::Shell.prepend OS.ld_library_path, package.lib, separator: ':' if Dir.exist? package.lib
+          System::Shell.prepend OS.ld_library_path, package.lib, separator: ':' if Dir.exist? package.lib and not package.has_label? :system_conflict
           System::Shell.append 'CPPFLAGS', "-I#{package.inc}" if Dir.exist? package.inc
           System::Shell.append 'LDFLAGS', "-L#{package.lib}" if Dir.exist? package.lib
           # Handle compiler package.

@@ -13,7 +13,7 @@ module STARMAN
       EOT
     end
 
-    attr_reader :languages, :flags, :features
+    attr_reader :languages, :flags
 
     def initialize
       @languages = {}
@@ -44,10 +44,15 @@ module STARMAN
 
     def feature val, &block
       if block_given?
-        @features[val.to_sym] = block.call
+        @features[val] = block
       else
-        @features[val.to_sym] = true
+        @features[val] = true
       end
+    end
+
+    def feature? val
+      @features[val] = @features[val].call if @features[val].class == Proc
+      @features[val]
     end
   end
 end

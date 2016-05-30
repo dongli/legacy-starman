@@ -20,6 +20,7 @@ module STARMAN
     }
 
     def self.run
+      @@options ||= {}
       ARGV.each do |arg|
         if not defined? @@command and Command.constants.include? arg.capitalize.to_sym
           @@command = arg.to_sym
@@ -27,7 +28,6 @@ module STARMAN
           if arg =~ /^-/
             option = arg.gsub(/(^-)|(=.*$)/, '').to_sym
             value = arg.gsub(/^-[^=]+/, '').delete('=')
-            @@options ||= {}
             @@options[option] = value
           elsif PackageLoader.has_package? arg
             @@packages ||= {}
@@ -38,17 +38,15 @@ module STARMAN
       if not defined? @@command
         CLI.report_error "You haven't specify command!"
       end
+      check_command_options
     end
 
-    def self.check_options
+    def self.check_command_options
       options.each do |name, value|
         option_spec = nil
-        packages.values.each do |package|
-          option_spec = package.options[name]
-          break if option_spec
-        end
         option_spec ||= eval("Command::#{@@command.capitalize.to_sym}").accepted_options[name]
         option_spec ||= CommonOptions[name]
+        next if not option_spec
         CLI.report_error "Option #{CLI.red name} is invalid!" if not option_spec
         begin
           option_spec.check value

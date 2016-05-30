@@ -3,8 +3,9 @@ module STARMAN
     extend System::Command
 
     class << self
-      def read_profile package
-        profile_file = "#{package.prefix}/#{package.name}.profile"
+      def read_profile package, prefix = nil
+        prefix ||= package.prefix
+        profile_file = "#{prefix}/#{package.name}.profile"
         File.exist?(profile_file) ? YAML.load(File.read(profile_file)) : {}
       end
 

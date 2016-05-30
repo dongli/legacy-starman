@@ -44,7 +44,7 @@ module STARMAN
       end
       if with_fortran?
         args << '--enable-fortran'
-        args << '--enable-fortran2003' if CompilerStore.compiler(:fortran).feature_fortran2003?
+        args << '--enable-fortran2003' if CompilerStore.compiler(:fortran).feature?(:fortran2003)
       else
         args << '--disable-fortran'
       end
