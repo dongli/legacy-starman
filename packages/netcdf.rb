@@ -5,12 +5,20 @@ module STARMAN
     label :group_master
 
     option 'with-cxx', {
-      :desc => 'Build C++ API bindings.',
-      :accept_value => { :boolean => true }
+      desc: 'Build C++ API bindings.',
+      accept_value: { boolean: true }
     }
     option 'with-fortran', {
-      :desc => 'Build Fortran API bindings.',
-      :accept_value => { :boolean => true }
+      desc: 'Build Fortran API bindings.',
+      accept_value: { boolean: true }
+    }
+    option 'with-mpi', {
+      desc: 'Build C and Fortran API bindings with MPI library.',
+      accept_value: { boolean: false }
+    }
+    option 'with-dap', {
+      desc: 'Build with DAP remote access client support.',
+      accept_value: { boolean: false }
     }
 
     depends_on :netcdf_cxx if with_cxx?

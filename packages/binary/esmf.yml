@@ -1,9 +1,0 @@
----
-deb5d57139c9488b048020ff6da9dcba6130ded597d6aaa49c91a8654d6d1a58:
-  :name: :esmf
-  :version: 7.0.0
-  :revision:
-    0: {}
-  :sha256: b2ac25f78c4bded006360230bd229953909f2a9f9e71b732833c240edc7707b1
-  :options:
-    :use-pio: false

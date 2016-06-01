@@ -19,9 +19,12 @@ module STARMAN
       end
 
       def self.run
-        System::Shell.whitelist ['PATH', OS.ld_library_path], separator: ':'
+        System::Shell.whitelist ['PATH', OS.ld_library_path, 'PKG_CONFIG_PATH'], separator: ':'
         CommandLine.packages.values.reverse_each do |package|
-          next if package.has_label? :group_master
+          if package.has_label? :group_master
+            PackageInstaller.write_profile package # Record the group master profile.
+            next
+          end
           case PackageDownloader.run package
           when :binary
             PackageBinary.run package
@@ -31,6 +34,7 @@ module STARMAN
           # Set environment variables for later packages that depend on it.
           System::Shell.prepend 'PATH', package.bin, separator: ':' if Dir.exist? package.bin
           System::Shell.prepend OS.ld_library_path, package.lib, separator: ':' if Dir.exist? package.lib and not package.has_label? :system_conflict
+          System::Shell.prepend 'PKG_CONFIG_PATH', package.pkg_config, separator: ':' if Dir.exist? package.pkg_config
           System::Shell.append 'CPPFLAGS', "-I#{package.inc}" if Dir.exist? package.inc
           System::Shell.append 'LDFLAGS', "-L#{package.lib}" if Dir.exist? package.lib
           # Handle compiler package.

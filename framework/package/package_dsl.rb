@@ -48,6 +48,15 @@ module STARMAN
             #{spec}.options[:'#{name}'].value
           end
         EOT
+      when :string
+        class_eval <<-EOT
+          def self.#{name.to_s.gsub('-', '_')}
+            #{spec}.options[:'#{name}'].value
+          end
+          def #{name.to_s.gsub('-', '_')}
+            #{spec}.options[:'#{name}'].value
+          end
+        EOT
       when :package
         if name =~ /^use-/
           class_eval <<-EOT

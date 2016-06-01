@@ -19,5 +19,9 @@ module STARMAN
     def lib
       "#{prefix}/lib"
     end
+
+    def pkg_config
+      "#{lib}/pkgconfig"
+    end
   end
 end

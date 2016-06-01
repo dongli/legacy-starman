@@ -12,6 +12,7 @@ module STARMAN
               '/sbin',
               '/opt/X11/bin'
             ],
+            'PKG_CONFIG_PATH' => [],
             OS.ld_library_path => []
           }.freeze
           return if CommandLine.command == :config

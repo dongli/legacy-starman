@@ -57,5 +57,9 @@ module STARMAN
     def value
       @value != nil ? @value : default
     end
+
+    def inspect
+      res = "#{@desc} [#{@type}: #{@default}]"
+    end
   end
 end

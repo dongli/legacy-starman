@@ -39,5 +39,19 @@ module STARMAN
     def self.package_name
       self.name.split('::').last.downcase.to_sym
     end
+
+    def self.slaves
+      latest = eval("@@#{package_name}_latest")
+      latest.slaves
+    end
+
+    def self.print_options package, options = {}
+      res = ' '.ljust(options[:indent], ' ') || ''
+      package.options.each do |option_name, option_spec|
+        next if option_spec.extra and option_spec.extra[:common]
+        res << "#{CLI.blue option_name}: #{option_spec.inspect}\n"
+      end
+      res
+    end
   end
 end

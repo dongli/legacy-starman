@@ -6,6 +6,6 @@ module STARMAN
     version '1.10.0'
     language :c, :fortran
 
-    depends_on :netcdf, 'use-mpi' => true, 'with-fortran' => true
+    depends_on :netcdf, 'with-mpi' => true, 'with-fortran' => true
   end
 end

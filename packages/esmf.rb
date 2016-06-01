@@ -6,14 +6,27 @@ module STARMAN
     version '7.0.0'
     language :c, :cxx, :fortran
 
-    option 'use-pio', {
-      :desc => 'Choose to use PIO library.',
-      :accept_value => { :boolean => true }
+    option 'mpi', {
+      desc: 'Set which MPI library to use.',
+      accept_value: { string: 'mpiuni' },
+      possible_values: %W[ mpich mpich2 lam openmpi intelmpi mpiuni ]
+    }
+    option 'with-pio', {
+      desc: 'Choose to use PIO library.',
+      accept_value: { boolean: false }
+    }
+    option 'with-openmp', {
+      desc: 'Use OpenMP v4.0 interface provided by compilers.',
+      accept_value: { boolean: false }
     }
 
     depends_on :lapack
-    depends_on :netcdf
-    depends_on :pio if use_pio?
+    if with_pio?
+      depends_on :netcdf, 'with-mpi' => true
+      depends_on :pio
+    else
+      depends_on :netcdf
+    end
 
     def export_env
       {
@@ -22,6 +35,7 @@ module STARMAN
     end
 
     def install
+      CLI.report_error "Option #{CLI.red 'mpi'} cannot be 'mpiuni' when #{CLI.red 'with-openmp'}!" if mpi == 'mpiuni' and with_openmp?
       System::Shell.set 'ESMF_DIR', FileUtils.pwd
       # System::Shell.set 'ESMF_CPP', ENV['CC']
       System::Shell.set 'ESMF_CXXCOMPILER', ENV['CXX']
@@ -31,7 +45,25 @@ module STARMAN
       System::Shell.set 'ESMF_LAPACK', 'system'
       System::Shell.set 'ESMF_LAPACK_LIBPATH', Lapack.lib
       System::Shell.set 'ESMF_LAPACK_LIBS', "-Wl,-rpath,#{Lapack.lib} -llapack -lblas"
+      System::Shell.set 'ESMF_NETCDF', 'split'
+      System::Shell.set 'ESMF_NETCDF_INCLUDE', Netcdf.inc
+      System::Shell.set 'ESMF_NETCDF_LIBPATH', Netcdf.lib
+      System::Shell.set 'ESMF_NETCDF_LIBS', "-Wl,-rpath,#{Netcdf.lib} -lnetcdf -lnetcdff"
+      if with_pio?
+        System::Shell.set 'ESMF_PNETCDF', 'standard'
+        System::Shell.set 'ESMF_PNETCDF_INCLUDE', Pnetcdf.inc
+        System::Shell.set 'ESMF_PNETCDF_LIBPATH', Pnetcdf.lib
+        System::Shell.set 'ESMF_PNETCDF_LIBS', "-Wl,-rpath,#{Pnetcdf.lib} -lpnetcdf"
+        System::Shell.set 'ESMF_PIO', 'internal'
+      end
+      System::Shell.set 'ESMF_ACC_SOFTWARE_STACK', 'openmp4' if with_openmp?
+      System::Shell.set 'ESMF_COMM', mpi
       System::Shell.set 'ESMF_INSTALL_PREFIX', prefix
+      System::Shell.set 'ESMF_INSTALL_BINDIR', bin
+      System::Shell.set 'ESMF_INSTALL_HEADERDIR', inc
+      System::Shell.set 'ESMF_INSTALL_LIBDIR', lib
+      System::Shell.set 'ESMF_INSTALL_MODDIR', "#{prefix}/mod"
+
       replace 'src/Infrastructure/Mesh/src/Moab/io/ReadABAQUS.cpp',
         'if (NULL != abFile)', 'if (abFile.is_open())'
       run 'make'
