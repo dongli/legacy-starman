@@ -30,7 +30,7 @@ module STARMAN
 
     def export_env
       {
-        'ESMFMKFILE' => "#{Dir.glob("#{lib}/libO/**/esmf.mk").first}"
+        'ESMFMKFILE' => "#{lib}/esmf.mk"
       }
     end
 
