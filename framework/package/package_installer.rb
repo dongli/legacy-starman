@@ -40,6 +40,10 @@ module STARMAN
           subdirs = Dir.glob('*')
           if subdirs.size == 1
             work_in subdirs[0] do
+              if package.patch
+                CLI.report_notice "Apply patch to #{CLI.blue package.name}."
+                patch package.patch
+              end
               package.pre_install
               package.install
               package.post_install

@@ -29,9 +29,7 @@ module STARMAN
     end
 
     def export_env
-      {
-        'ESMFMKFILE' => "#{lib}/esmf.mk"
-      }
+      System::Shell.set 'ESMFMKFILE', "#{lib}/esmf.mk"
     end
 
     def install

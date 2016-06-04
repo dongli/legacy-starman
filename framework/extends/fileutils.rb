@@ -21,5 +21,13 @@ module FileUtils
         STARMAN::CLI.report_error "Failed to create directory #{STARMAN::CLI.red list}! Create it manually by using sudo, then back."
       end
     end
+
+    def write file_path, content
+      dir = File.dirname file_path
+      mkdir_p dir if not Dir.exist? dir
+      file = File.new file_path, 'w'
+      file << content
+      file.close
+    end
   end
 end

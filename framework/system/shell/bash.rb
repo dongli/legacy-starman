@@ -93,6 +93,7 @@ module STARMAN
       def self.whitelist keys, **options
         separator = options[:separator] || ' '
         Array(keys).each do |key|
+          next if not ENV[key]
           new_value = []
           ENV[key].split(separator).each do |value|
             next if not System::Shell.whitelists[key].include? value

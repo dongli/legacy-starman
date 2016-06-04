@@ -81,6 +81,19 @@ module STARMAN
       create_option_helpers val, :latest
     end
 
+    def has_patch
+      data = ''
+      start = false
+      File.open("#{ENV['STARMAN_ROOT']}/packages/#{package_name}.rb", 'r').each do |line|
+        if line =~ /__END__/
+          start = true
+          next
+        end
+        data << line if start
+      end
+      latest.patch data
+    end
+
     def depends_on val, options = {}
       latest.depends_on val, options
     end

@@ -24,7 +24,7 @@ module STARMAN
       @slaves = []
     end
 
-    [:homepage, :mirror, :sha256, :version, :filename, :group_master].each do |attr|
+    [:homepage, :mirror, :sha256, :version, :filename, :group_master, :patch].each do |attr|
       class_eval <<-EOT
         def #{attr} val = nil
           @#{attr} = val if val

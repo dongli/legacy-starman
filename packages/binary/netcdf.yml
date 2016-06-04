@@ -1,0 +1,23 @@
+---
+bb500fdf3cc036b4c8ef45ccbadb8bd609b26b83e7100cf29cc6362e6761e82b:
+  :name: :netcdf
+  :version: 4.4.0
+  :revision:
+    0: {}
+  :sha256: 
+  :options:
+    :with-cxx: true
+    :with-fortran: true
+    :with-mpi: false
+    :with-dap: false
+e1e8f7c349d4a09cb60d8ddb7104aabee17aa3a7b336db4b98fc0fed9ad58369:
+  :name: :netcdf
+  :version: 4.4.0
+  :revision:
+    0: {}
+  :sha256: 
+  :options:
+    :with-cxx: true
+    :with-fortran: false
+    :with-mpi: false
+    :with-dap: false
