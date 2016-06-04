@@ -101,7 +101,7 @@ module STARMAN
         end
 
         def self.ruby
-          "#{bin}/bin"
+          "#{bin}/ruby"
         end
       end
       EOT
