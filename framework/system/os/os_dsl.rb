@@ -4,7 +4,7 @@ module STARMAN
       base.extend self
     end
 
-    [:type, :version, :soname, :ld_library_path].each do |attr|
+    [:type, :version, :soname, :ld_library_path, :hardware].each do |attr|
       class_eval <<-EOT
         def #{attr} val = nil, &block
           spec.#{attr} val, &block
@@ -12,8 +12,13 @@ module STARMAN
       EOT
     end
 
+    def command val, &block
+      spec.command val, &block
+    end
+
     def spec
-      eval "@@#{os_name}_spec ||= OsSpec.new"
+      name = self.class == Class ? self.os_name : self.class.os_name
+      eval "@@#{name}_spec ||= OsSpec.new"
     end
   end
 end

@@ -2,7 +2,8 @@ module STARMAN
   class OS
     include OsDSL
 
-    attr_reader :spec
+    extend Forwardable
+    def_delegators :@spec, :commands
 
     def initialize
       @spec = eval "@@#{self.class.name.split('::').last.downcase.to_sym}_spec"
@@ -37,6 +38,13 @@ module STARMAN
         else
           CLI.report_error "Unknown OS type \"#{res}\"!"
         end
+        @@os.commands.each_key do |name|
+          class_eval <<-EOT
+            def self.#{name} *args
+              @@os.commands[:#{name}].call *args
+            end
+          EOT
+        end
       end
 
       def tag
@@ -46,8 +54,6 @@ module STARMAN
       def mac?
         @@os.type == :mac
       end
-
-      protected
 
       def os_name
         @@os_name ||= self.name.split('::').last.downcase.to_sym

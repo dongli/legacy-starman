@@ -1,6 +1,10 @@
 module STARMAN
   class OsSpec
-    [:type, :soname, :ld_library_path].each do |attr|
+    def initialize
+      @commands = {}
+    end
+
+    [:type, :soname, :ld_library_path, :hardware].each do |attr|
       class_eval <<-EOT
         def #{attr} val = nil, &block
           if block_given?
@@ -21,6 +25,11 @@ module STARMAN
         @version = VersionSpec.new val if val
       end
       @version
+    end
+
+    attr_reader :commands
+    def command val, &block
+      @commands[val] = block
     end
   end
 end
