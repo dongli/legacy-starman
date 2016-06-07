@@ -13,7 +13,8 @@ module STARMAN
     DownloadDomain = 'http://7xuddd.com1.z0.glb.clouddn.com'
 
     def self.init
-      if QINIU_AVAILABLE and not ENV['STARMAN_QINIU_ACCESSKEY'].empty? and not ENV['STARMAN_QINIU_SECRETKEY'].empty?
+      if ENV['STARMAN_QINIU_ACCESSKEY'] and not ENV['STARMAN_QINIU_ACCESSKEY'].empty? and
+         ENV['STARMAN_QINIU_SECRETKEY'] and not ENV['STARMAN_QINIU_SECRETKEY'].empty?
         Qiniu.establish_connection! :access_key => ENV['STARMAN_QINIU_ACCESSKEY'],
                                     :secret_key => ENV['STARMAN_QINIU_SECRETKEY']
       end
