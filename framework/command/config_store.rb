@@ -8,10 +8,10 @@ module STARMAN
       end
 
       def init
-        return if CommandLine.command == :config
         if not File.exist? CommandLine.options[:config].value
           write_template CommandLine.options[:config].value
         end
+        return if CommandLine.command == :config
         begin
           @@config = YAML.load(File.read(CommandLine.options[:config].value)).to_hash
         rescue SyntaxError => e
