@@ -17,15 +17,15 @@ module STARMAN
          ENV['STARMAN_QINIU_SECRETKEY'] and not ENV['STARMAN_QINIU_SECRETKEY'].empty?
         Qiniu.establish_connection! :access_key => ENV['STARMAN_QINIU_ACCESSKEY'],
                                     :secret_key => ENV['STARMAN_QINIU_SECRETKEY']
-        QINIU_CONNECTION_ESTABLISHED = true
+        @@connection_established = true
       else
-        QINIU_CONNECTION_ESTABLISHED = false
+        @@connection_established = false
       end
     end
 
     def self.uploaded? package
       tar_name = Storage.tar_name package
-      if QINIU_AVAILABLE and QINIU_CONNECTION_ESTABLISHED
+      if QINIU_AVAILABLE and @@connection_established
         code, result = Qiniu::Storage.stat(Bucket, tar_name)
         code == 200
       else
