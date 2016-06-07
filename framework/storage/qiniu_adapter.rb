@@ -1,4 +1,9 @@
-require 'qiniu'
+begin
+  require 'qiniu'
+  QINIU_AVAILABLE = true
+rescue LoadError
+  QINIU_AVAILABLE = false
+end
 
 module STARMAN
   class QiniuAdapter
@@ -8,7 +13,7 @@ module STARMAN
     DownloadDomain = 'http://7xuddd.com1.z0.glb.clouddn.com'
 
     def self.init
-      if not ENV['STARMAN_QINIU_ACCESSKEY'].empty? and not ENV['STARMAN_QINIU_SECRETKEY'].empty?
+      if QINIU_AVAILABLE and not ENV['STARMAN_QINIU_ACCESSKEY'].empty? and not ENV['STARMAN_QINIU_SECRETKEY'].empty?
         Qiniu.establish_connection! :access_key => ENV['STARMAN_QINIU_ACCESSKEY'],
                                     :secret_key => ENV['STARMAN_QINIU_SECRETKEY']
       end
@@ -16,8 +21,12 @@ module STARMAN
 
     def self.uploaded? package
       tar_name = Storage.tar_name package
-      code, result = Qiniu::Storage.stat(Bucket, tar_name)
-      code == 200
+      if QINIU_AVAILABLE
+        code, result = Qiniu::Storage.stat(Bucket, tar_name)
+        code == 200
+      else
+        true
+      end
     end
 
     def self.upload! package
