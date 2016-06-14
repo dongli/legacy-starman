@@ -1,0 +1,9 @@
+---
+e18bec5aae990b2231a76558c08dc47b6973fa515886c6eb5de87573e5e6182f:
+  :name: :redis
+  :version: 3.2.0
+  :revision:
+    0: {}
+  :sha256: 989f1af3dc0ac1828fdac48cd6c608f5a32a235046dddf823226f760c0fd8762
+  :options:
+    :with-jemalloc: false

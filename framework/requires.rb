@@ -1,6 +1,7 @@
 begin
   require 'byebug'
-rescue
+  require 'readline'
+rescue LoadError
 end
 
 require 'forwardable'

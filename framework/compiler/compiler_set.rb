@@ -15,7 +15,7 @@ module STARMAN
           actual_language = language.to_s.gsub('mpi_', '').to_sym
         else
           if not system_command? command
-            CLI.report_warning "Compiler command #{CLI.red compiler_command} does not exist!"
+            CLI.report_warning "Compiler command #{CLI.red command} does not exist!"
             @compilers[language] = nil
           else
             @compilers[language] = Compiler.choose_spec language, command
