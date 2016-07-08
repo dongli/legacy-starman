@@ -1,0 +1,9 @@
+---
+55463979ce9da5f655dd83f3bc00a83053a579ff2f0484cb02d60e5da87152fe:
+  :name: :armadillo
+  :version: 7.200.2
+  :revision:
+    0: {}
+  :sha256: 55ab2e62e305da66de6e1c80d91a55511a924cbcfa95ceb13c87e8a958397dfb
+  :options:
+    :with-hdf5: false

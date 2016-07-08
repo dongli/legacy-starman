@@ -1,0 +1,36 @@
+module STARMAN
+  class Armadillo < Package
+    homepage 'http://arma.sourceforge.net/'
+    url 'http://heanet.dl.sourceforge.net/project/arma/armadillo-7.200.2.tar.xz'
+    sha256 '55ab2e62e305da66de6e1c80d91a55511a924cbcfa95ceb13c87e8a958397dfb'
+    version '7.200.2'
+    language :cxx
+
+    option 'with-hdf5', {
+      desc: 'Enable the ability to save and load matrices stored in the HDF5 format.',
+      accept_value: { boolean: false }
+    }
+
+    depends_on :cmake if needs_build?
+    depends_on :arpack
+    depends_on :superlu
+    depends_on :hdf5 if with_hdf5?
+
+    def install
+      replace 'cmake_aux/Modules/ARMA_FindARPACK.cmake',
+        'PATHS ${CMAKE_SYSTEM_LIBRARY_PATH}',
+        "PATHS ${CMAKE_SYSTEM_LIBRARY_PATH} #{Arpack.lib}"
+      replace 'cmake_aux/Modules/ARMA_FindSuperLU5.cmake',
+        'find_path(SuperLU_INCLUDE_DIR slu_ddefs.h',
+        "find_path(SuperLU_INCLUDE_DIR slu_ddefs.h\n#{Superlu.inc}/superlu"
+      replace 'cmake_aux/Modules/ARMA_FindSuperLU5.cmake',
+        'PATHS ${CMAKE_SYSTEM_LIBRARY_PATH}',
+        "PATHS ${CMAKE_SYSTEM_LIBRARY_PATH} #{Superlu.lib}"
+
+      args = std_cmake_args
+      args << '-DDETECT_HDF5=ON' if with_hdf5?
+      run 'cmake', '.', *args
+      run 'make', 'install'
+    end
+  end
+end
