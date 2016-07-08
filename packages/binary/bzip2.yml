@@ -13,3 +13,10 @@ e1a2239d03d1707966a32457885400c6127c16a309da29956669e250b0c8aefe:
     0: {}
   :sha256: a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd
   :options: {}
+2d08a4f5072138ada8bab21a8f861539cf011dbaa34c36f4a3e0c0078a259f25:
+  :name: :bzip2
+  :version: 1.0.6
+  :revision:
+    0: {}
+  :sha256: a2848f34fcd5d6cf47def00461fcb528a0484d8edef8208d6d2e2909dc61d9cd
+  :options: {}

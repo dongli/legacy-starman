@@ -6,3 +6,10 @@
     0: {}
   :sha256: 92d8410d3d981bb881dfff2aed466da55a58d34c7390d50449aa59b32bb5e62a
   :options: {}
+009c197952e5e46a7b2830c23832b29367851e706c92edbc694ed9f663d58757:
+  :name: :cmake
+  :version: 3.5.2
+  :revision:
+    0: {}
+  :sha256: 92d8410d3d981bb881dfff2aed466da55a58d34c7390d50449aa59b32bb5e62a
+  :options: {}

@@ -8,9 +8,12 @@ module STARMAN
     end
     language :c,   :command => 'clang',   :default_flags => '-O2'
     language :cxx, :command => 'clang++', :default_flags => '-O2'
-    flag :openmp => '-fopenmp'
+    flag :openmp => nil
     flag :pic => '-fPIC'
     flag :libcxx => '-lc++'
     flag :cxx11 => '-std=c++11 -stdlib=libc++'
+    feature :openmp do
+      false
+    end
   end
 end

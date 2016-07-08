@@ -35,6 +35,7 @@ module STARMAN
 
       def work_in dir
         CLI.report_error 'No work block is given!' if not block_given?
+        FileUtils.mkdir dir if not Dir.exist? dir
         cd dir
         yield
         cd :back

@@ -14,7 +14,8 @@ module STARMAN
 
     def self.init
       if ENV['STARMAN_QINIU_ACCESSKEY'] and not ENV['STARMAN_QINIU_ACCESSKEY'].empty? and
-         ENV['STARMAN_QINIU_SECRETKEY'] and not ENV['STARMAN_QINIU_SECRETKEY'].empty?
+         ENV['STARMAN_QINIU_SECRETKEY'] and not ENV['STARMAN_QINIU_SECRETKEY'].empty? and
+         QINIU_AVAILABLE
         Qiniu.establish_connection! :access_key => ENV['STARMAN_QINIU_ACCESSKEY'],
                                     :secret_key => ENV['STARMAN_QINIU_SECRETKEY']
         @@connection_established = true
@@ -43,7 +44,8 @@ module STARMAN
       put_policy = Qiniu::Auth::PutPolicy.new(Bucket, tar_name, 3600)
       uptoken = Qiniu::Auth.generate_uptoken(put_policy)
       code, result = Qiniu::Storage.upload_with_token_2(
-        uptoken, "#{ConfigStore.package_root}/#{tar_name}", tar_name)
+        uptoken, "#{ConfigStore.package_root}/#{tar_name}", tar_name, nil,
+        bucket: Bucket)
       raise result['error'] if code != 200
     end
 

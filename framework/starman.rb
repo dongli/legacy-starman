@@ -5,9 +5,9 @@ $LOAD_PATH << "#{ENV['STARMAN_ROOT']}/packages"
 STARMAN::OS.init
 STARMAN::CommandLine.run
 STARMAN::ConfigStore.init
-STARMAN::PackageLoader.run
 STARMAN::System::Shell.init
 STARMAN::ConfigStore.run
+STARMAN::PackageLoader.run
 STARMAN::Storage.init :qiniu
 
 STARMAN::DirtyWorks.handle_absent_compiler STARMAN::CommandLine.packages
