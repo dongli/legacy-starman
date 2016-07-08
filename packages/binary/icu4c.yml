@@ -1,0 +1,8 @@
+---
+c5b4ad36d14e8ecbc44e13d8e2095c347e7cdeee7e062bc01379f8839ec0b6af:
+  :name: :icu4c
+  :version: '57.1'
+  :revision:
+    0: {}
+  :sha256: ff8c67cb65949b1e7808f2359f2b80f722697048e90e7cfc382ec1fe229e9581
+  :options: {}
