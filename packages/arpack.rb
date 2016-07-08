@@ -17,7 +17,7 @@ module STARMAN
       args = %W[
         --prefix=#{prefix}
         --disable-dependency-tracking
-        --with-blas="-L#{Openblas.prefix}/lib -lopenblas"
+        --with-blas="-L#{Openblas.lib} -lopenblas"
       ]
       args << '--enable-mpi' if with_mpi?
 

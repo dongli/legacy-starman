@@ -22,6 +22,13 @@ module FileUtils
       end
     end
 
+    alias_method :old_cp, :cp
+    def cp src, dst, options = {}
+      Dir.glob(src).each do |file|
+        old_cp file, dst
+      end
+    end
+
     def write file_path, content
       dir = File.dirname file_path
       mkdir_p dir if not Dir.exist? dir

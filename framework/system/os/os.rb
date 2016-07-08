@@ -55,6 +55,10 @@ module STARMAN
         @@os.type == :mac
       end
 
+      def linux?
+        @@os.type == :ubuntu
+      end
+
       def os_name
         @@os_name ||= self.name.split('::').last.downcase.to_sym
       end
