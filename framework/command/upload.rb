@@ -13,6 +13,9 @@ module STARMAN
       def self.run
         CommandLine.packages.values.reverse_each do |package|
           next if package.group_master
+          if not PackageInstaller.installed? package
+            CLI.report_error "Package #{CLI.red package.name} has not been installed!"
+          end
           if Storage.uploaded? package
             if CommandLine.options[:force].value
               begin
