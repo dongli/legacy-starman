@@ -1,9 +1,0 @@
----
-2c1bc3a2705393db3faa2da070addc75a0be05178c25e76cc96d2f71c2320ed5:
-  :name: :arpack
-  :version: 3.4.0
-  :revision:
-    0: {}
-  :sha256: 69e9fa08bacb2475e636da05a6c222b17c67f1ebeab3793762062248dd9d842f
-  :options:
-    :with-mpi: false

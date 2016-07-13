@@ -14,41 +14,51 @@ module STARMAN
       extra: { need_compiler: false }
     }
 
-    depends_on :gmp
-    depends_on :mpfr
-    depends_on :mpc
-    depends_on :isl
+    # depends_on :wget if needs_build?
+    # depends_on :dejagnu if needs_build?
 
     def shipped_compilers
-      compilers = {
+      return @compilers if @compilers
+      @compilers = {
         c: 'gcc',
         cxx: 'g++'
       }
-      compilers[:fortran] = 'gfortran' if with_fortran?
-      compilers
+      @compilers[:fortran] = 'gfortran' if with_fortran?
+      @compilers
+    end
+
+    def version_suffix
+      version.to_s.slice(/\d/)
     end
 
     def install
+      ENV.delete 'LD'
       args = %W[
         --prefix=#{prefix}
+        --libdir=#{lib}/gcc/#{version_suffix}
         --enable-languages=#{shipped_compilers.keys.join(',').gsub('cxx', 'c++')}
-        --with-gmp=#{Gmp.prefix}
-        --with-mpfr=#{Mpfr.prefix}
-        --with-mpc=#{Mpc.prefix}
-        --with-isl=#{Isl.prefix}
+        --disable-multilib
+        --with-system-zlib
+        --enable-libstdcxx-time=yes
         --enable-stage1-checking
         --enable-checking=release
         --enable-lto
-        --disable-multilib
         --with-build-config=bootstrap-debug
         --disable-werror
+        --disable-nls
         --with-pkgversion='STARMAN #{Time.now}'
         --with-bugurl=https://github.com/dongli/starman/issues
       ]
+
+      replace 'libgcc/config/t-slibgcc-darwin', '@shlib_slibdir@', "#{lib}/gcc/#{version_suffix}"
+
+      run './contrib/download_prerequisites'
+
       FileUtils.mkdir 'build'
       work_in 'build' do
         run '../configure', *args
         run 'make', 'bootstrap'
+        # run 'ulimit -s 32768 && make -k check' if not skip_test?
         run 'make', 'install', :single_job
       end
     end

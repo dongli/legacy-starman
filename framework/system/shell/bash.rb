@@ -17,10 +17,6 @@ module STARMAN
         FileUtils.touch rc_file if mode == :file
       end
 
-      def self.final
-        FileUtils.rm rc_file if mode == :file
-      end
-
       def self.set keys, value, **options
         case mode
         when :file

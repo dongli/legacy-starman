@@ -32,5 +32,13 @@ module STARMAN
       run 'cmake', '.', *args
       run 'make', 'install'
     end
+
+    def post_install
+      # FIXME: Armadillo has a nasty bug in randn when using c++11, so I just
+      #        make it not use c++11!
+      replace "#{prefix}/include/armadillo_bits/config.hpp",
+        '#define ARMA_USE_EXTERN_CXX11_RNG',
+        '#undef ARMA_USE_EXTERN_CXX11_RNG'
+    end
   end
 end

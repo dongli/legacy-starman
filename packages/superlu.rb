@@ -19,6 +19,7 @@ module STARMAN
       elsif OS.mac?
         FileUtils.cp 'MAKE_INC/make.mac-x', 'make.inc'
       end
+      replace 'make.inc', '-fopenmp', '' if not CompilerStore.compiler(:c).feature?(:openmp)
       args = %W[
         RANLIB=true
         CC="${CC}"

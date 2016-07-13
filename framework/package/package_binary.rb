@@ -12,7 +12,7 @@ module STARMAN
         file = record_file package
         record = File.exist?(file) ? YAML.load(File.open(file, 'r').read) : {}
         sha = Digest::SHA256.hexdigest(File.read "#{ConfigStore.package_root}/#{package.tag}.tgz")
-        record[sha] = package.profile
+        record[sha] = package.tag
         CLI.report_notice "Record binary #{CLI.blue package.tag}."
         File.open(file, 'w').write record.to_yaml
       end

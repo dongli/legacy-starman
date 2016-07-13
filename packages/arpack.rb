@@ -11,16 +11,18 @@ module STARMAN
       accept_value: { :boolean => false }
     }
 
+    depends_on :automake if needs_build?
     depends_on :openblas
 
     def install
       args = %W[
         --prefix=#{prefix}
         --disable-dependency-tracking
-        --with-blas="-L#{Openblas.lib} -lopenblas"
+        --with-blas='-L#{Openblas.lib} -lopenblas'
       ]
       args << '--enable-mpi' if with_mpi?
 
+      run 'glibtoolize'
       run './bootstrap'
       run './configure', *args
       run 'make'

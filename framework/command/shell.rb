@@ -36,7 +36,7 @@ module STARMAN
             System::Shell.set "#{package.name.to_s.upcase}_ROOT", package.prefix
             package.export_env
           end
-          System::Shell.set 'PS1', '\e[0;34m\u\e[m@\e[0;32mstarman\e[m \W$ '
+          System::Shell.set 'PS1', '(starman) \h:\W \u\$ '
           System::Shell.set 'CLICOLOR', 'xterm-color'
         else
           system "source #{System::Shell.rc_file} && sh"

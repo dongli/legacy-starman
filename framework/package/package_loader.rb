@@ -24,7 +24,13 @@ module STARMAN
     end
 
     def self.load_package name, *options
-      return if packages[name][:instance] and not options.include? :force
+      if packages[name][:instance] and not options.include? :force
+        # Package is depended by depended package nestly.
+        package = CommandLine.packages[name]
+        CommandLine.packages.delete(name)
+        CommandLine.packages[name] = package
+        return
+      end
       Package.clean name
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new

@@ -1,9 +1,0 @@
----
-4dbd1cf8d07d6841e2757a28dec77a168421e4ca765aa4032bb5cb4b23d8b99c:
-  :name: :superlu
-  :version: 5.2.1
-  :revision:
-    0: {}
-  :sha256: 28fb66d6107ee66248d5cf508c79de03d0621852a0ddeba7301801d3d859f463
-  :options:
-    :with-openmp: true
