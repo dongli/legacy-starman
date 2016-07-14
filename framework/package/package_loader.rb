@@ -72,15 +72,16 @@ module STARMAN
         Dir.glob("#{ConfigStore.install_root}/*").each do |dir|
           next if not File.directory? dir
           name = File.basename(dir).to_sym
+          load_package name
+          package = packages[name][:instance]
           profiles = []
           Dir.glob("#{dir}/*/*").each do |prefix|
             profile = PackageInstaller.read_profile prefix
-            next if profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '')
+            next if profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '') and
+                    not package.has_label? :compiler
             profiles << profile
           end
           next if profiles.empty?
-          load_package name
-          package = packages[name][:instance]
           if profiles.size > 1
             CLI.report_warning "There are multiple installation versions of package #{CLI.blue name}."
             all_options = []

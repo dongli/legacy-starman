@@ -24,6 +24,10 @@ module STARMAN
       "#{prefix}/share"
     end
 
+    def man
+      "#{prefix}/share/man"
+    end
+
     def pkg_config
       "#{lib}/pkgconfig"
     end

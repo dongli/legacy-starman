@@ -27,6 +27,7 @@ module STARMAN
           FileUtils.touch System::Shell.rc_file
           PackageLoader.installed_packages.each_value do |package|
             System::Shell.prepend 'PATH', package.bin, separator: ':', system: true if Dir.exist? package.bin
+            System::Shell.prepend 'MANPATH', package.man, separator: ':', system: true if Dir.exist? package.man
             System::Shell.prepend OS.ld_library_path, package.lib, separator: ':', system: true if Dir.exist? package.lib and not package.has_label? :system_conflict
             System::Shell.prepend 'PKG_CONFIG_PATH', package.pkg_config, separator: ':', system: true if Dir.exist? package.pkg_config
             System::Shell.set "#{package.name.to_s.upcase}_ROOT", package.prefix
