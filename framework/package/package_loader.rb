@@ -6,9 +6,8 @@ module STARMAN
       @@packages[name] = { :file => file }
     end
 
-    def self.transfer_command_line_options_to package
-      # Check command line options for package options.
-      CommandLine.options.each do |name, value|
+    def self.transfer_options_to package, options
+      options.each do |name, value|
         next unless package.options.has_key? name
         begin
           if value.class == String
@@ -34,7 +33,7 @@ module STARMAN
       Package.clean name
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
-      transfer_command_line_options_to package
+      transfer_options_to package, CommandLine.options
       # Reload package, since the options may change dependencies.
       Package.clean name
       load packages[name][:file]
@@ -73,8 +72,25 @@ module STARMAN
         Dir.glob("#{ConfigStore.install_root}/*").each do |dir|
           next if not File.directory? dir
           name = File.basename(dir).to_sym
+          profiles = []
+          Dir.glob("#{dir}/*/*").each do |prefix|
+            profile = PackageInstaller.read_profile prefix
+            next if profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '')
+            profiles << profile
+          end
+          next if profiles.empty?
           load_package name
           package = packages[name][:instance]
+          if profiles.size > 1
+            CLI.report_warning "There are multiple installation versions of package #{CLI.blue name}."
+            all_options = []
+            profiles.each do |profile|
+              all_options << profile[:options]
+            end
+            CLI.ask 'Which one do you want to use?', all_options
+            i = CLI.get_answer
+            transfer_options_to package, all_options[i]
+          end
           @@installed_packages[name] = package
           if package.has_label? :group_master
             package.slaves.each do |slave|

@@ -26,10 +26,6 @@ module STARMAN
           FileUtils.rm_f System::Shell.rc_file
           FileUtils.touch System::Shell.rc_file
           PackageLoader.installed_packages.each_value do |package|
-            if not Dir.exist? package.prefix
-              CLI.report_warning "Package #{CLI.red package.name} wasn't installed by the current options.\n" +
-                "Possible options:\n#{Package.print_options(package, indent: 2).chomp}"
-            end
             System::Shell.prepend 'PATH', package.bin, separator: ':', system: true if Dir.exist? package.bin
             System::Shell.prepend OS.ld_library_path, package.lib, separator: ':', system: true if Dir.exist? package.lib and not package.has_label? :system_conflict
             System::Shell.prepend 'PKG_CONFIG_PATH', package.pkg_config, separator: ':', system: true if Dir.exist? package.pkg_config
