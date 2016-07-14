@@ -9,7 +9,7 @@ module STARMAN
           package_name = Pathname.new(package_or_prefix).dirname.dirname.basename
         else
           prefix = package_or_prefix.prefix
-          package_name = package.name
+          package_name = package_or_prefix.name
         end
         profile_file = "#{prefix}/#{package_name}.profile"
         File.exist?(profile_file) ? YAML.load(File.read(profile_file)) : {}
