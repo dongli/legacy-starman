@@ -48,6 +48,7 @@ require 'compiler/compiler_store'
 
 require 'command/config'
 require 'command/install'
+require 'command/remove'
 require 'command/upload'
 require 'command/shell'
 require 'command/start'
