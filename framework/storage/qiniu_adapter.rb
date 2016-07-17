@@ -29,8 +29,6 @@ module STARMAN
       if QINIU_AVAILABLE and @@connection_established
         code, result = Qiniu::Storage.stat(Bucket, tar_name)
         code == 200
-      else
-        CLI.report_error 'You have no permission to upload package!'
       end
     end
 
