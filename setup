@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-export STARMAN_ROOT=$(cd $(dirname $BASH_SOURCE) && pwd)
-OLD_DIR=$(pwd)
