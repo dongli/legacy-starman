@@ -7,6 +7,15 @@ module STARMAN
 
     def initialize
       @spec = eval "@@#{self.class.name.split('::').last.downcase.to_sym}_spec"
+      inherit_parent_spec self.class
+    end
+
+    def inherit_parent_spec os
+      if os.superclass and os.superclass != STARMAN::OS
+        spec = eval "@@#{os.superclass.name.split('::').last.downcase.to_sym}_spec"
+        @spec.inherit spec
+        inherit_parent_spec os.superclass
+      end
     end
 
     class << self
@@ -60,7 +69,7 @@ module STARMAN
       end
 
       def os_name
-        @@os_name ||= self.name.split('::').last.downcase.to_sym
+        self.name.split('::').last.downcase.to_sym
       end
     end
   end

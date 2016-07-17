@@ -65,8 +65,7 @@ module STARMAN
             'compiler_set_index' => 0,
             'mpi' => 'mpich'
           },
-          'compiler_set_0' => {
-          }
+          'compiler_set_0' => nil
         }
         File.open(file_path, 'w').write template.to_yaml
       end

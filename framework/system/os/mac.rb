@@ -1,7 +1,9 @@
 module STARMAN
   class Mac < OS
     type :mac
-    version `sw_vers`.match(/ProductVersion:\s*(\d+\.\d+(\.\d+)?)/)[1]
+    version do
+      `sw_vers`.match(/ProductVersion:\s*(\d+\.\d+(\.\d+)?)/)[1]
+    end
     soname :dylib
     ld_library_path 'DYLD_LIBRARY_PATH'
 
@@ -27,11 +29,8 @@ module STARMAN
       $?.success?
     end
     command :create_user do |name, *options|
-      debugger
       CLI.report_notice "Create user #{CLI.blue name}."
-      if check_user name
-        CLI.report_error "User #{CLI.red name} exists!"
-      end
+      CLI.report_error "User #{CLI.red name} exists!" if check_user name
       res = `sudo dscl . create /Users/#{name} 2>&1`
       CLI.report_error "Failed to create user #{CLI.red name}! See errors:\n#{res}" if not $?.success?
       res = `sudo dscl . create /Users/#{name} UserShell /bin/bash`

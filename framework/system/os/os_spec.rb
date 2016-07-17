@@ -8,7 +8,10 @@ module STARMAN
       class_eval <<-EOT
         def #{attr} val = nil, &block
           if block_given?
-            @#{attr} = block.call
+            begin
+              @#{attr} = block.call
+            rescue Errno::ENOENT
+            end
           else
             @#{attr} = val if val
           end
@@ -20,7 +23,10 @@ module STARMAN
     attr_reader :version
     def version val = nil, &block
       if block_given?
-        @version = VersionSpec.new block.call
+        begin
+          @version = VersionSpec.new block.call
+        rescue Errno::ENOENT
+        end
       else
         @version = VersionSpec.new val if val
       end
@@ -30,6 +36,16 @@ module STARMAN
     attr_reader :commands
     def command val, &block
       @commands[val] = block
+    end
+
+    def inherit spec
+      spec.commands.each do |val, block|
+        next if @commands.has_key? val
+        @commands[val] = block
+      end
+      [:version, :soname, :ld_library_path, :hardware].each do |attr|
+        instance_eval "@#{attr} ||= spec.#{attr}"
+      end
     end
   end
 end
