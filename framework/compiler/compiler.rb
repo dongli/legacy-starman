@@ -8,7 +8,7 @@ module STARMAN
     attr_reader :spec
 
     def initialize
-      @spec = eval "@@#{self.class.name.split('::').last.downcase.to_sym}_spec"
+      @spec = eval "@@#{self.class.name.split('::').last.downcase.to_sym}_spec.clone"
     end
 
     def tag language
@@ -29,9 +29,10 @@ module STARMAN
           Array(spec.languages[language][:command]).each do |spec_command|
             if File.basename(command) == spec_command
               spec.languages[language][:command] = command
-              return spec.clone
+              return spec
             end
           end
+          nil
         end
       end
 

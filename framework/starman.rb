@@ -12,6 +12,8 @@ STARMAN::Storage.init :qiniu
 
 STARMAN::DirtyWorks.handle_absent_compiler STARMAN::CommandLine.packages
 
+STARMAN::CommandLine.check_invalid_options
+
 def clean
   FileUtils.rm_f "#{STARMAN::ConfigStore.package_root}/stdout.#{Process.pid}"
   FileUtils.rm_f "#{STARMAN::ConfigStore.package_root}/stderr.#{Process.pid}"

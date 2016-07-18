@@ -20,6 +20,7 @@ module STARMAN
           CLI.report_error "Package option #{CLI.red name}: #{e}"
         end
       end
+      CommandLine.check_invalid_options
     end
 
     def self.load_package name, *options

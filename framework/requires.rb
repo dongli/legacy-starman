@@ -8,6 +8,7 @@ require 'forwardable'
 require 'uri'
 require 'digest'
 require 'yaml'
+require 'pathname'
 
 require 'extends/string'
 require 'extends/fileutils'

@@ -27,9 +27,9 @@ module STARMAN
           end
           case PackageDownloader.run package
           when :binary
-            PackageBinary.run package
+            installed = PackageBinary.run package
           when :source
-            PackageInstaller.run package
+            installed = PackageInstaller.run package
           end
           # Set environment variables for later packages that depend on it.
           System::Shell.prepend 'PATH', package.bin, separator: ':' if Dir.exist? package.bin
@@ -38,7 +38,7 @@ module STARMAN
           System::Shell.append 'CPPFLAGS', "-I#{package.inc}" if Dir.exist? package.inc
           System::Shell.append 'LDFLAGS', "-L#{package.lib}" if Dir.exist? package.lib
           # Handle compiler package.
-          next if not package.has_label? :compiler
+          next unless installed and package.has_label? :compiler
           new_compiler_set_index = :"compiler_set_#{CompilerStore.compiler_sets.size}"
           ConfigStore.config[new_compiler_set_index] = {}
           package.shipped_compilers.each do |language, command|

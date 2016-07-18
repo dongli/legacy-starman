@@ -21,6 +21,11 @@ module STARMAN
       @features = {}
     end
 
+    def initialize_copy source
+      super
+      @languages = Marshal.load(Marshal.dump(source.languages))
+    end
+
     def version val = nil, &block
       if block_given?
         @version = block

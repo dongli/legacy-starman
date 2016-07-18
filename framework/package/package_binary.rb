@@ -31,7 +31,7 @@ module STARMAN
       end
 
       def run package
-        return if PackageInstaller.installed? package
+        return false if PackageInstaller.installed? package
         if package.group_master
           master_binary package
         else

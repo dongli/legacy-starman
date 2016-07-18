@@ -59,6 +59,13 @@ module STARMAN
       @@options = CommonOptions.merge(@@options)
     end
 
+    def self.check_invalid_options
+      @@options.each do |name, value|
+        next if value.class == OptionSpec or not value.empty?
+        CLI.report_error "Unknown option #{CLI.red name}!"
+      end
+    end
+
     def self.command
       @@command ||= nil
     end
