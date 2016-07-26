@@ -33,7 +33,7 @@ module STARMAN
         if @version.class == Proc
           @version = VersionSpec.new @version.call(@languages[val][:command])
         elsif val
-          @version = VersionSpec.new val
+          @version ||= VersionSpec.new val
         end
       end
       @version
