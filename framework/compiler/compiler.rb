@@ -12,7 +12,7 @@ module STARMAN
     end
 
     def tag language
-      "#{File.basename languages[language][:command]}_#{version.major_minor}"
+      "#{File.basename languages[language][:command]}_#{version(language).major_minor}"
     end
 
     class << self

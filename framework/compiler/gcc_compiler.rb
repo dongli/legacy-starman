@@ -1,8 +1,8 @@
 module STARMAN
   class GccCompiler < Compiler
     vendor :gnu
-    version do
-      res = `#{spec.languages[:c][:command]} -v 2>&1`.match(/gcc .* (\d+\.\d+\.\d+)/)
+    version do |command|
+      res = `#{command} -v 2>&1`.match(/gcc .* (\d+\.\d+\.\d+)/)
       CLI.report_error "Failed to query version of #{CLI.red "#{spec.languages[:c][:command]}"}!" if not res
       res[1]
     end

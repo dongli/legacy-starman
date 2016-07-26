@@ -1,8 +1,8 @@
 module STARMAN
   class ClangCompiler < Compiler
     vendor :llvm
-    version do
-      res = `clang -v 2>&1`.match(/Apple LLVM version ([^ ]+)/)
+    version do |command|
+      res = `#{command} -v 2>&1`.match(/Apple LLVM version ([^ ]+)/)
       CLI.report_error "Failed to query version of #{CLI.red 'clang'}!" if not res
       res[1]
     end

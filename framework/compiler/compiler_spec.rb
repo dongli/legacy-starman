@@ -30,10 +30,10 @@ module STARMAN
       if block_given?
         @version = block
       else
-        if val
+        if @version.class == Proc
+          @version = VersionSpec.new @version.call(@languages[val][:command])
+        elsif val
           @version = VersionSpec.new val
-        elsif @version.class == Proc
-          @version = VersionSpec.new @version.call
         end
       end
       @version
