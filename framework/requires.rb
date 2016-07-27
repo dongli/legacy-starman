@@ -1,6 +1,7 @@
 begin
   require 'byebug'
   require 'readline'
+  require 'net/http'
 rescue LoadError
 end
 

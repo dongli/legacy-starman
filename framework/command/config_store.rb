@@ -49,10 +49,11 @@ module STARMAN
           end
         end
         if command_hash_array.empty?
-          CLI.report_error "There is no compiler set defined in #{CommandLine.options[:config].value}!"
+          CLI.report_warning "There is no compiler set defined in #{CommandLine.options[:config].value}!"
+        else
+          CompilerStore.set_compiler_sets command_hash_array
+          CompilerStore.set_active_compiler_set @@config[:defaults][:compiler_set_index]
         end
-        CompilerStore.set_compiler_sets command_hash_array
-        CompilerStore.set_active_compiler_set @@config[:defaults][:compiler_set_index]
       end
 
       def write_template file_path

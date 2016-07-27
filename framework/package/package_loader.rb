@@ -79,8 +79,8 @@ module STARMAN
           Dir.glob("#{dir}/*/*").each do |prefix|
             next if Pathname.new(prefix).dirname.basename.to_s == 'persist'
             profile = PackageInstaller.read_profile prefix
-            next if profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '') and
-                    not package.has_label? :compiler and not package.has_label? :compiler_agnostic
+            next if not package.has_label? :compiler and not package.has_label? :compiler_agnostic and
+                    profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '')
             profiles << profile
           end
           next if profiles.empty?

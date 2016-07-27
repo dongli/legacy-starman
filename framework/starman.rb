@@ -10,7 +10,9 @@ STARMAN::ConfigStore.run
 STARMAN::PackageLoader.run
 STARMAN::Storage.init :qiniu
 
-STARMAN::DirtyWorks.handle_absent_compiler STARMAN::CommandLine.packages
+if STARMAN::CompilerStore.active_compiler_set
+  STARMAN::DirtyWorks.handle_absent_compiler STARMAN::CommandLine.packages
+end
 
 STARMAN::CommandLine.check_invalid_options
 

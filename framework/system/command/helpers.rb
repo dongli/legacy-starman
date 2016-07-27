@@ -40,6 +40,13 @@ module STARMAN
         yield
         cd :back
       end
+
+      def url_exist? url
+        uri = URI(url)
+        request = Net::HTTP.new uri.host
+        response= request.request_head uri.path
+        response.code.to_i == 200
+      end
     end
   end
 end
