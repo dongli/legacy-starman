@@ -99,6 +99,11 @@ module STARMAN
         end
       end
 
+      def self.default_environment_variables
+        System::Shell.set 'PS1', "(starman) [\\u:\\h \\W]#{ENV['USER'] == 'root' ? '#' : '$'} "
+        System::Shell.set 'CLICOLOR', 'xterm-color'
+      end
+
       private
 
       def self.write content

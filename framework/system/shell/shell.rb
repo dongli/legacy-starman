@@ -44,6 +44,14 @@ module STARMAN
           EOT
         end
 
+        [:default_environment_variables].each do |action|
+          class_eval <<-EOT
+            def #{action}
+              @@shell.#{action}
+            end
+          EOT
+        end
+
         def shell_command
           ConfigStore.defaults[:shell]
         end

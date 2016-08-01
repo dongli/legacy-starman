@@ -88,11 +88,13 @@ module STARMAN
             CLI.report_warning "There are multiple installation versions of package #{CLI.blue name}."
             all_options = []
             profiles.each do |profile|
-              all_options << profile[:options]
+              option = profile[:version]
+              option << ": #{profile[:options]}" if not profile[:options].empty?
+              all_options << option
             end
             CLI.ask 'Which one do you want to use?', all_options
-            i = CLI.get_answer
-            transfer_options_to package, all_options[i]
+            i = CLI.get_answer.to_i
+            transfer_options_to package, all_options[i].split(':').last if all_options[i].include? ':'
           end
           @@installed_packages[name] = package
           if package.has_label? :group_master
