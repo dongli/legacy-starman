@@ -64,6 +64,9 @@ module STARMAN
         next if value.class == OptionSpec or not value.empty?
         CLI.report_error "Unknown option #{CLI.red name}!"
       end
+      if [:install, :remove].include? @@command
+        CLI.report_error "No valid package to operate on!" if @@packages.empty?
+      end
     end
 
     def self.command
