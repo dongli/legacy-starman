@@ -1,9 +1,9 @@
 module STARMAN
   class Mlpack < Package
     homepage 'http://www.mlpack.org'
-    url 'http://www.mlpack.org/files/mlpack-2.0.2.tar.gz'
-    sha256 '1b50eb81c418f2c420bf9957092396760bd21775a8c65f317ed93370b26d2038'
-    version '2.0.2'
+    url 'http://www.mlpack.org/files/mlpack-2.0.3.tar.gz'
+    sha256 '3682c698aac1cd0f2f00d0484fdd033ab33f0ead88666c392312272919e20adb'
+    version '2.0.3'
     language :cxx
 
     depends_on :cmake if needs_build?
