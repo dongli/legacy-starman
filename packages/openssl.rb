@@ -14,12 +14,11 @@ module STARMAN
     depends_on :zlib
 
     def arch_flags
-      {
-        mac: {
-          x86_64: 'darwin64-x86_64-cc',
-          i386: 'darwin-i386-cc'
-        }
-      }
+      if OS.mac?
+        { x86_64: 'darwin64-x86_64-cc', i386: 'darwin-i386-cc' }
+      elsif OS.linux?
+        { x86_64: 'linux-x86_64', i386: 'linux-x32' }
+      end
     end
 
     def install
@@ -34,7 +33,7 @@ module STARMAN
       replace 'crypto/comp/c_zlib.c',
         'zlib_dso = DSO_load(NULL, "z", NULL, 0);',
         "zlib_dso = DSO_load(NULL, \"#{Zlib.lib}/libz.#{OS.soname}\", NULL, DSO_FLAG_NO_NAME_TRANSLATION);"
-      run './Configure', *args, arch_flags[OS.type][x86_64? ? :x86_64 : :i386]
+      run './Configure', *args, arch_flags[x86_64? ? :x86_64 : :i386]
       replace 'Makefile', /^ZLIB_INCLUDE=/, "ZLIB_INCLUDE=#{Zlib.inc}"
       replace 'Makefile', /^LIBZLIB=/, "LIBZLIB=#{Zlib.lib}"
       run 'make'

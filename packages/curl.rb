@@ -1,11 +1,15 @@
 module STARMAN
   class Curl < Package
     homepage 'https://curl.haxx.se/'
-    url 'https://curl.haxx.se/download/curl-7.48.0.tar.bz2'
-    sha256 '864e7819210b586d42c674a1fdd577ce75a78b3dda64c63565abe5aefd72c753'
-    version '7.48.0'
+    url 'https://curl.haxx.se/download/curl-7.50.1.tar.bz2'
+    sha256 '3c12c5f54ccaa1d40abc65d672107dcc75d3e1fcb38c267484334280096e5156'
+    version '7.50.1'
     language :c
 
     depends_on :openssl
+
+    def install
+
+    end
   end
 end
