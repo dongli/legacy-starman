@@ -10,6 +10,10 @@ module STARMAN
         @@adapter.init
       end
 
+      def check_connection
+        @@adapter.check_connection
+      end
+
       [:uploaded?, :upload!, :delete!, :download].each do |action|
         class_eval <<-EOT
           def #{action} package

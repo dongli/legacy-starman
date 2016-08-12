@@ -11,6 +11,7 @@ module STARMAN
       end
 
       def self.run
+        Storage.check_connection
         CommandLine.packages.values.reverse_each do |package|
           next if package.group_master
           if not PackageInstaller.installed? package

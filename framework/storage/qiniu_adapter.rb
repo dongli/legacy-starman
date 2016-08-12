@@ -1,6 +1,11 @@
 begin
   require 'qiniu'
-  QINIU_AVAILABLE = true
+  if ENV['STARMAN_QINIU_ACCESSKEY'] and not ENV['STARMAN_QINIU_ACCESSKEY'].empty? and
+     ENV['STARMAN_QINIU_SECRETKEY'] and not ENV['STARMAN_QINIU_SECRETKEY'].empty? and
+    QINIU_AVAILABLE = true
+  else
+    QINIU_AVAILABLE = false
+  end
 rescue LoadError
   QINIU_AVAILABLE = false
 end
@@ -13,14 +18,18 @@ module STARMAN
     DownloadDomain = 'http://7xuddd.com1.z0.glb.clouddn.com'
 
     def self.init
-      if ENV['STARMAN_QINIU_ACCESSKEY'] and not ENV['STARMAN_QINIU_ACCESSKEY'].empty? and
-         ENV['STARMAN_QINIU_SECRETKEY'] and not ENV['STARMAN_QINIU_SECRETKEY'].empty? and
-         QINIU_AVAILABLE
+      if QINIU_AVAILABLE
         Qiniu.establish_connection! :access_key => ENV['STARMAN_QINIU_ACCESSKEY'],
                                     :secret_key => ENV['STARMAN_QINIU_SECRETKEY']
         @@connection_established = true
       else
         @@connection_established = false
+      end
+    end
+
+    def self.check_connection
+      if not @@connection_established
+        CLI.report_error 'Failed to establish connection with Qiniu!'
       end
     end
 
