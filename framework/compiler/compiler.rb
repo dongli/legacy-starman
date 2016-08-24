@@ -25,7 +25,7 @@ module STARMAN
         end
         @@compiler_classes.each do |compiler_class|
           spec = eval "#{compiler_class}.new"
-          return nil if not spec.languages.keys.include? language
+          next if not spec.languages.keys.include? language
           Array(spec.languages[language][:command]).each do |spec_command|
             if File.basename(command) == spec_command
               spec.languages[language][:command] = command

@@ -4,23 +4,21 @@ module STARMAN
       base.extend self
     end
 
-    DEFAULT_INSTALL_ROOT = '/opt/starman/software'
-
     def prefix debug = false
       name = self.class == Class ? package_name : self.name
       # <install_root>/<package_name>/<package_version>/<sha1>
       if self.has_label? :group_master
-        "#{DEFAULT_INSTALL_ROOT}/#{name}/#{self.version}/#{master_tag debug}"
+        "#{ConfigStore.install_root}/#{name}/#{self.version}/#{master_tag debug}"
       elsif not self.group_master
-        "#{DEFAULT_INSTALL_ROOT}/#{name}/#{self.version}/#{normal_tag debug}"
+        "#{ConfigStore.install_root}/#{name}/#{self.version}/#{normal_tag debug}"
       else
-        "#{DEFAULT_INSTALL_ROOT}/#{self.group_master.name}/#{self.group_master.version}/#{slave_tag debug}"
+        "#{ConfigStore.install_root}/#{self.group_master.name}/#{self.group_master.version}/#{slave_tag debug}"
       end
     end
 
     def persist
       name = self.class == Class ? package_name : self.name
-      "#{DEFAULT_INSTALL_ROOT}/#{name}/persist"
+      "#{ConfigStore.install_root}/#{name}/persist"
     end
 
     # Tag package for creating precompiled binary.

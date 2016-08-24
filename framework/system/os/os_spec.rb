@@ -10,7 +10,7 @@ module STARMAN
           if block_given?
             begin
               @#{attr} = block.call
-            rescue Errno::ENOENT
+            rescue NoMethodError, Errno::ENOENT
             end
           else
             @#{attr} = val if val
@@ -25,7 +25,7 @@ module STARMAN
       if block_given?
         begin
           @version = VersionSpec.new block.call
-        rescue Errno::ENOENT
+        rescue NoMethodError, Errno::ENOENT
         end
       else
         @version = VersionSpec.new val if val

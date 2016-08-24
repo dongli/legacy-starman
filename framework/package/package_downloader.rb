@@ -4,6 +4,8 @@ module STARMAN
     extend Utils
 
     def self.run package
+      # Check if install_root matches preset one.
+      return :source if ConfigStore.install_root != '/opt/starman/software'
       # Check if there is a precompiled binary first.
       if not CommandLine.options[:'local-build'].value
         _package = package.group_master || package
