@@ -16,6 +16,10 @@ module STARMAN
       :'make-jobs' => OptionSpec.new(
         desc: 'Make job number.',
         accept_value: { integer: 1 }
+      ),
+      :'relax-env' => OptionSpec.new(
+        desc: 'Do not limit the content of the given environment variables.',
+        accept_value: { string: '' }
       )
     }
 

@@ -2,7 +2,7 @@ module STARMAN
   module System
     class Bash
       def self.rc_file
-        @@rc_file ||= "#{ConfigStore.install_root}/starman.bashrc.#{CompilerStore.active_compiler_set_index}"
+        @@rc_file ||= File.expand_path("#{ConfigStore.install_root}/starman.bashrc.#{CompilerStore.active_compiler_set_index}")
       end
 
       def self.reset_rc_file
@@ -89,7 +89,7 @@ module STARMAN
       def self.whitelist keys, **options
         separator = options[:separator] || ' '
         Array(keys).each do |key|
-          next if not ENV[key]
+          next if not ENV[key] or CommandLine.options[:'relax-env'].value.include? key
           new_value = []
           ENV[key].split(separator).each do |value|
             next if not System::Shell.whitelists[key].include? value
