@@ -17,13 +17,22 @@ module STARMAN
           return :binary
         end
       end
-      # Package is not compiled before.
-      file_path = "#{ConfigStore.package_root}/#{package.filename}"
-      if not ( File.exist? file_path and sha_same? file_path, package.sha256 )
-        CLI.report_notice "Downloading package #{CLI.blue package.name}."
-        curl package.url, ConfigStore.package_root, rename: package.filename
+      if package.has_label? :external_binary
+        file_path = "#{ConfigStore.package_root}/#{package.external_binary.filename}"
+        if not ( File.exist? file_path and sha_same? file_path, package.external_binary.sha256 )
+          CLI.report_notice "Downloading package #{CLI.blue package.name}."
+          curl package.url, ConfigStore.package_root, rename: package.external_binary.filename
+        end
+        return :binary
+      else
+        # Package is not compiled before.
+        file_path = "#{ConfigStore.package_root}/#{package.filename}"
+        if not ( File.exist? file_path and sha_same? file_path, package.sha256 )
+          CLI.report_notice "Downloading package #{CLI.blue package.name}."
+          curl package.url, ConfigStore.package_root, rename: package.filename
+        end
+        return :source
       end
-      return :source
     end
   end
 end

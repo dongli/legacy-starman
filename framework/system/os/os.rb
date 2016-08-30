@@ -47,7 +47,7 @@ module STARMAN
         else
           CLI.report_error "Unknown OS type \"#{res}\"!"
         end
-        [:version, :soname, :ld_library_path].each do |attr|
+        [:type, :version, :soname, :ld_library_path].each do |attr|
           class_eval "def self.#{attr}; @@os.#{attr}; end"
         end
         @@os.commands.each_key do |name|

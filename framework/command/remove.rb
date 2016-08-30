@@ -12,6 +12,7 @@ module STARMAN
 
       def self.run
         CommandLine.packages.keys.reverse_each do |package_name|
+          next if not CommandLine.direct_packages.include? package_name and not CommandLine.options[:purely].value
           next unless PackageLoader.installed_packages.keys.include? package_name
           package = PackageLoader.installed_packages[package_name]
           path = Pathname.new(package.prefix)

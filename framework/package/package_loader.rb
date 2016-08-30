@@ -6,6 +6,12 @@ module STARMAN
       @@packages[name] = { :file => file }
     end
 
+    def self.transfer_profile_to package, profile
+      package.version profile[:version]
+      package.sha256 profile[:sha256]
+      transfer_options_to package, profile[:options]
+    end
+
     def self.transfer_options_to package, options
       options.each do |name, value|
         next unless package.options.has_key? name
@@ -78,12 +84,13 @@ module STARMAN
           profiles = []
           Dir.glob("#{dir}/*/*").each do |prefix|
             next if Pathname.new(prefix).dirname.basename.to_s == 'persist'
-            profile = PackageInstaller.read_profile prefix
+            profile = PackageProfile.read_profile prefix
             next if not package.has_label? :compiler and not package.has_label? :compiler_agnostic and
                     profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '')
             profiles << profile
           end
           next if profiles.empty?
+          # FIXME: There are cases when we do not need to choose.
           if profiles.size > 1
             CLI.report_warning "There are multiple installation versions of package #{CLI.blue name}."
             all_options = []
@@ -94,7 +101,9 @@ module STARMAN
             end
             CLI.ask 'Which one do you want to use?', all_options
             i = CLI.get_answer.to_i
-            transfer_options_to package, all_options[i].split(':').last if all_options[i].include? ':'
+            transfer_profile_to package, profiles[i]
+          else
+            transfer_profile_to package, profiles.first
           end
           @@installed_packages[name] = package
           if package.has_label? :group_master

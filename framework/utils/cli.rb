@@ -79,7 +79,7 @@ module STARMAN
     def self.report_error message, options = nil
       options = [options] if not options or options.class != Array
       print "[#{red 'Error'}]: #{message}\n"
-      print_call_stack if CommandLine.options[:debug].value
+      print_call_stack if CommandLine.options[:debug].value rescue exit
       exit
     end
 

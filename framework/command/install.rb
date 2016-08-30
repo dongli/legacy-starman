@@ -22,7 +22,7 @@ module STARMAN
         System::Shell.whitelist ['PATH', OS.ld_library_path, 'PKG_CONFIG_PATH'], separator: ':'
         CommandLine.packages.values.reverse_each do |package|
           if package.has_label? :group_master
-            PackageInstaller.write_profile package # Record the group master profile.
+            PackageProfile.write_profile package # Record the group master profile.
             next
           end
           case PackageDownloader.run package

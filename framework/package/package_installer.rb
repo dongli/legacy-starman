@@ -3,37 +3,13 @@ module STARMAN
     extend System::Command
 
     class << self
-      def read_profile package_or_prefix
-        if package_or_prefix.class == String
-          prefix = package_or_prefix
-          package_name = Pathname.new(package_or_prefix).dirname.dirname.basename
-        else
-          prefix = package_or_prefix.prefix
-          package_name = package_or_prefix.name
-        end
-        profile_file = "#{prefix}/#{package_name}.profile"
-        File.exist?(profile_file) ? YAML.load(File.read(profile_file)) : {}
-      end
-
-      def write_profile package
-        profile = package.profile
-        profile[:os_tag] = OS.tag
-        profile[:compiler_tag] = CompilerStore.active_compiler_set.tag.sub('-', '')
-        package.dependencies.each do |depend_name, options|
-          depend = CommandLine.packages[depend_name]
-          profile[:dependencies] ||= {}
-          profile[:dependencies][depend_name] = depend.profile
-        end
-        profile_file = "#{package.prefix}/#{package.name}.profile"
-        File.open(profile_file, 'w') do |file|
-          file.write(profile.to_yaml)
-          file.close
-        end
-      end
-
       def installed? package
-        profile = read_profile package
-        profile[:sha256] == package.sha256
+        profile = PackageProfile.read_profile package
+        if package.has_label? :external_binary
+          profile[:sha256] == package.external_binary.sha256
+        else
+          profile[:sha256] == package.sha256
+        end
       end
 
       def run package
@@ -53,7 +29,7 @@ module STARMAN
               package.pre_install
               package.install
               package.post_install
-              write_profile package
+              PackageProfile.write_profile package
             end
           else
             CLI.report_error "There are multiple directories in #{CLI.red dir}."

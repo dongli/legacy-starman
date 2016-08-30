@@ -110,8 +110,18 @@ module STARMAN
       eval "@@#{package_name}_latest"
     end
 
+    # To support external binaries of package.
+    def external_binary_on *options, &block
+      eval "@@#{package_name}_external_binary ||= {}"
+      return eval "@@#{package_name}_external_binary" if not block_given?
+      spec = PackageSpec.new
+      spec.instance_eval(&block)
+      eval "@@#{package_name}_external_binary[options.to_s] = spec"
+    end
+
     # To support multiple versions of package, but the history versions should
-    # be limited.
+    # be limited. TODO: Maybe put the history version into a separate file is a
+    # good idea.
     def history &block
       eval "@@#{package_name}_history ||= {}"
       return eval "@@#{package_name}_history" if not block_given?

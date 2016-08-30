@@ -13,11 +13,18 @@ module STARMAN
     def_delegators :@latest, :group_master, :slave, :slaves, :patch
     def_delegators :@latest, :filename, :revision, :options, :dependencies
 
-    attr_reader :name, :latest, :history
+    attr_reader :name, :latest, :external_binary, :history
 
     def initialize
       @name = self.class.name.split('::').last.downcase.to_sym
       @latest = eval("@@#{@name}_latest")
+      @external_binary = eval("defined? @@#{@name}_external_binary") ? eval("@@#{@name}_external_binary") : {}
+      # Find out matched external binary.
+      @external_binary.each do |os, spec|
+        os = eval os
+        next if os.first != OS.type or not eval "OS.version #{os.last.split.first} '#{os.last.split.last}'"
+        @external_binary = spec
+      end
       @history = eval("defined? @@#{@name}_history") ? eval("@@#{@name}_history") : {}
     end
 
@@ -27,11 +34,12 @@ module STARMAN
         next if self.options[name].extra[:common]
         option_profile[name] = self.options[name].value
       end
+      spec = has_label?(:external_binary) ? external_binary : self
       {
         :name => self.name,
         :version => self.version.to_s,
-        :revision => self.revision,
-        :sha256 => self.sha256,
+        :revision => spec.revision,
+        :sha256 => spec.sha256,
         :options => option_profile
       }
     end

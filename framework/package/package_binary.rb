@@ -32,10 +32,14 @@ module STARMAN
 
       def run package
         return false if PackageInstaller.installed? package
-        if package.group_master
-          master_binary package
+        if package.has_label? :external_binary
+          external_binary package
         else
-          normal_binary package
+          if package.group_master
+            master_binary package
+          else
+            normal_binary package
+          end
         end
       end
 
@@ -43,6 +47,17 @@ module STARMAN
 
       def record_file package
         "#{ENV['STARMAN_ROOT']}/packages/binary/#{package.name}.yml"
+      end
+
+      def external_binary package
+        CLI.report_notice "Install external binary package #{CLI.blue package.name}."
+        FileUtils.mkdir_p package.prefix
+        work_in package.prefix do
+          package.pre_install
+          decompress "#{ConfigStore.package_root}/#{package.external_binary.filename}"
+          package.post_install
+          PackageProfile.write_profile package
+        end
       end
 
       def master_binary package

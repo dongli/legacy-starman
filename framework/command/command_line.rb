@@ -28,7 +28,7 @@ module STARMAN
       ARGV.each do |arg|
         if not defined? @@command and Command.constants.include? arg.capitalize.to_sym
           @@command = arg.to_sym
-        elsif @@command
+        elsif defined? @@command
           if arg =~ /^-/
             option = arg.gsub(/(^-)|(=.*$)/, '').to_sym
             value = arg.gsub(/^-[^=]+/, '').delete('=')
@@ -37,12 +37,12 @@ module STARMAN
             @@packages ||= {}
             @@packages[arg.to_sym] = nil
           end
+        else
+          CLI.report_error 'Invalid subcommand!'
         end
       end
-      if not defined? @@command
-        CLI.report_error "You haven't specify command!"
-      end
       check_command_options
+      @@direct_packages = @@packages.keys if defined? @@packages
     end
 
     def self.check_command_options
@@ -87,6 +87,10 @@ module STARMAN
 
     def self.packages
       @@packages ||= {}
+    end
+
+    def self.direct_packages
+      @@direct_packages ||= []
     end
   end
 end
