@@ -35,7 +35,8 @@ module STARMAN
         raise "Input is empty!" if value == ''
         raise "File or directory #{CLI.red value} does not exist!" if not File.exist? value
       when :boolean
-        if value == '' or value.downcase == 'true'
+        if value.class == FalseClass or value.class == TrueClass
+        elsif value == '' or value.downcase == 'true'
           value = true
         elsif value.downcase == 'false'
           value = false

@@ -16,11 +16,11 @@ module STARMAN
       options.each do |name, value|
         next unless package.options.has_key? name
         begin
-          if value.class == String
+          if value.class == OptionSpec
+            package.options[name] = value
+          else
             package.options[name].check value
             CommandLine.options[name] = package.options[name]
-          else
-            package.options[name] = value
           end
         rescue => e
           CLI.report_error "Package option #{CLI.red name}: #{e}"
