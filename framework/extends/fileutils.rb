@@ -29,6 +29,14 @@ module FileUtils
       end
     end
 
+    alias_method :old_ln_sf, :ln_sf
+    def ln_sf src, dst, options = {}
+      begin
+        old_ln_sf src, dst
+      rescue Errno::EEXIST
+      end
+    end
+
     def write file_path, content = nil, &block
       dir = File.dirname file_path
       mkdir_p dir if not Dir.exist? dir

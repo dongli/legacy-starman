@@ -5,9 +5,8 @@ module STARMAN
 
     def self.run package
       # Check if install_root matches preset one.
-      return :source if ConfigStore.install_root != '/opt/starman/software'
       # Check if there is a precompiled binary first.
-      if not CommandLine.options[:'local-build'].value
+      if not CommandLine.options[:'local-build'].value and ConfigStore.install_root == '/opt/starman/software'
         _package = package.group_master || package
         if PackageBinary.has? _package
           if not PackageBinary.match? _package
@@ -15,6 +14,27 @@ module STARMAN
             Storage.download _package
           end
           return :binary
+        end
+      end
+      # Check if there is any resource to download.
+      if not package.resources.empty?
+        package.resources.each do |tag, resource|
+          file_path = "#{ConfigStore.package_root}/#{resource.filename}"
+          if not ( File.exist? file_path and sha_same? file_path, resource.sha256 )
+            CLI.report_notice "Downloading resource #{CLI.blue tag}."
+            curl resource.url, ConfigStore.package_root, rename: resource.filename
+          end
+        end
+      end
+      # Check if there is any patch to download.
+      if not package.patches.empty?
+        package.patches.each_with_index do |patch, index|
+          next if not patch.class == PackageSpec
+          file_path = "#{ConfigStore.package_root}/#{package.name}.patch.#{index}"
+          if not ( File.exist? file_path and sha_same? file_path, patch.sha256 )
+            CLI.report_notice "Downloading patch #{CLI.blue index}."
+            curl patch.url, ConfigStore.package_root, rename: "#{package.name}.patch.#{index}"
+          end
         end
       end
       if package.has_label? :external_binary

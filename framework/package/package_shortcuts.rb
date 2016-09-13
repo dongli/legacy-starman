@@ -20,6 +20,10 @@ module STARMAN
       "#{prefix}/lib"
     end
 
+    def libexec
+      "#{prefix}/libexec"
+    end
+
     def share
       "#{prefix}/share"
     end

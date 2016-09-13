@@ -28,11 +28,16 @@ module STARMAN
          "#{Gcc.lib}/gcc/#{VersionSpec.new(Gcc.version).major}/libstdc++.6.dylib",
          "#{Gcc.lib}/gcc/#{VersionSpec.new(Gcc.version).major}/libgcc_s.1.dylib",
          "#{Fontconfig.lib}/libfontconfig.1.dylib"].each do |lib|
-          FileUtils.ln_s lib, "#{persist}/lib" if not File.exist? "#{persist}/lib"
+          FileUtils.ln_s lib, "#{persist}/lib" if not File.exist? "#{persist}/lib/#{lib}"
         end
-        run 'install_name_tool', '-add_rpath', "#{persist}/lib", "#{Ncl.bin}/ncl"
+        files = ['ncl', 'ncargpath']
+        files.each do |file|
+          run 'install_name_tool', '-add_rpath', "#{persist}/lib", "#{Ncl.bin}/#{file}"
+        end
         ['libgomp.1.dylib', 'libstdc++.6.dylib', 'libgcc_s.1.dylib', 'libfontconfig.1.dylib'].each do |lib|
-          run 'install_name_tool', '-change', "/usr/local/lib/#{lib}", "@rpath/#{lib}", "#{Ncl.bin}/ncl"
+          files.each do |file|
+            run 'install_name_tool', '-change', "/usr/local/lib/#{lib}", "@rpath/#{lib}", "#{Ncl.bin}/#{file}"
+          end
         end
       end
     end

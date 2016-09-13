@@ -6,14 +6,15 @@ module STARMAN
     include PackageDefaultMethods
     include PackageShortcuts
     include PackageHelpers
+    include PackageResource
 
     extend Forwardable
     def_delegators :@latest, :homepage, :url, :mirror, :sha256, :version
     def_delegators :@latest, :labels, :languages, :has_label?, :has_language?
-    def_delegators :@latest, :group_master, :slave, :slaves, :patch
+    def_delegators :@latest, :group_master, :slave, :slaves, :patches
     def_delegators :@latest, :filename, :revision, :options, :dependencies
 
-    attr_reader :name, :latest, :external_binary, :history
+    attr_reader :name, :latest, :external_binary, :history, :resources
 
     def initialize
       @name = self.class.name.split('::').last.downcase.to_sym
@@ -26,6 +27,7 @@ module STARMAN
         @external_binary = spec
       end
       @history = eval("defined? @@#{@name}_history") ? eval("@@#{@name}_history") : {}
+      @resources = eval("defined? @@#{@name}_resources") ? eval("@@#{@name}_resources") : {}
     end
 
     def profile
@@ -46,6 +48,10 @@ module STARMAN
 
     def self.package_name
       self.name.split('::').last.downcase.to_sym
+    end
+
+    def package_name
+      self.name
     end
 
     def self.slaves

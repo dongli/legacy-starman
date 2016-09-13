@@ -22,9 +22,14 @@ module STARMAN
           subdirs = Dir.glob('*')
           if subdirs.size == 1
             work_in subdirs[0] do
-              if package.patch
-                CLI.report_notice "Apply patch to #{CLI.blue package.name}."
-                patch package.patch
+              package.patches.each_with_index do |patch, index|
+                CLI.report_notice "Apply patch #{CLI.green "##{index}"} to #{CLI.blue package.name}."
+                case patch
+                when String
+                  patch_data patch
+                when PackageSpec
+                  patch_file "#{ConfigStore.package_root}/#{package.name}.patch.#{index}"
+                end
               end
               package.pre_install
               package.install

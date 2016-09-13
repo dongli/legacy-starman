@@ -110,6 +110,14 @@ module STARMAN
       eval "@@#{package_name}_latest"
     end
 
+    def resource tag, &block
+      eval "@@#{package_name}_resources ||= {}"
+      return eval "@@#{package_name}_resources[tag]" if not block_given?
+      spec = PackageSpec.new
+      spec.instance_eval(&block)
+      eval "@@#{package_name}_resources[tag] = spec"
+    end
+
     # To support external binaries of package.
     def external_binary_on *options, &block
       eval "@@#{package_name}_external_binary ||= {}"
@@ -126,7 +134,7 @@ module STARMAN
       eval "@@#{package_name}_history ||= {}"
       return eval "@@#{package_name}_history" if not block_given?
       spec = PackageSpec.new
-      spec.instance_eval(&block)
+      spec.instance_eval &block
       eval "@@#{package_name}_history[spec.version.to_s] = spec"
     end
 

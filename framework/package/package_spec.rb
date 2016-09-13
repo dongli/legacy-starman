@@ -14,6 +14,7 @@ module STARMAN
           :extra => { :common => true }
         )
       }
+      @patches = []
     end
 
     # Data need to be cleaned between load statements.
@@ -22,9 +23,10 @@ module STARMAN
       @labels = []
       @dependencies = {}
       @slaves = []
+      @patches = []
     end
 
-    [:homepage, :mirror, :sha256, :version, :filename, :group_master, :patch].each do |attr|
+    [:homepage, :mirror, :sha256, :version, :filename, :group_master].each do |attr|
       class_eval <<-EOT
         def #{attr} val = nil
           @#{attr} = val if val
@@ -68,10 +70,6 @@ module STARMAN
       @revision
     end
 
-    def slave val
-      @slaves << val if not @slaves.include? val
-    end
-
     attr_reader :options, :dependencies, :slaves
 
     def option val, options = {}
@@ -81,6 +79,22 @@ module STARMAN
 
     def depends_on val, options = {}
       @dependencies[val] = options
+    end
+
+    def slave val
+      @slaves << val if not @slaves.include? val
+    end
+
+    attr_reader :patches
+
+    def patch data = nil, &block
+      if data
+        @patches << data
+      else
+        spec = PackageSpec.new
+        spec.instance_eval &block
+        @patches << spec
+      end
     end
   end
 end
