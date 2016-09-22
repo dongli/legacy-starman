@@ -6,7 +6,7 @@ module STARMAN
     version '2.7.7'
 
     def install
-      replace 'lib/cpp/antlr/CharScanner.hpp',
+      inreplace 'lib/cpp/antlr/CharScanner.hpp',
         /^(#include <map>)$/,
         "\\1\n#include <strings.h>\n#include <cstdio>\n"
       args = %W[

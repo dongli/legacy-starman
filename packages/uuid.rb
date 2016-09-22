@@ -9,9 +9,11 @@ module STARMAN
       # upstream ticket: http://cvs.ossp.org/tktview?tn=200
       # pkg-config --cflags uuid returns the wrong directory since we override the
       # default, but uuid.pc.in does not use it
-      replace 'uuid.pc.in', /^(exec_prefix)=\$\{prefix\}$/, '\1=@\1@'
-      replace 'uuid.pc.in', /^(includedir)=\$\{prefix\}\/include$/, '\1=@\1@'
-      replace 'uuid.pc.in', /^(libdir)=\$\{exec_prefix\}\/lib$/, '\1=@\1@'
+      inreplace 'uuid.pc.in', {
+        /^(exec_prefix)=\$\{prefix\}$/ => '\1=@\1@',
+        /^(includedir)=\$\{prefix\}\/include$/ => '\1=@\1@',
+        /^(libdir)=\$\{exec_prefix\}\/lib$/ => '\1=@\1@'
+      }
 
       args = %W[
         --prefix=#{prefix}

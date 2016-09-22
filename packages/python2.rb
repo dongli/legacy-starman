@@ -27,7 +27,7 @@ module STARMAN
     sha256 '1ebb8ad7e26b448e9caa4773d2357849bf80ff9e313964bcaf79cbf0201a1648'
     end
 
-    has_patch if OS.mac?
+    patch :DATA if OS.mac?
 
     def install
       # Unset these so that installing pip and setuptools puts them where we want
@@ -51,15 +51,17 @@ module STARMAN
 
       args << "MACOSX_DEPLOYMENT_TARGET=#{OS.version.major_minor}"
 
-      replace 'setup.py', "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')", "do_readline = '#{Readline.prefix}/libhistory.dylib'"
-      replace 'setup.py', '/usr/local/ssl', Openssl.prefix
-      replace 'setup.py', '/usr/include/db4', Berkeleydb4.inc
-      replace 'setup.py', 'sqlite_defines.append(("SQLITE_OMIT_LOAD_EXTENSION", "1"))', ''
-      replace 'setup.py', "sqlite_inc_paths = [ '/usr/include'", "sqlite_inc_paths = [ '#{Sqlite.inc}'"
+      inreplace 'setup.py', {
+        "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')" => "do_readline = '#{Readline.prefix}/libhistory.dylib'",
+        '/usr/local/ssl' => Openssl.prefix,
+        '/usr/include/db4' => Berkeleydb4.inc,
+        'sqlite_defines.append(("SQLITE_OMIT_LOAD_EXTENSION", "1"))' => '',
+        "sqlite_inc_paths = [ '/usr/include'" => "sqlite_inc_paths = [ '#{Sqlite.inc}'"
+      }
 
       run './configure', *args
 
-      replace 'pyconfig.h', /.*?(HAVE_POLL[_A-Z]*).*/, '#undef \1'
+      inreplace 'pyconfig.h', /.*?(HAVE_POLL[_A-Z]*).*/, '#undef \1'
 
       run 'make'
       run 'make', 'install', "PYTHONAPPSDIR=#{prefix}"
@@ -73,13 +75,13 @@ module STARMAN
     def post_install
       # Install modules into persistent directory.
       site_packages = "#{persist}/lib/python2.7/site-packages"
-      FileUtils.mkdir_p site_packages
-      FileUtils.rm_rf "#{lib}/python2.7/site-packages"
-      FileUtils.ln_sf site_packages, "#{lib}/python2.7/"
-      FileUtils.rm_rf "#{site_packages}/setuptools*"
-      FileUtils.rm_rf "#{site_packages}/distribute*"
-      FileUtils.rm_rf "#{site_packages}/pip[-_.][0-9]*"
-      FileUtils.rm_rf "#{site_packages}/pip"
+      mkdir_p site_packages
+      rm_rf "#{lib}/python2.7/site-packages"
+      ln_sf site_packages, "#{lib}/python2.7/"
+      rm_rf "#{site_packages}/setuptools*"
+      rm_rf "#{site_packages}/distribute*"
+      rm_rf "#{site_packages}/pip[-_.][0-9]*"
+      rm_rf "#{site_packages}/pip"
       setup_args = ['-s', 'setup.py', '--no-user-cfg', 'install', '--force',
                     '--verbose',
                     '--single-version-externally-managed',
@@ -89,17 +91,6 @@ module STARMAN
       work_in "#{libexec}/setuptools" do run "#{bin}/python", *setup_args end
       work_in "#{libexec}/pip" do run "#{bin}/python", *setup_args end
       work_in "#{libexec}/wheel" do run "#{bin}/python", *setup_args end
-
-      include_dirs = [Readline.inc, Openssl.inc, Sqlite.inc]
-      library_dirs = [Readline.inc, Openssl.lib, Sqlite.lib]
-      FileUtils.write "#{prefix}/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/distutils.cfg", <<-EOT.keep_indent
-      [install]
-      prefix=#{prefix}
-
-      [build_ext]
-      include_dirs=#{include_dirs.join ':'}
-      library_dirs=#{library_dirs.join ':'}
-      EOT
     end
   end
 end

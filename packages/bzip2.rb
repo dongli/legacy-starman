@@ -6,7 +6,7 @@ module STARMAN
     version '1.0.6'
 
     def install
-      replace 'Makefile', '$(PREFIX)/man', '$(PREFIX)/share/man'
+      inreplace 'Makefile', '$(PREFIX)/man', '$(PREFIX)/share/man'
       run 'make', 'install', "PREFIX=#{prefix}"
     end
   end

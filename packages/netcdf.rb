@@ -6,15 +6,18 @@ module STARMAN
 
     option 'with-cxx', {
       desc: 'Build C++ API bindings.',
-      accept_value: { boolean: true }
+      accept_value: { boolean: true },
+      cascade: true
     }
     option 'with-fortran', {
       desc: 'Build Fortran API bindings.',
-      accept_value: { boolean: true }
+      accept_value: { boolean: true },
+      cascade: true
     }
     option 'with-mpi', {
       desc: 'Build C and Fortran API bindings with MPI library.',
-      accept_value: { boolean: false }
+      accept_value: { boolean: false },
+      cascade: true
     }
     option 'with-dap', {
       desc: 'Build with DAP remote access client support.',

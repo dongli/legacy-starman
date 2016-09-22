@@ -20,13 +20,15 @@ module STARMAN
       args << "MALLOC=jemalloc" if with_jemalloc?
       run 'make', 'install', *args
       %w[run db/redis log].each { |p| FileUtils.mkdir_p "#{persist}/#{p}" }
-      replace 'redis.conf', '/var/run/redis.pid', "#{persist}/run/redis.pid"
-      replace 'redis.conf', 'dir ./', "dir #{persist}/db/redis"
-      replace 'redis.conf', '# bind 127.0.0.1', 'bind 127.0.0.1'
-      replace 'redis.conf', 'daemonize no', 'daemonize yes'
-      FileUtils.mkdir etc
-      FileUtils.cp 'redis.conf', etc
-      FileUtils.cp 'sentinel.conf', "#{etc}/redis-sentinel.conf"
+      inreplace 'redis.conf', {
+        '/var/run/redis.pid' => "#{persist}/run/redis.pid",
+        'dir ./' => "dir #{persist}/db/redis",
+        '# bind 127.0.0.1' => 'bind 127.0.0.1',
+        'daemonize no' => 'daemonize yes'
+      }
+      mkdir etc
+      cp 'redis.conf', etc
+      cp 'sentinel.conf', "#{etc}/redis-sentinel.conf"
     end
 
     def start options = {}

@@ -16,8 +16,12 @@ module STARMAN
       "#{File.basename languages[language][:command]}_#{version(language).major_minor}"
     end
 
-    def command
-      @spec.languages[@active_language][:command]
+    [:command, :default_flags].each do |attr|
+      class_eval <<-EOT
+        def #{attr}
+          @spec.languages[@active_language][:#{attr}]
+        end
+      EOT
     end
 
     class << self
@@ -33,7 +37,7 @@ module STARMAN
           next if not spec.languages.keys.include? language
           Array(spec.languages[language][:command]).each do |spec_command|
             if File.basename(command) == spec_command
-              spec.languages[language][:command] = command
+              spec.languages[language][:command] = Pathname.new command
               return spec
             end
           end

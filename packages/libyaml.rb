@@ -5,7 +5,7 @@ module STARMAN
     sha256 '7da6971b4bd08a986dd2a61353bc422362bd0edcc67d7ebaac68c95f74182749'
     version '0.1.6'
 
-    has_patch
+    patch :DATA
 
     def install
       run './configure', "--prefix=#{prefix}", '--disable-dependency-tracking'

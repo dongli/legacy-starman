@@ -7,9 +7,6 @@ module STARMAN
     def export_env
     end
 
-    def patch
-    end
-
     def pre_install
     end
 

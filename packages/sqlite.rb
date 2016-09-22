@@ -92,7 +92,7 @@ module STARMAN
           -o libsqlitefunctions.#{OS.soname}
         ]
         run CompilerStore.compiler(:c).command, *args
-        FileUtils.cp "libsqlitefunctions.#{OS.soname}", lib
+        cp "libsqlitefunctions.#{OS.soname}", lib
       end
     end
   end

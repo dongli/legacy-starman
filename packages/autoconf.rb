@@ -10,8 +10,8 @@ module STARMAN
     depends_on :libtool
 
     def install
-      replace 'bin/autoreconf.in', 'libtoolize', 'glibtoolize'
-      replace 'man/autoreconf.1', 'libtoolize', 'glibtoolize'
+      inreplace 'bin/autoreconf.in', 'libtoolize', 'glibtoolize'
+      inreplace 'man/autoreconf.1', 'libtoolize', 'glibtoolize'
 
       args = %W[
         --prefix=#{prefix}

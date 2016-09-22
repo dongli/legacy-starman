@@ -30,12 +30,14 @@ module STARMAN
         enable-cms
       ]
       args << 'enable-ec_nistp_64_gcc_128' # Needs C compiler to support __uint128_t.
-      replace 'crypto/comp/c_zlib.c',
+      inreplace 'crypto/comp/c_zlib.c',
         'zlib_dso = DSO_load(NULL, "z", NULL, 0);',
         "zlib_dso = DSO_load(NULL, \"#{Zlib.lib}/libz.#{OS.soname}\", NULL, DSO_FLAG_NO_NAME_TRANSLATION);"
       run './Configure', *args, arch_flags[x86_64? ? :x86_64 : :i386]
-      replace 'Makefile', /^ZLIB_INCLUDE=/, "ZLIB_INCLUDE=#{Zlib.inc}"
-      replace 'Makefile', /^LIBZLIB=/, "LIBZLIB=#{Zlib.lib}"
+      inreplace 'Makefile', {
+        /^ZLIB_INCLUDE=/ => "ZLIB_INCLUDE=#{Zlib.inc}",
+        /^LIBZLIB=/ => "LIBZLIB=#{Zlib.lib}"
+      }
       run 'make'
       run 'make', 'test' if not skip_test?
       run 'make', 'install'
@@ -61,8 +63,8 @@ module STARMAN
           $?.success?
         end
       end
-      FileUtils.mkdir_p "#{etc}/openssl"
-      File.open("#{etc}/openssl/cert.pem", 'w').write valid_certs.join("\n")
+      mkdir_p "#{etc}/openssl"
+      write_file "#{etc}/openssl/cert.pem", valid_certs.join("\n")
     end
   end
 end

@@ -7,7 +7,7 @@ module STARMAN
       expect(hdf5.options[:'with-cxx'].value).to eq true
       hdf5.options[:'with-cxx'].check 'false'
       expect(hdf5.options[:'with-cxx'].value).to eq false
-      PackageLoader.load_package :hdf5, :force
+      PackageLoader.load_package :hdf5, { force: true }
       expect(hdf5.languages).to eq [:c, :fortran]
     end
   end
@@ -34,7 +34,7 @@ module STARMAN
       expect(netcdf_c.options[:'with-mpi'].value).to eq false
       netcdf_c.options[:'with-mpi'].check 'true'
       expect(netcdf_c.options[:'with-mpi'].value).to eq true
-      PackageLoader.load_package :netcdf_c, :force
+      PackageLoader.load_package :netcdf_c, { force: true }
       expect(netcdf_c.dependencies.keys).to eq [:hdf5, :pnetcdf]
     end
   end

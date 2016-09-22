@@ -1,6 +1,7 @@
 module STARMAN
   class ConfigStore
     extend Utils
+    extend FileUtils
 
     class << self
       def config
@@ -32,8 +33,8 @@ module STARMAN
         return if CommandLine.command == :config
         @@config[:package_root] = File.expand_path @@config[:package_root]
         @@config[:install_root] = File.expand_path @@config[:install_root]
-        FileUtils.mkdir_p @@config[:package_root] if not Dir.exist? @@config[:package_root]
-        FileUtils.mkdir_p @@config[:install_root] if not Dir.exist? @@config[:install_root]
+        mkdir_p @@config[:package_root] if not Dir.exist? @@config[:package_root]
+        mkdir_p @@config[:install_root] if not Dir.exist? @@config[:install_root]
         set_compilers
       end
 
@@ -68,10 +69,10 @@ module STARMAN
           },
           'compiler_set_0' => nil
         }
-        File.open(file_path, 'w').write template.to_yaml
+        write_file file_path, template.to_yaml
       end
 
-      def write file_path = nil
+      def write_config file_path = nil
         file_path ||= CommandLine.options[:config].value
         # Users may not be familiar with symbol in Ruby, so we convert them into
         # strings.
@@ -79,7 +80,7 @@ module STARMAN
         @@config.each_key do |key|
           @@config[key] = stringfy_keys @@config[key] if @@config[key].class == Hash
         end
-        File.open(file_path, 'w').write @@config.to_yaml
+        write_file file_path, @@config.to_yaml
       end
     end
   end

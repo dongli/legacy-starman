@@ -18,7 +18,7 @@ module STARMAN
 
     def install
       if not without_subpixel?
-        replace 'include/freetype/config/ftoption.h',
+        inreplace 'include/freetype/config/ftoption.h',
           '/* #define FT_CONFIG_OPTION_SUBPIXEL_RENDERING */',
           '#define FT_CONFIG_OPTION_SUBPIXEL_RENDERING'
       end

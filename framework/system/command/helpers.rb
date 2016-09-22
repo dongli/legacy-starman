@@ -11,11 +11,16 @@ module STARMAN
       end
 
       def run cmd, *options
+        CompilerStore.set_default_flags
         args = options.select { |option| option.class == String }
         if cmd == 'make' and not options.include? :single_job
           options << "-j#{CommandLine.options[:'make-jobs'].value}"
         end
         options.delete(:single_job)
+        sources = ''
+        System::Shell.source_files.each do |file|
+          sources << "source #{file} && "
+        end
         cmd_str = "#{cmd} #{args.join(' ')}"
         if CommandLine.options[:debug].value
           CLI.blue_arrow cmd_str
@@ -27,18 +32,11 @@ module STARMAN
           cmd_str << " 1>#{ConfigStore.package_root}/stdout.#{Process.pid}" +
                      " 2>#{ConfigStore.package_root}/stderr.#{Process.pid}"
         end
-        system cmd_str
+        system sources + cmd_str
         if not $?.success? and not options.include? :skip_error
           CLI.report_error "Failed to run #{cmd_str}.\n"
         end
-      end
-
-      def work_in dir
-        CLI.report_error 'No work block is given!' if not block_given?
-        FileUtils.mkdir dir if not Dir.exist? dir
-        cd dir
-        yield
-        cd :back
+        CompilerStore.unset_flags
       end
 
       def url_exist? url

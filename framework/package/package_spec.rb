@@ -1,5 +1,7 @@
 module STARMAN
   class PackageSpec
+    include Utils
+
     def initialize
       @revision = {}
       @languages = []
@@ -60,6 +62,10 @@ module STARMAN
       @url
     end
 
+    def path
+      "#{ConfigStore.package_root}/#{filename}"
+    end
+
     def revision val = nil, options = {}
       if val
         @revision[val] = options
@@ -72,13 +78,21 @@ module STARMAN
 
     attr_reader :options, :dependencies, :slaves
 
-    def option val, options = {}
+    def option val, *options
       # Should not override option.
-      @options[val.to_sym] = OptionSpec.new(options) if not @options.has_key? val.to_sym
+      return if @options.has_key? val.to_sym
+      if options.first.class == Hash
+        @options[val.to_sym] = OptionSpec.new(options.first)
+      else
+        @options[val.to_sym] = OptionSpec.new({
+          desc: options[0],
+          accept_value: options[1]
+        })
+      end
     end
 
     def depends_on val, options = {}
-      @dependencies[val] = options
+      @dependencies[val] = symbolize_keys options
     end
 
     def slave val
@@ -92,8 +106,13 @@ module STARMAN
         @patches << data
       else
         spec = PackageSpec.new
-        spec.instance_eval &block
-        @patches << spec
+        files = []
+        spec.instance_exec files, &block
+        if files.empty?
+          @patches << spec
+        else
+          @patches << [spec, files]
+        end
       end
     end
   end

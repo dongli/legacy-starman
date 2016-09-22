@@ -4,16 +4,16 @@ module STARMAN
       def self.accepted_options
         {
           :'local-build' => OptionSpec.new(
-            :desc => 'Force to build package locally from source codes.',
-            :accept_value => { :boolean => false }
+            desc: 'Force to build package locally from source codes.',
+            accept_value: { boolean: false }
           ),
-          :version => OptionSpec.new(
-            :desc => 'Select which version to install.',
-            :accept_value => :string
+          version: OptionSpec.new(
+            desc: 'Select which version to install.',
+            accept_value: :string
           ),
-          :force => OptionSpec.new(
-            :desc => 'Force to install packages no matter other conditions.',
-            :accept_value => { :boolean => false }
+          force: OptionSpec.new(
+            desc: 'Force to install packages no matter other conditions.',
+            accept_value: { boolean: false }
           )
         }
       end
@@ -44,7 +44,7 @@ module STARMAN
           package.shipped_compilers.each do |language, command|
             ConfigStore.config[new_compiler_set_index][language] = "#{package.bin}/#{command}"
           end
-          ConfigStore.write
+          ConfigStore.write_config
         end
       end
     end

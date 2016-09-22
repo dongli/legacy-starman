@@ -50,12 +50,11 @@ module STARMAN
         --with-bugurl=https://github.com/dongli/starman/issues
       ]
 
-      replace 'libgcc/config/t-slibgcc-darwin', '@shlib_slibdir@', "#{lib}/gcc/#{version_suffix}"
+      inreplace 'libgcc/config/t-slibgcc-darwin', '@shlib_slibdir@', "#{lib}/gcc/#{version_suffix}"
 
       run './contrib/download_prerequisites'
 
-      FileUtils.mkdir 'build'
-      work_in 'build' do
+      mkdir 'build' do
         run '../configure', *args
         run 'make', 'bootstrap'
         # run 'ulimit -s 32768 && make -k check' if not skip_test?

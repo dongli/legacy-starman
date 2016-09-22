@@ -29,11 +29,19 @@ module STARMAN
       # Check if there is any patch to download.
       if not package.patches.empty?
         package.patches.each_with_index do |patch, index|
-          next if not patch.class == PackageSpec
-          file_path = "#{ConfigStore.package_root}/#{package.name}.patch.#{index}"
-          if not ( File.exist? file_path and sha_same? file_path, patch.sha256 )
-            CLI.report_notice "Downloading patch #{CLI.blue index}."
-            curl patch.url, ConfigStore.package_root, rename: "#{package.name}.patch.#{index}"
+          case patch
+          when PackageSpec
+            file_path = "#{ConfigStore.package_root}/#{package.name}.patch.#{index}"
+            if not ( File.exist? file_path and sha_same? file_path, patch.sha256 )
+              CLI.report_notice "Downloading patch #{CLI.blue index}."
+              curl patch.url, ConfigStore.package_root, rename: "#{package.name}.patch.#{index}"
+            end
+          when Array
+            file_path = "#{ConfigStore.package_root}/#{patch.first.filename}"
+            if not ( File.exist? file_path and sha_same? file_path, patch.first.sha256 )
+              CLI.report_notice "Downloading patch #{CLI.blue patch.first.filename}."
+              curl patch.first.url, ConfigStore.package_root, rename: patch.first.filename
+            end
           end
         end
       end

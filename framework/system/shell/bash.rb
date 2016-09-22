@@ -1,6 +1,8 @@
 module STARMAN
   module System
     class Bash
+      extend FileUtils
+
       def self.rc_file
         @@rc_file ||= File.expand_path("#{ConfigStore.install_root}/starman.bashrc.#{CompilerStore.active_compiler_set_index}")
       end
@@ -14,7 +16,7 @@ module STARMAN
       end
 
       def self.init
-        FileUtils.touch rc_file if mode == :file
+        touch rc_file if mode == :file
       end
 
       def self.set keys, value, **options
@@ -26,10 +28,10 @@ module STARMAN
               content << "export #{key}=\"#{value}\"\n"
             end
           end
-          write content
+          write_file rc_file, content
         when :env
           Array(keys).map(&:to_s).each do |key|
-            ENV[key] = value
+            ENV[key] = value.to_s
           end
         end
       end
@@ -48,7 +50,7 @@ module STARMAN
               end
             end
           end
-          write content
+          write_file rc_file, content
         when :env
           Array(keys).map(&:to_s).each do |key|
             if ENV[key]
@@ -74,7 +76,7 @@ module STARMAN
               end
             end
           end
-          write content
+          write_file rc_file, content
         when :env
           Array(keys).map(&:to_s).each do |key|
             if ENV[key]
@@ -102,15 +104,6 @@ module STARMAN
       def self.default_environment_variables
         System::Shell.set 'PS1', "(starman) [\\u:\\h \\W]#{ENV['USER'] == 'root' ? '#' : '$'} "
         System::Shell.set 'CLICOLOR', 'xterm-color'
-      end
-
-      private
-
-      def self.write content
-        File.open(rc_file, 'w') do |f|
-          f.write content
-          f.flush
-        end
       end
     end
   end

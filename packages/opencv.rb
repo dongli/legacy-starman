@@ -1,0 +1,113 @@
+module STARMAN
+  class Opencv < Package
+    homepage 'http://opencv.org'
+    url 'https://github.com/opencv/opencv/archive/3.1.0.tar.gz'
+    sha256 'f00b3c4f42acda07d89031a2ebb5ebe390764a133502c03a511f67b78bbd4fbf'
+    version '3.1.0'
+    filename 'opencv-3.1.0.tar.gz'
+
+    option 'with-python2', {
+      desc: 'Build with Python 2 support.',
+      accept_value: { boolean: true }
+    }
+
+    option 'with-python3', {
+      desc: 'Build with Python 3 support.',
+      accept_value: { boolean: true }
+    }
+
+    depends_on :cmake if needs_build?
+    depends_on :python2 if with_python2?
+    depends_on :python3 if with_python3?
+    depends_on :eigen
+    depends_on :jasper
+    depends_on :libjpeg
+    depends_on :libpng
+    depends_on :libtiff
+    depends_on :webp
+    depends_on :tbb
+    depends_on :zlib
+
+    resource :contrib do
+      url 'https://github.com/opencv/opencv_contrib/archive/3.1.0.tar.gz'
+      sha256 'ef2084bcd4c3812eb53c21fa81477d800e8ce8075b68d9dedec90fef395156e5'
+      filename 'opencv-contrib-3.1.0.tar.gz'
+    end
+
+    if OS.mac?
+      resource :icv do
+        url 'https://raw.githubusercontent.com/opencv/opencv_3rdparty/81a676001ca8075ada498583e4166079e5744668/ippicv/ippicv_macosx_20151201.tgz'
+        sha256 '8a067e3e026195ea3ee5cda836f25231abb95b82b7aa25f0d585dc27b06c3630'
+      end
+    elsif OS.linux?
+      resource :icv do
+        url 'https://raw.githubusercontent.com/opencv/opencv_3rdparty/81a676001ca8075ada498583e4166079e5744668/ippicv/ippicv_linux_20151201.tgz'
+        sha256 '4333833e40afaa22c804169e44f9a63e357e21476b765a5683bcb3760107f0da'
+      end
+    end
+
+    def install
+      run 'pip2', 'install', '--upgrade', 'numpy' if with_python2?
+      run 'pip3', 'install', '--upgrade', 'numpy' if with_python3?
+      System::Shell.set 'EIGEN_ROOT', Eigen.prefix
+      args = std_cmake_args + %W[
+        -DBUILD_JASPER=OFF
+        -DBUILD_JPEG=OFF
+        -DBUILD_TIFF=OFF
+        -DBUILD_OPENEXR=OFF
+        -DBUILD_PNG=OFF
+        -DBUILD_ZLIB=OFF
+        -DBUILD_TBB=OFF
+        -DCMAKE_OSX_DEPLOYMENT_TARGET=
+        -DJPEG_INCLUDE_DIR=#{Libjpeg.inc}
+        -DJPEG_LIBRARY=#{Libjpeg.lib}/libjpeg.#{OS.soname}
+        -DZLIB_ROOT=#{Zlib.prefix}
+      ]
+      args << '-DBUILD_TESTS=OFF' << '-DBUILD_PERF_TESTS=OFF' if not skip_test?
+      args << '-DWITH_EIGEN=ON'
+      args << '-DWITH_JASPER=ON'
+      args << '-DWITH_TBB=ON'
+      if with_python2?
+        args << '-DBUILD_opencv_python2=ON'
+        args << "-DPYTHON2_EXECUTABLE=#{Python2.bin}/python2"
+        args << "-DPYTHON2_LIBRARY=#{Python2.lib}/libpython2.7.#{OS.soname}"
+        args << "-DPYTHON2_INCLUDE_DIR=#{Python2.inc}/python2.7"
+      else
+        args << '-DBUILD_opencv_python2=OFF'
+        # args << "-DPYTHON2_EXECUTABLE=''"
+      end
+      if with_python3?
+        args << '-DBUILD_opencv_python3=ON'
+        args << "-DPYTHON3_EXECUTABLE=#{Python3.bin}/python3"
+        args << "-DPYTHON3_LIBRARY=#{Python3.lib}/libpython3.5m.#{OS.soname}"
+        args << "-DPYTHON3_INCLUDE_DIR=#{Python3.inc}/python3.5m"
+      else
+        args << '-DBUILD_opencv_python3=OFF'
+        # args << "-DPYTHON3_EXECUTABLE=''"
+      end
+
+      install_resource :contrib, 'opencv_contrib', strip_leading_dirs: 1
+      args << "-DOPENCV_EXTRA_MODULES_PATH=#{pwd}/opencv_contrib/modules"
+
+      ['FFMPEG', 'V4L', 'DSHOW', 'MSMF', 'XIMEA', 'XINE', 'INTELPERC', 'GPHOTO2',
+       'UNICAP', 'AVFOUNDATION', 'GSTREAMER', 'GTK', 'OPENNI'].each do |lib|
+        args << "-DWITH_#{lib}=OFF"
+      end
+
+      args << '-DWITH_CARBON=ON' if OS.mac? and CompilerStore.compiler(:cxx).vendor == :gcc
+
+      inreplace '3rdparty/ippicv/downloader.cmake',
+        "${OPENCV_ICV_PLATFORM}-${OPENCV_ICV_PACKAGE_HASH}",
+        "${OPENCV_ICV_PLATFORM}"
+      platform = OS.mac? ? "macosx" : "linux"
+      mkdir_p "3rdparty/ippicv/downloads/#{platform}"
+      cp resource(:icv).path, "3rdparty/ippicv/downloads/#{platform}"
+
+      mkdir 'build' do
+        run 'cmake', '..', *args
+        run 'make'
+        run 'make', 'install'
+      end
+    end
+  end
+end

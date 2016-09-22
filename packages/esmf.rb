@@ -34,7 +34,7 @@ module STARMAN
 
     def install
       CLI.report_error "Option #{CLI.red 'mpi'} cannot be 'mpiuni' when #{CLI.red 'with-openmp'}!" if mpi == 'mpiuni' and with_openmp?
-      System::Shell.set 'ESMF_DIR', FileUtils.pwd
+      System::Shell.set 'ESMF_DIR', pwd
       # System::Shell.set 'ESMF_CPP', ENV['CC']
       System::Shell.set 'ESMF_CXXCOMPILER', ENV['CXX']
       System::Shell.set 'ESMF_CXXLINKER', ENV['CXX']
@@ -62,7 +62,7 @@ module STARMAN
       System::Shell.set 'ESMF_INSTALL_LIBDIR', lib
       System::Shell.set 'ESMF_INSTALL_MODDIR', "#{prefix}/mod"
 
-      replace 'src/Infrastructure/Mesh/src/Moab/io/ReadABAQUS.cpp',
+      inreplace 'src/Infrastructure/Mesh/src/Moab/io/ReadABAQUS.cpp',
         'if (NULL != abFile)', 'if (abFile.is_open())'
       run 'make'
       run 'make', 'check' if not skip_test?

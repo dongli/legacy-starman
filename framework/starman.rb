@@ -27,4 +27,5 @@ Kernel.trap('INT') do
   exit
 end
 
+# FIXME: This may not be right.
 at_exit { clean if $! }

@@ -1,6 +1,7 @@
 module STARMAN
   class PackageBinary
     extend System::Command
+    extend FileUtils
 
     class << self
       def read_record package
@@ -32,6 +33,7 @@ module STARMAN
 
       def run package
         return false if PackageInstaller.installed? package
+        package.pre_install
         if package.has_label? :external_binary
           external_binary package
         else
@@ -41,6 +43,7 @@ module STARMAN
             normal_binary package
           end
         end
+        package.post_install
       end
 
       protected
@@ -51,27 +54,22 @@ module STARMAN
 
       def external_binary package
         CLI.report_notice "Install external binary package #{CLI.blue package.name}."
-        FileUtils.mkdir_p package.prefix
-        work_in package.prefix do
-          package.pre_install
+        mkdir_p package.prefix do
           decompress "#{ConfigStore.package_root}/#{package.external_binary.filename}"
-          package.post_install
           PackageProfile.write_profile package
         end
       end
 
       def master_binary package
         CLI.report_notice "Install precompiled package #{CLI.blue package.group_master.name}."
-        FileUtils.mkdir_p package.prefix
-        work_in package.prefix do
+        mkdir_p package.prefix do
           decompress "#{ConfigStore.package_root}/#{Storage.tar_name package.group_master}"
         end
       end
 
       def normal_binary package
         CLI.report_notice "Install precompiled package #{CLI.blue package.name}."
-        FileUtils.mkdir_p package.prefix
-        work_in package.prefix do
+        mkdir_p package.prefix do
           decompress "#{ConfigStore.package_root}/#{Storage.tar_name package}"
         end
       end

@@ -11,7 +11,7 @@ module STARMAN
 
     label :compiler_agnostic
 
-    has_patch
+    patch :DATA
 
     depends_on :pkgconfig if needs_build?
     depends_on :readline
@@ -39,7 +39,7 @@ module STARMAN
     end
 
     def post_install
-      FileUtils.write "#{lib}/ruby/#{abi_version}/rubygems/defaults/operating_system.rb", rubygems_config
+      write_file "#{lib}/ruby/#{abi_version}/rubygems/defaults/operating_system.rb", rubygems_config
     end
 
     def rubygems_config; <<-EOT.keep_indent

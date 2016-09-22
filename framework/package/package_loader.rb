@@ -17,7 +17,7 @@ module STARMAN
         next unless package.options.has_key? name
         begin
           if value.class == OptionSpec
-            package.options[name] = value
+            package.options[name] = value if value.cascade
           else
             package.options[name].check value
             CommandLine.options[name] = package.options[name]
@@ -29,8 +29,8 @@ module STARMAN
       CommandLine.check_invalid_options
     end
 
-    def self.load_package name, *options
-      if packages[name][:instance] and not options.include? :force
+    def self.load_package name, options = {}
+      if packages[name][:instance] and not options[:force]
         # Package is depended by depended package nestly.
         package = CommandLine.packages[name]
         CommandLine.packages.delete(name)
@@ -41,6 +41,7 @@ module STARMAN
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
       transfer_options_to package, CommandLine.options
+      transfer_options_to package, options
       # Reload package, since the options may change dependencies.
       Package.clean name
       load packages[name][:file]
@@ -73,43 +74,45 @@ module STARMAN
       @@packages
     end
 
+    def self.scan_installed_package package_name
+      dir = "#{ConfigStore.install_root}/#{package_name}"
+      return unless File.directory? dir
+      load_package package_name
+      package = packages[package_name][:instance]
+      profiles = []
+      Dir.glob("#{dir}/*/*").each do |prefix|
+        next if Pathname.new(prefix).dirname.basename.to_s == 'persist'
+        profile = PackageProfile.read_profile prefix
+        next if not package.has_label? :compiler and not package.has_label? :compiler_agnostic and
+                profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '')
+        profiles << profile
+      end
+      return if profiles.empty?
+      if profiles.size > 1
+        CLI.report_warning "There are multiple installation versions of package #{CLI.blue name}."
+        all_options = []
+        profiles.each do |profile|
+          all_options << "#{profile[:version]}#{": #{profile[:options]}" if not profile[:options].empty?}"
+        end
+        CLI.ask 'Which one do you want to use?', all_options
+        i = CLI.get_answer.to_i
+        transfer_profile_to package, profiles[i]
+      else
+        transfer_profile_to package, profiles.first
+      end
+      package
+    end
+
     def self.installed_packages
-      if not defined? @@installed_packages
-        @@installed_packages ||= {}
-        Dir.glob("#{ConfigStore.install_root}/*").each do |dir|
-          next if not File.directory? dir
-          name = File.basename(dir).to_sym
-          load_package name
-          package = packages[name][:instance]
-          profiles = []
-          Dir.glob("#{dir}/*/*").each do |prefix|
-            next if Pathname.new(prefix).dirname.basename.to_s == 'persist'
-            profile = PackageProfile.read_profile prefix
-            next if not package.has_label? :compiler and not package.has_label? :compiler_agnostic and
-                    profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '')
-            profiles << profile
-          end
-          next if profiles.empty?
-          # FIXME: There are cases when we do not need to choose.
-          if profiles.size > 1
-            CLI.report_warning "There are multiple installation versions of package #{CLI.blue name}."
-            all_options = []
-            profiles.each do |profile|
-              option = profile[:version]
-              option << ": #{profile[:options]}" if not profile[:options].empty?
-              all_options << option
-            end
-            CLI.ask 'Which one do you want to use?', all_options
-            i = CLI.get_answer.to_i
-            transfer_profile_to package, profiles[i]
-          else
-            transfer_profile_to package, profiles.first
-          end
-          @@installed_packages[name] = package
-          if package.has_label? :group_master
-            package.slaves.each do |slave|
-              @@installed_packages[slave.name] = slave
-            end
+      return @@installed_packages if defined? @@installed_packages
+      @@installed_packages ||= {}
+      Dir.glob("#{ConfigStore.install_root}/*").each do |dir|
+        package = scan_installed_package File.basename(dir).to_sym
+        next unless package
+        @@installed_packages[package.name] = package
+        if package.has_label? :group_master
+          package.slaves.each do |slave|
+            @@installed_packages[slave.name] = slave
           end
         end
       end

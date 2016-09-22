@@ -22,7 +22,7 @@ module STARMAN
     end
 
     def symbolize_keys hash
-      hash = hash.inject({}) { |memo, (k,v)| memo[k.to_sym] = v; memo }
+      hash = hash.each_with_object({}) { |(k, v), h| h[k.to_sym] = v.is_a?(Hash) ? symbolize_keys(v) : v }
     end
 
     def stringfy_keys hash

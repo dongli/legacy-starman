@@ -52,6 +52,19 @@ module STARMAN
           EOT
         end
 
+        def append_source_file file_path
+          @@source_files ||= []
+          @@source_files << file_path
+        end
+
+        def clean_source_files
+          @@source_files = []
+        end
+
+        def source_files
+          @@source_files ||= []
+        end
+
         def shell_command
           ConfigStore.defaults[:shell]
         end

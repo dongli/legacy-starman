@@ -15,17 +15,17 @@ module STARMAN
 
     def install
       if OS.linux?
-        FileUtils.cp 'MAKE_INC/make.linux', 'make.inc'
+        cp 'MAKE_INC/make.linux', 'make.inc'
       elsif OS.mac?
-        FileUtils.cp 'MAKE_INC/make.mac-x', 'make.inc'
+        cp 'MAKE_INC/make.mac-x', 'make.inc'
       end
-      replace 'make.inc', '-fopenmp', '' if not CompilerStore.compiler(:c).feature?(:openmp)
+      inreplace 'make.inc', '-fopenmp', '' if not CompilerStore.compiler(:c).feature?(:openmp)
       args = %W[
         RANLIB=true
         CC="${CC}"
         FORTRAN="${FC}"
-        SuperLUroot=#{FileUtils.pwd}
-        SUPERLULIB=#{FileUtils.pwd}/lib/libsuperlu.a
+        SuperLUroot=#{pwd}
+        SUPERLULIB=#{pwd}/lib/libsuperlu.a
         NOOPTS=-fPIC
         BLASLIB="-L#{Openblas.lib} -lopenblas"
       ]
@@ -39,10 +39,10 @@ module STARMAN
           end
         end
       end
-      FileUtils.mkdir_p "#{inc}/superlu"
-      FileUtils.cp 'SRC/*.h', "#{inc}/superlu"
-      FileUtils.mkdir_p lib
-      FileUtils.cp 'lib/*', lib
+      mkdir_p "#{inc}/superlu"
+      cp 'SRC/*.h', "#{inc}/superlu"
+      mkdir_p lib
+      cp 'lib/*', lib
     end
   end
 end
