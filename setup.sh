@@ -50,7 +50,7 @@ if ! which ruby 2>&1 1> /dev/null 2>&1; then
 fi
 
 RUBY_VERSION=$(ruby -v | cut -d ' ' -f 2)
-if [[ $RUBY_VERSION =~ $(echo '^2\.0') || $RUBY_VERSION =~ $(echo '^1\.9') ]]; then
+if [[ $RUBY_VERSION =~ $(echo '^1\.8') || $RUBY_VERSION =~ $(echo '^1\.9') ]]; then
   echo "[Warning]: Ruby version is too old, STARMAN will install a newer one for you!"
   install_ruby
 fi
