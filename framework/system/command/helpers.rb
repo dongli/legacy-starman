@@ -24,7 +24,17 @@ module STARMAN
         cmd_str = "#{cmd} #{args.join(' ')}"
         if CommandLine.options[:debug].value
           CLI.blue_arrow cmd_str
-          print File.open(System::Shell.rc_file, 'r').read if File.exist? System::Shell.rc_file
+          CompilerStore::LanguageCompilerVariableNames.each do |language, variables|
+            Array(variables).each do |variable|
+              print "#{variable}: #{ENV[variable]}\n"
+            end
+          end
+          CompilerStore::LanguageCompilerFlagNames.each do |language, variables|
+            Array(variables).each do |variable|
+              print "#{variable}: #{ENV[variable]}\n"
+            end
+          end
+          print "LDFLAGS: #{ENV['LDFLAGS']}\n"
         else
           CLI.blue_arrow cmd_str, :truncate
         end

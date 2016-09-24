@@ -44,11 +44,17 @@ module STARMAN
       end
 
       def set_default_flags
-        LanguageCompilerFlagNames.each do |language, flags|
-          Array(flags).each do |flag|
-            System::Shell.set flag, CompilerStore.compiler(language).default_flags
+        LanguageCompilerFlagNames.each do |language, flag_names|
+          Array(flag_names).each do |flag_name|
+            compiler = CompilerStore.compiler(language)
+            next if not compiler
+            flags = [compiler.default_flags]
+            flags << compiler.flag(:pic)
+            flags << compiler.flag(:cxx11) if language == :cxx
+            System::Shell.set flag_name, flags.join(' ')
           end
         end
+        System::Shell.set 'LDFLAGS', CompilerStore.compiler(:cxx).flag(:libcxx)
       end
 
       def unset_flags
@@ -57,6 +63,7 @@ module STARMAN
             System::Shell.set flag, ''
           end
         end
+        System::Shell.set 'LDFLAGS', ''
       end
 
       def set_optimization_flags level

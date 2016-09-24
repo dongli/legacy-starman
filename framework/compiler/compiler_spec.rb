@@ -44,7 +44,12 @@ module STARMAN
     end
 
     def flag val
-      @flags = val.merge(@flags)
+      case val
+      when Hash
+        @flags = val.merge(@flags)
+      else
+        @flags[val]
+      end
     end
 
     def feature val, &block

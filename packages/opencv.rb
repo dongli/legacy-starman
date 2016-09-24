@@ -10,15 +10,23 @@ module STARMAN
       desc: 'Build with Python 2 support.',
       accept_value: { boolean: true }
     }
-
     option 'with-python3', {
       desc: 'Build with Python 3 support.',
       accept_value: { boolean: true }
+    }
+    option 'with-qt5', {
+      desc: 'Build the Qt5 backend to HighGUI',
+      accept_value: { boolean: true }
+    }
+    option 'with-cuda', {
+      desc: 'Build with Cuda support.',
+      accept_value: { boolean: false }
     }
 
     depends_on :cmake if needs_build?
     depends_on :python2 if with_python2?
     depends_on :python3 if with_python3?
+    depends_on :qt5
     depends_on :eigen
     depends_on :jasper
     depends_on :libjpeg
@@ -27,6 +35,7 @@ module STARMAN
     depends_on :webp
     depends_on :tbb
     depends_on :zlib
+    depends_on :glog
 
     resource :contrib do
       url 'https://github.com/opencv/opencv_contrib/archive/3.1.0.tar.gz'
@@ -49,20 +58,19 @@ module STARMAN
     def install
       run 'pip2', 'install', '--upgrade', 'numpy' if with_python2?
       run 'pip3', 'install', '--upgrade', 'numpy' if with_python3?
-      System::Shell.set 'EIGEN_ROOT', Eigen.prefix
       args = std_cmake_args + %W[
         -DBUILD_JASPER=OFF
         -DBUILD_JPEG=OFF
+        -DJPEG_INCLUDE_DIR=#{Libjpeg.inc}
+        -DJPEG_LIBRARY=#{Libjpeg.lib}/libjpeg.#{OS.soname}
         -DBUILD_TIFF=OFF
         -DBUILD_OPENEXR=OFF
         -DBUILD_PNG=OFF
+        -DZLIB_ROOT=#{Zlib.prefix}
         -DBUILD_ZLIB=OFF
         -DBUILD_TBB=OFF
-        -DCMAKE_OSX_DEPLOYMENT_TARGET=
-        -DJPEG_INCLUDE_DIR=#{Libjpeg.inc}
-        -DJPEG_LIBRARY=#{Libjpeg.lib}/libjpeg.#{OS.soname}
-        -DZLIB_ROOT=#{Zlib.prefix}
       ]
+      args << "-DCMAKE_PREFIX_PATH=#{Qt5.prefix}" << '-DWITH_QT=ON' if with_qt5?
       args << '-DBUILD_TESTS=OFF' << '-DBUILD_PERF_TESTS=OFF' if not skip_test?
       args << '-DWITH_EIGEN=ON'
       args << '-DWITH_JASPER=ON'
@@ -74,7 +82,7 @@ module STARMAN
         args << "-DPYTHON2_INCLUDE_DIR=#{Python2.inc}/python2.7"
       else
         args << '-DBUILD_opencv_python2=OFF'
-        # args << "-DPYTHON2_EXECUTABLE=''"
+        args << "-DPYTHON2_EXECUTABLE=''"
       end
       if with_python3?
         args << '-DBUILD_opencv_python3=ON'
@@ -83,7 +91,7 @@ module STARMAN
         args << "-DPYTHON3_INCLUDE_DIR=#{Python3.inc}/python3.5m"
       else
         args << '-DBUILD_opencv_python3=OFF'
-        # args << "-DPYTHON3_EXECUTABLE=''"
+        args << "-DPYTHON3_EXECUTABLE=''"
       end
 
       install_resource :contrib, 'opencv_contrib', strip_leading_dirs: 1
@@ -99,12 +107,25 @@ module STARMAN
       inreplace '3rdparty/ippicv/downloader.cmake',
         "${OPENCV_ICV_PLATFORM}-${OPENCV_ICV_PACKAGE_HASH}",
         "${OPENCV_ICV_PLATFORM}"
+      inreplace 'cmake/OpenCVFindLibsPerf.cmake',
+        "$ENV{EIGEN_ROOT}/include", "#{Eigen.inc}/eigen3"
+      inreplace 'opencv_contrib/modules/cnn_3dobj/FindGlog.cmake',
+        '/usr/local/lib', Glog.lib
+      inreplace 'opencv_contrib/modules/sfm/CMakeLists.txt', {
+        'set(GLOG_LIBRARIES "glog")' => 'set(GLOG_LIBRARIES "")',
+        '${GLOG_INCLUDE_DIRS}' => Glog.inc,
+        '${GFLAGS_INCLUDE_DIRS}' => Gflags.inc,
+        '${GLOG_LIBRARIES}' => "#{Glog.lib}/libglog.#{OS.soname}",
+        '${GFLAGS_LIBRARIES}' => "#{Gflags.lib}/libgflags.#{OS.soname}"
+      }
+
       platform = OS.mac? ? "macosx" : "linux"
       mkdir_p "3rdparty/ippicv/downloads/#{platform}"
       cp resource(:icv).path, "3rdparty/ippicv/downloads/#{platform}"
 
       mkdir 'build' do
         run 'cmake', '..', *args
+        inreplace 'modules/sfm/CMakeFiles/opencv_sfm.dir/link.txt', '-lglog', ''
         run 'make'
         run 'make', 'install'
       end

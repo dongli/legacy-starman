@@ -29,9 +29,9 @@ module STARMAN
       ]
       args << 'stdlib=libc++' if OS.mac? and CompilerStore.compiler(:cxx).vendor == :llvm
       run 'make', *args
-      FileUtils.mkdir_p [lib, inc], force: true
-      FileUtils.cp Dir.glob("build/BUILDPREFIX_release/*.#{OS.soname}"), lib
-      FileUtils.cp_r 'include/tbb', inc
+      mkdir_p [lib, inc], force: true
+      cp Dir.glob("build/BUILDPREFIX_release/*.#{OS.soname}"), lib
+      cp_r 'include/tbb', inc
     end
   end
 end

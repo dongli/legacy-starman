@@ -38,6 +38,8 @@ require 'system/os/linux'
 require 'system/os/ubuntu'
 require 'system/os/centos'
 
+require 'system/ide/xcode'
+
 require 'compiler/compiler_spec'
 require 'compiler/compiler_dsl'
 require 'compiler/compiler'

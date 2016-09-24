@@ -35,5 +35,9 @@ module STARMAN
     def pkg_config
       "#{lib}/pkgconfig"
     end
+
+    def var
+      "#{prefix}/var"
+    end
   end
 end
