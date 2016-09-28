@@ -18,6 +18,7 @@ module STARMAN
       :accept_value => { :boolean => false }
     }
 
+    depends_on :m4
     depends_on :hdf5
     depends_on :curl if with_dap?
     depends_on :pnetcdf if with_mpi?
