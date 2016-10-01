@@ -39,6 +39,8 @@ module STARMAN
             @@os = Debian.new
           when /SUSE Linux/
             @@os = Suse.new
+          when /Scientific Linux/
+            @@os = ScientificLinux.new
           else
             CLI.report_error "Unknown OS type \"#{res}\"!"
           end
@@ -68,7 +70,7 @@ module STARMAN
       end
 
       def linux?
-        @@os.type == :ubuntu
+        [:ubuntu, :fedora, :centos, :scientific_linux].include? @@os.type
       end
 
       def os_name
