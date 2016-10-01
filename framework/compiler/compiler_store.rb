@@ -20,6 +20,9 @@ module STARMAN
       end
 
       def set_active_compiler_set compiler_set_index
+        if compiler_set_index >= @@compiler_sets.size
+          CLI.report_error "Your default compiler set does not exist! Configure again!"
+        end
         @@active_compiler_set_index = compiler_set_index
         @@active_compiler_set = @@compiler_sets[compiler_set_index]
         @@active_compiler_set.compilers.each do |language, compiler|
