@@ -44,6 +44,8 @@ module STARMAN
           else
             CLI.report_error "Unknown OS type \"#{res}\"!"
           end
+        when /^AIX */
+          @@os = AIX.new
         when /^CYGWIN*/
           @@os = Cygwin.new
         else
@@ -70,7 +72,8 @@ module STARMAN
       end
 
       def linux?
-        [:ubuntu, :fedora, :centos, :scientific_linux].include? @@os.type
+        # FIXME: Check if aix can be covered in linux?
+        [:ubuntu, :fedora, :centos, :scientific_linux, :aix].include? @@os.type
       end
 
       def os_name

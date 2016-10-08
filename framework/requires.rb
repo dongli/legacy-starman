@@ -38,6 +38,7 @@ require 'system/os/linux'
 require 'system/os/ubuntu'
 require 'system/os/centos'
 require 'system/os/scientific_linux'
+require 'system/os/aix'
 
 require 'system/ide/xcode'
 
