@@ -76,11 +76,14 @@ module STARMAN
       print_call_stack if CommandLine.options[:debug].value
     end
 
-    def self.report_error message, options = nil
-      options = [options] if not options or options.class != Array
-      print "[#{red 'Error'}]: #{message}\n"
-      print_call_stack if CommandLine.options[:debug].value rescue exit
-      exit
+    def self.report_error message, options = {}
+      if options[:raise_exception]
+        raise message
+      else
+        print "[#{red 'Error'}]: #{message}\n"
+        print_call_stack if CommandLine.options[:debug].value rescue exit
+        exit
+      end
     end
 
     def self.repeat x, times, color, suffix = nil

@@ -38,7 +38,7 @@ module STARMAN
           when /Debian GNU\/Linux/
             @@os = Debian.new
           when /SUSE Linux/
-            @@os = Suse.new
+            @@os = SUSE.new
           when /Scientific Linux/
             @@os = ScientificLinux.new
           else

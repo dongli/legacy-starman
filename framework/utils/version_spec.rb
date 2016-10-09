@@ -2,13 +2,13 @@ module STARMAN
   class VersionSpec
     attr_reader :major, :minor, :revision, :alpha, :beta, :release_candidate
 
-    def initialize version_string
+    def initialize version_string, options = {}
       tmp = version_string.split('.')
       # The major version identifer is the first one.
       begin
         @major = Integer(tmp[0])
       rescue
-        CLI.report_error "Bad version identifer #{CLI.red version_string}!"
+        CLI.report_error "Bad version identifer #{CLI.red version_string}!", options
       end
       # The alpha, beta, release candidate identifers may be appended to the
       # minor version identifer
@@ -16,7 +16,7 @@ module STARMAN
       res = tmp[1].match(/(\d+)-?(a|b|rc)?(\d+)?/)
       # TODO: Handle bad minor version identifer.
       if not res
-        CLI.report_error "Bad version identifer #{CLI.red version_string}!"
+        CLI.report_error "Bad version identifer #{CLI.red version_string}!", options
       end
       @minor = res[1].to_i
       if res[2] and res[3]
@@ -31,12 +31,12 @@ module STARMAN
       elsif not res[2] and res[3]
         @beta = res[3].to_i
       elsif res[2] and not res[3]
-        CLI.report_error "Bad version identifer #{CLI.red version_string}!"
+        CLI.report_error "Bad version identifer #{CLI.red version_string}!", options
       end
       return if tmp.size == 2
       @revision = tmp[2].to_i
       if tmp.size > 3
-        CLI.report_error "Bad version identifer #{CLI.red version_string}!"
+        CLI.report_error "Bad version identifer #{CLI.red version_string}!", options
       end
     end
 

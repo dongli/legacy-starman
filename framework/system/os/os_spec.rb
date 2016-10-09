@@ -24,7 +24,7 @@ module STARMAN
     def version val = nil, &block
       if block_given?
         begin
-          @version = VersionSpec.new block.call
+          @version = VersionSpec.new block.call, raise_exception: true
         rescue => e
           case e
           when Errno::ENOENT

@@ -1,8 +1,9 @@
 module STARMAN
-  class Ubuntu < Linux
+  class SUSE < Linux
     type :suse
     version do
-      `cat /etc/os-release`.match(/SUSE (\d+\.\d+)/)[1]
+      tmp = `cat /etc/*-release`
+      "#{tmp.match(/VERSION\s*=\s*(\d+)/)[1]}.#{tmp.match(/PATCHLEVEL\s*=\s*(\d+)/)[1]}"
     end
   end
 end
