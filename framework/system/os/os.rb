@@ -73,7 +73,7 @@ module STARMAN
 
       def linux?
         # FIXME: Check if aix can be covered in linux?
-        [:ubuntu, :fedora, :centos, :scientific_linux, :aix].include? @@os.type
+        [:ubuntu, :fedora, :centos, :suse, :scientific_linux, :aix].include? @@os.type
       end
 
       def os_name

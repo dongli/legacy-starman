@@ -37,6 +37,7 @@ require 'system/os/mac'
 require 'system/os/linux'
 require 'system/os/ubuntu'
 require 'system/os/centos'
+require 'system/os/suse'
 require 'system/os/scientific_linux'
 require 'system/os/aix'
 

@@ -1,7 +1,7 @@
 module STARMAN
   class Linux < OS
     version do
-      `lsb_release -r`.gsub(/^.*\t/, '').chomp
+      `lsb_release -r`.gsub(/^.*\s+/, '').chomp
     end
     soname :so
     ld_library_path 'LD_LIBRARY_PATH'
