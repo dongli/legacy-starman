@@ -1,7 +1,12 @@
 module STARMAN
   class IntelCompiler < Compiler
     vendor :intel
-    language :c,       :command => 'icc',   :default_flags => '-O2 -fPIC'
+    version do |command|
+      res = `#{command} -v 2>&1`.match(/version (\d+\.\d+\.\d+)/)
+      CLI.report_error "Failed to query version of #{CLI.red command}!" if not res
+      res[1]
+    end
+     language :c,       :command => 'icc',   :default_flags => '-O2 -fPIC'
     language :cxx,     :command => 'icpc',  :default_flags => '-O2 -fPIC'
     language :fortran, :command => 'ifort', :default_flags => '-O2 -fPIC'
     flag :openmp => '-openmp'
