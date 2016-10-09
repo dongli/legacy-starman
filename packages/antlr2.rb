@@ -7,8 +7,7 @@ module STARMAN
 
     def install
       inreplace 'lib/cpp/antlr/CharScanner.hpp',
-        /^(#include <map>)$/,
-        "\\1\n#include <strings.h>\n#include <cstdio>\n"
+        /^(#include <map>)$/ => "\\1\n#include <strings.h>\n#include <cstdio>\n"
       args = %W[
         --prefix=#{prefix}
         --disable-debug
