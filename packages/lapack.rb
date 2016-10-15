@@ -1,9 +1,9 @@
 module STARMAN
   class Lapack < Package
     homepage 'http://www.netlib.org/lapack/'
-    url 'http://www.netlib.org/lapack/lapack-3.6.0.tgz'
-    sha256 'a9a0082c918fe14e377bbd570057616768dca76cbdc713457d8199aaa233ffc3'
-    version '3.6.0'
+    url 'http://www.netlib.org/lapack/lapack-3.6.1.tgz'
+    sha256 '888a50d787a9d828074db581c80b2d22bdb91435a673b1bf6cd6eb51aa50d1de'
+    version '3.6.1'
     language :fortran
 
     label :system_conflict if OS.mac?
