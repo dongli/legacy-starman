@@ -1,8 +1,8 @@
 module STARMAN
   module System
     module Command
-      def compress path, **options
-        system "tar czf #{path} ."
+      def compress path, filename
+        system "tar -C #{path} -czf #{filename} ."
       end
 
       def decompress path, **options

@@ -14,6 +14,14 @@ module STARMAN
           force: OptionSpec.new(
             desc: 'Force to install packages no matter other conditions.',
             accept_value: { boolean: false }
+          ),
+          post: OptionSpec.new(
+            desc: 'Only execute post install procedures.',
+            accept_value: { boolean: false }
+          ),
+          remote: OptionSpec.new(
+            desc: 'Install package on remote server.',
+            accept_value: :string
           )
         }
       end
@@ -31,6 +39,7 @@ module STARMAN
           when :source
             installed = PackageInstaller.run package
           end
+          package.post_install if not installed and CommandLine.options[:post].value
           # Set environment variables for later packages that depend on it.
           System::Shell.prepend 'PATH', package.bin, separator: ':' if Dir.exist? package.bin
           System::Shell.prepend OS.ld_library_path, package.lib, separator: ':' if Dir.exist? package.lib and not package.has_label? :system_conflict

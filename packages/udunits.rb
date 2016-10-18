@@ -5,11 +5,16 @@ module STARMAN
     sha256 'f10a02014bc6a200d50d8719997bb3a6b3d364de688469d2f7d599688dd9d195'
     version '2.2.20'
 
+    depends_on :expat
+
     def install
       args = %W[
         --prefix=#{prefix}
         --disable-debug
         --disable-dependency-tracking
+        CPPFLAGS='-I#{Expat.inc}'
+        LDFLAGS='-L#{Expat.lib}'
+        LIBS='-lexpat'
       ]
       run './configure', *args
       run 'make', 'install'

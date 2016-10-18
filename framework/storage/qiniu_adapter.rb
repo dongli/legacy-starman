@@ -47,9 +47,7 @@ module STARMAN
       tar_name = Storage.tar_name package
       # Compress built package.
       CLI.report_notice "Compress package #{CLI.blue package.name}."
-      work_in package.prefix do
-        compress "#{ConfigStore.package_root}/#{tar_name}"
-      end
+      compress package.prefix, "#{ConfigStore.package_root}/#{tar_name}"
       # Upload to Qiniu.
       CLI.report_notice "Upload package #{CLI.blue package.name}."
       put_policy = Qiniu::Auth::PutPolicy.new(Bucket, tar_name, 3600)
