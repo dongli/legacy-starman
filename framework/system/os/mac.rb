@@ -28,6 +28,18 @@ module STARMAN
       res = `dscl . list /Groups | grep #{name} 2>&1`
       $?.success?
     end
+    command :get_unique_id do
+      existed_ids = `dscl . list /Users UniqueID`.gsub(/^[^\s]+\s+/, '').split("\n").map { |id| id.to_i }
+      id = 500
+      id += 1 until not existed_ids.include? id
+      id
+    end
+    command :get_primary_group_id do
+      existed_ids = `dscl . list /Users PrimaryGroupID`.gsub(/^[^\s]+\s+/, '').split("\n").map { |id| id.to_i }
+      id = 500
+      id += 1 until not existed_ids.include? id
+      id
+    end
     command :create_user do |name, *options|
       CLI.report_notice "Create user #{CLI.blue name}."
       CLI.report_error "User #{CLI.red name} exists!" if check_user name
