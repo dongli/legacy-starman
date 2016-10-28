@@ -1,16 +1,19 @@
 module STARMAN
   class Postgresql < Package
     homepage 'https://www.postgresql.org/'
-    url 'https://ftp.postgresql.org/pub/source/v9.5.3/postgresql-9.5.3.tar.bz2'
-    sha256 '7385c01dc58acba8d7ac4e6ad42782bd7c0b59272862a3a3d5fe378d4503a0b4'
-    version '9.5.3'
+    url 'https://ftp.postgresql.org/pub/source/v9.6.0/postgresql-9.6.0.tar.bz2'
+    sha256 '3b5fe9634b80a4511aac1832a087586a7caa8c3413619562bdda009a015863ce'
+    version '9.6.0'
 
     label :compiler_agnostic
+
+    compatible_with '10.11' if OS.mac? and OS.version =~ '10.12'
 
     option 'with-perl', { desc: 'Build with Perl support', accept_value: { boolean: false } }
     option 'with-tcl', { desc: 'Build with Tcl support', accept_value: { boolean: false } }
     option 'with-dtrace', { desc: 'Build with DTrace support', accept_value: { boolean: false } }
-    option 'admin-user', { desc: 'Set admin user name.', accept_value: { string: 'postgres' } }
+    option 'admin-user', { desc: 'Set admin user name.', accept_value: { string: 'postgres' }, extra: { profile: false } }
+    option 'port', { desc: 'Set the default port number.', accept_value: { string: '5432' } }
 
     depends_on :openssl
     depends_on :readline
@@ -28,6 +31,7 @@ module STARMAN
         --prefix=#{prefix}
         --localstatedir=#{persist}
         --enable-thread-safety
+        --with-pgport=#{port}
         --with-bonjour
         --with-gssapi
         --with-ldap
@@ -36,6 +40,7 @@ module STARMAN
         --with-libxml
         --with-libxslt
         --with-uuid=e2fs
+        --without-tcl
       ]
 
       run './configure', *args

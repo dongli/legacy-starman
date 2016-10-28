@@ -12,6 +12,7 @@ module STARMAN
     extend Forwardable
     def_delegators :@latest, :homepage, :url, :mirror, :sha256, :version
     def_delegators :@latest, :labels, :languages, :has_label?, :has_language?
+    def_delegators :@latest, :compats, :has_compat?
     def_delegators :@latest, :group_master, :slave, :slaves, :patches
     def_delegators :@latest, :filename, :revision, :options, :dependencies
 
@@ -34,7 +35,7 @@ module STARMAN
     def profile
       option_profile = {}
       self.options.each_key do |name|
-        next if self.options[name].extra[:common]
+        next if self.options[name].extra[:profile] == false
         option_profile[name] = self.options[name].value
       end
       spec = has_label?(:external_binary) ? external_binary : self

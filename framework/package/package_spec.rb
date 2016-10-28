@@ -6,6 +6,7 @@ module STARMAN
       @revision = {}
       @languages = []
       @labels = []
+      @compats = []
       @dependencies = {}
       @slaves = []
       # Common options.
@@ -13,7 +14,7 @@ module STARMAN
         :'skip-test' => OptionSpec.new(
           :desc => 'Skip the build test.',
           :accept_value => { :boolean => false },
-          :extra => { :common => true }
+          :extra => { :profile => false }
         )
       }
       @patches = []
@@ -23,6 +24,7 @@ module STARMAN
     def clean
       @languages = []
       @labels = []
+      @compats = []
       @dependencies = {}
       @slaves = []
       @patches = []
@@ -37,7 +39,7 @@ module STARMAN
       EOT
     end
 
-    [:label, :language].each do |attr|
+    [:label, :language, :compat].each do |attr|
       class_eval <<-EOT
         attr_reader :#{attr}s
         def #{attr} *val, **options

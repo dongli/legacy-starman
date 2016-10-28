@@ -61,6 +61,7 @@ module STARMAN
     end
 
     def self.run
+      return if CommandLine.command == :edit
       CommandLine.packages.keys.each do |name|
         load_package name.to_s.downcase.to_sym
       end

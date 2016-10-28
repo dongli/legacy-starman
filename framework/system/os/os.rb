@@ -63,8 +63,8 @@ module STARMAN
         end
       end
 
-      def tag
-        "#{@@os.type}_#{@@os.version.major_minor}"
+      def tag version
+        "#{@@os.type}_#{version || @@os.version.major_minor}"
       end
 
       def mac?
