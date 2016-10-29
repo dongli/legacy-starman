@@ -5,11 +5,17 @@ module STARMAN
 
     class << self
       def installed? package
-        profile = PackageProfile.read_profile package
-        if package.has_label? :external_binary
-          profile[:sha256] == package.external_binary.sha256
+        if package.has_label? :parasite
+          profile = PackageProfile.read_profile PackageLoader.packages[package.labels[:parasite][:into]][:instance]
+          sha256 = profile.fetch(:parasites, {}).fetch(package.name, {}).fetch(:sha256, nil)
         else
-          profile[:sha256] == package.sha256
+          profile = PackageProfile.read_profile package
+          sha256 = profile[:sha256]
+        end
+        if package.has_label? :external_binary
+          sha256 == package.external_binary.sha256
+        else
+          sha256 == package.sha256
         end
       end
 

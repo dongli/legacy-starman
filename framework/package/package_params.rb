@@ -5,18 +5,23 @@ module STARMAN
     end
 
     def prefix options = {}
-      name = self.class == Class ? package_name : self.name
-      if self.has_label? :group_master
-        res = "#{ConfigStore.install_root}/#{name}/#{self.version}/#{master_tag options}"
-      elsif not self.group_master
-        res = "#{ConfigStore.install_root}/#{name}/#{self.version}/#{normal_tag options}"
+      if self.has_label? :parasite
+        name = self.labels[:parasite][:into]
       else
-        res = "#{ConfigStore.install_root}/#{self.group_master.name}/#{self.group_master.version}/#{slave_tag options}"
+        name = self.class == Class ? package_name : self.name
+      end
+      package = PackageLoader.packages[name][:instance]
+      if package.has_label? :group_master
+        res = "#{ConfigStore.install_root}/#{name}/#{package.version}/#{master_tag options}"
+      elsif not self.group_master
+        res = "#{ConfigStore.install_root}/#{name}/#{package.version}/#{normal_tag options}"
+      else
+        res = "#{ConfigStore.install_root}/#{package.group_master.name}/#{package.group_master.version}/#{slave_tag options}"
       end
       # If prefix directory does not exist, check if there is any compatible versions.
-      if not options[:compatible_os_version] and not Dir.exist? res and self.class != Class
-        self.compats.each do |compat|
-          res = prefix options.merge compatible_os_version: compat
+      if not options[:compatible_os_version] and not Dir.exist? res and package.class != Class
+        package.compats.each do |compat|
+          res = package.prefix options.merge compatible_os_version: compat
           return res if Dir.exist? res
         end
       end

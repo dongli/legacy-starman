@@ -5,7 +5,7 @@ module STARMAN
     def initialize
       @revision = {}
       @languages = []
-      @labels = []
+      @labels = {}
       @compats = []
       @dependencies = {}
       @slaves = []
@@ -23,7 +23,7 @@ module STARMAN
     # Data need to be cleaned between load statements.
     def clean
       @languages = []
-      @labels = []
+      @labels = {}
       @compats = []
       @dependencies = {}
       @slaves = []
@@ -42,16 +42,28 @@ module STARMAN
     [:label, :language, :compat].each do |attr|
       class_eval <<-EOT
         attr_reader :#{attr}s
-        def #{attr} *val, **options
-          val.flatten!
-          if not val.empty?
-            @#{attr}s.concat val
-            @#{attr}s.uniq!
+        def #{attr} *values, **options
+          values.flatten!
+          if not values.empty?
+            case @#{attr}s
+            when Array
+              @#{attr}s.concat values
+              @#{attr}s.uniq!
+            when Hash
+              values.each do |value|
+                @#{attr}s[value] = options
+              end
+            end
           end
         end
 
-        def has_#{attr}? val
-          #{attr}s.include? val
+        def has_#{attr}? value
+          case @#{attr}s
+          when Array
+            #{attr}s.include? value
+          when Hash
+            #{attr}s.has_key? value
+          end
         end
       EOT
     end

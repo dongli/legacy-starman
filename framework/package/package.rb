@@ -9,6 +9,7 @@ module STARMAN
     include PackageHelpers
     include PackageResource
 
+    # Delegate methods to instance methods.
     extend Forwardable
     def_delegators :@latest, :homepage, :url, :mirror, :sha256, :version
     def_delegators :@latest, :labels, :languages, :has_label?, :has_language?
@@ -16,10 +17,26 @@ module STARMAN
     def_delegators :@latest, :group_master, :slave, :slaves, :patches
     def_delegators :@latest, :filename, :revision, :options, :dependencies
 
+    # Delegate methods to class methods
+    [:labels].each do |method|
+      class_eval <<-RUBY
+        def self.#{method}
+          self.class_variable_get(:"@@\#{self.package_name}_latest").#{method}
+        end
+      RUBY
+    end
+    [:has_label?].each do |method|
+      class_eval <<-RUBY
+        def self.#{method} value
+          self.class_variable_get(:"@@\#{self.package_name}_latest").#{method} value
+        end
+      RUBY
+    end
+
     attr_reader :name, :latest, :external_binary, :history, :resources
 
     def initialize
-      @name = self.class.name.split('::').last.downcase.to_sym
+      @name = self.class.package_name
       @latest = eval("@@#{@name}_latest")
       @external_binary = eval("defined? @@#{@name}_external_binary") ? eval("@@#{@name}_external_binary") : {}
       # Find out matched external binary.
