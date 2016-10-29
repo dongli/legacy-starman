@@ -63,7 +63,7 @@ module STARMAN
         end
       end
 
-      def tag version
+      def tag version = nil
         "#{@@os.type}_#{version || @@os.version.major_minor}"
       end
 

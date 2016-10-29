@@ -10,7 +10,7 @@ module STARMAN
         case path
         when /\.tar.Z$/i
           args << "--strip-components #{options[:strip_leading_dirs]}" if options[:strip_leading_dirs]
-          system "tar xzf #{file_path} #{args.join(' ')}"
+          system "tar xzf #{path} #{args.join(' ')}"
         when /\.(tar(\..*)?|tgz|tbz2)$/i
           args << "--strip-components #{options[:strip_leading_dirs]}" if options[:strip_leading_dirs]
           system "tar xf #{path} #{args.join(' ')}"
