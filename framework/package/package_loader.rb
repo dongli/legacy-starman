@@ -90,7 +90,7 @@ module STARMAN
       end
       return if profiles.empty?
       if profiles.size > 1
-        CLI.report_warning "There are multiple installation versions of package #{CLI.blue name}."
+        CLI.report_warning "There are multiple installation versions of package #{CLI.blue package_name}."
         all_options = []
         profiles.each do |profile|
           all_options << "#{profile[:version]}#{": #{profile[:options]}" if not profile[:options].empty?}"

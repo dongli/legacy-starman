@@ -84,7 +84,7 @@ module STARMAN
       run 'make', 'install'
 
       if with_functions?
-        install_resource :functions, '.', :plain_file
+        install_resource :functions, '.', plain_file: true
         args = %W[
           -fno-common
           -dynamiclib
