@@ -32,7 +32,11 @@ module STARMAN
     end
 
     def start
-      run "#{bin}/elasticsearch --silent --daemonize --pidfile #{var}/pid", :screen_output, :skip_error
+      if not get_pid
+        run "#{bin}/elasticsearch --silent --daemonize --pidfile #{var}/pid", :screen_output, :skip_error
+      else
+        CLI.report_notice "#{CLI.blue 'Elasticsearch'} is already #{CLI.green 'on'}."
+      end
     end
 
     def stop
@@ -46,6 +50,9 @@ module STARMAN
     def status
       if pid = get_pid
         CLI.report_notice "#{CLI.blue 'Elasticsearch'} is #{CLI.green 'on'} (pid: #{pid})."
+        run "curl http://localhost:9200/_cat/health?v", :screen_output, :skip_error
+        run "curl http://localhost:9200/_cat/nodes?v", :screen_output, :skip_error
+        run "curl http://localhost:9200/_cat/indices?v", :screen_output, :skip_error
       else
         CLI.report_notice "#{CLI.blue 'Elasticsearch'} is #{CLI.red 'off'}."
       end
