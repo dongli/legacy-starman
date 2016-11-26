@@ -8,6 +8,10 @@ module STARMAN
         @@dev_dir_changed = false
       end
 
+      def self.command_line_tools?
+        `xcode-select -p`.chomp == '/Library/Developer/CommandLineTools'
+      end
+
       def self.select dev_dir
         res = `xcode-select -p`
         if dev_dir == :xcode_app and res != '/Applications/Xcode.app/Contents/Developer'

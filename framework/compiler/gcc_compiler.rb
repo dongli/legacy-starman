@@ -9,10 +9,10 @@ module STARMAN
     language :c,       command: 'gcc',      default_flags: '-O2'
     language :cxx,     command: 'g++',      default_flags: '-O2'
     language :fortran, command: 'gfortran', default_flags: '-O2'
-    flag :openmp => '-fopenmp'
-    flag :pic => '-fPIC'
-    flag :libcxx => '-lstdc++'
-    flag :cxx11 => '-std=c++11'
+    flag openmp: '-fopenmp'
+    flag pic: '-fPIC'
+    flag libcxx: '-lstdc++'
+    flag cxx11: '-std=c++11'
     feature :openmp do
       true
     end
