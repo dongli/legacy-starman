@@ -54,6 +54,7 @@ require 'compiler/compiler_set'
 require 'compiler/compiler_store'
 
 require 'command/config'
+require 'command/download'
 require 'command/edit'
 require 'command/install'
 require 'command/remove'

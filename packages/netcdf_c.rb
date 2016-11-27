@@ -32,6 +32,7 @@ module STARMAN
         --enable-static
         --disable-dap-remote-tests
         --disable-doxygen
+        LDFLAGS='-L#{Hdf5.lib}'
       ]
       args << '--enable-pnetcdf' if with_mpi?
       if with_dap?

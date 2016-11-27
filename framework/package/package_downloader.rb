@@ -6,7 +6,8 @@ module STARMAN
     def self.run package
       # Check if install_root matches preset one.
       # Check if there is a precompiled binary first.
-      if not CommandLine.options[:'local-build'].value and ConfigStore.install_root == '/opt/starman/software'
+      if not (CommandLine.options[:'local-build'] and CommandLine.options[:'local-build'].value) and
+         ConfigStore.install_root == '/opt/starman/software'
         _package = package.group_master || package
         if PackageBinary.has? _package
           if not PackageBinary.match? _package

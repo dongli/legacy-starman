@@ -8,7 +8,12 @@ module STARMAN
     label :compiler_agnostic
 
     def install
-      run './configure', '--disable-dependency-tracking', "--prefix=#{prefix}"
+      args = %W[
+        --prefix=#{prefix}
+        --disable-dependency-tracking
+      ]
+      args << 'ac_cv_type_struct_sched_param=yes' if OS.mac? and CompilerStore.compiler(:c).vendor == :gnu
+      run './configure', *args
       run 'make'
       run 'make', 'install'
     end

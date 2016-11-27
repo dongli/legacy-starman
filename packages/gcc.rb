@@ -1,9 +1,9 @@
 module STARMAN
   class Gcc < Package
     homepage 'https://gcc.gnu.org'
-    url 'http://ftpmirror.gnu.org/gcc/gcc-6.1.0/gcc-6.1.0.tar.bz2'
-    sha256 '09c4c85cabebb971b1de732a0219609f93fc0af5f86f6e437fd8d7f832f1a351'
-    version '6.1.0'
+    url 'http://ftpmirror.gnu.org/gcc/gcc-6.2.0/gcc-6.2.0.tar.bz2'
+    sha256 '9944589fc722d3e66308c0ce5257788ebd7872982a718aa2516123940671b7c5'
+    version '6.2.0'
     language :c, :cxx
 
     label :compiler
@@ -14,7 +14,8 @@ module STARMAN
       extra: { need_compiler: false }
     }
 
-    # depends_on :wget if needs_build?
+    depends_on :wget if needs_build?
+    depends_on :libiconv
     # depends_on :dejagnu if needs_build?
 
     def shipped_compilers
@@ -51,6 +52,9 @@ module STARMAN
       ]
 
       inreplace 'libgcc/config/t-slibgcc-darwin', '@shlib_slibdir@', "#{lib}/gcc/#{version_suffix}"
+      `grep -lr '@LIBICONV@' *`.split("\n").each do |file|
+        inreplace file, '@LIBICONV@', "-L#{Libiconv.lib} @LIBICONV@"
+      end
 
       run './contrib/download_prerequisites'
 
