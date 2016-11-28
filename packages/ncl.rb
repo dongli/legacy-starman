@@ -10,10 +10,10 @@ module STARMAN
       depends_on :fontconfig
     end
 
-    external_binary_on :mac, '=~ 10.11' do
-      url 'https://www.earthsystemgrid.org/download/fileDownload.html?logicalFileId=7f35ed4f-369b-11e6-a99e-00c0f03d5b7c'
-      sha256 '6eec9bc8b8bc884c6a48a4386c8ef6d1915f7ed452f0a7a06b79e306c8a1b924'
-      filename 'ncl_ncarg-6.3.0.MacOS_10.11_64bit_gcc530.tar.gz'
+    external_binary_on :mac, '>= 10.11' do
+      url 'https://www.earthsystemgrid.org/download/fileDownload.html?logicalFileId=fa161bc1-84c7-11e6-8aa0-00c0f03d5b7c'
+      sha256 '69a11cef0a3d0af78a07ad7acf4769bc8f22ad3ac22d391d5223047824d1daff'
+      filename 'ncl_ncarg-6.3.0.MacOS_10.11_64bit_gcc610.tar.gz'
     end
 
     def export_env
