@@ -6,16 +6,19 @@ module STARMAN
     version '57.1'
 
     def install
+      # Add --enable-rpath to allow icu4c library paths to be embeded into other files.
       args = %W[
         --prefix=#{prefix}
         --disable-samples
         --disable-tests
         --enable-static
+        --enable-rpath
         --with-library-bits=64
       ]
       work_in 'source' do
         run './configure', *args
         run 'make'
+        run 'make', 'test' unless skip_test?
         run 'make', 'install'
       end
     end
