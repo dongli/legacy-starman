@@ -1,9 +1,9 @@
 module STARMAN
   class Ruby < Package
     homepage 'https://www.ruby-lang.org/'
-    url 'https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.bz2'
-    sha256 '4a7c5f52f205203ea0328ca8e1963a7a88cf1f7f0e246f857d595b209eac0a4d'
-    version '2.3.1'
+    url 'https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.3.tar.bz2'
+    sha256 '882e6146ed26c6e78c02342835f5d46b86de95f0dc4e16543294bc656594cc5b'
+    version '2.3.3'
 
     def abi_version
       '2.3.0'
@@ -11,7 +11,15 @@ module STARMAN
 
     label :compiler_agnostic
 
-    patch :DATA
+    # Reverts an upstream commit which incorrectly tries to install headers
+    # into SDKROOT, if defined
+    # See https://bugs.ruby-lang.org/issues/11881
+    # The issue has been fixed on HEAD as of 1 Jan 2016, but has not been
+    # backported to the 2.3 branch yet and patch is still required.
+    patch do
+      url 'https://raw.githubusercontent.com/Homebrew/formula-patches/ba8cc6b88e6b7153ac37739e5a1a6bbbd8f43817/ruby/mkconfig.patch'
+      sha256 '929c618f74e89a5e42d899a962d7d2e4af75716523193af42626884eaba1d765'
+    end
 
     depends_on :pkgconfig if needs_build?
     depends_on :readline
@@ -24,16 +32,29 @@ module STARMAN
     end
 
     def install
+      ENV.delete 'SDKROOT'
       args = %W[
         --prefix=#{prefix}
         --enable-shared
         --disable-silent-rules
+        --with-sitedir=#{persist}/lib/ruby/site_ruby
+        --with-vendordir=#{persist}/lib/ruby/vendor_ruby
         --with-opt-dir=#{Readline.prefix}:#{Gmp.prefix}:#{Libyaml.prefix}:#{Openssl.prefix}
       ]
       args << '--with-out-ext=tk'
       args << '--disable-install-doc'
 
       run './configure', *args
+
+      # These directories are empty on install; sitedir is used for non-rubygems
+      # third party libraries, and vendordir is used for packager-provided libraries.
+      inreplace 'tool/rbinstall.rb' do |s|
+        s.gsub! 'prepare "extension scripts", sitelibdir', ''
+        s.gsub! 'prepare "extension scripts", vendorlibdir', ''
+        s.gsub! 'prepare "extension objects", sitearchlibdir', ''
+        s.gsub! 'prepare "extension objects", vendorarchlibdir', ''
+      end
+
       run 'make'
       run 'make', 'install'
     end
@@ -108,40 +129,3 @@ module STARMAN
     end
   end
 end
-
-__END__
-From 2b41316953cdc92ab4d82b987bd1bf6870b2e752 Mon Sep 17 00:00:00 2001
-From: Misty De Meo <mistydemeo@gmail.com>
-Date: Mon, 28 Dec 2015 16:46:19 -0400
-Subject: [PATCH] Revert "mkconfig.rb: SDKROOT"
-
-This reverts commit e98f7ea423b08222b6eceda945613040c7b08a09.
----
- tool/mkconfig.rb | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/tool/mkconfig.rb b/tool/mkconfig.rb
-index fdba709..ef9a4b0 100755
---- a/tool/mkconfig.rb
-+++ b/tool/mkconfig.rb
-@@ -131,8 +131,6 @@ def config.write(arg)
-       if universal
-         val.sub!(/universal/, %q[#{arch && universal[/(?:\A|\s)#{Regexp.quote(arch)}=(\S+)/, 1] || '\&'}])
-       end
--    when /^includedir$/
--      val = '"$(SDKROOT)"'+val if /darwin/ =~ arch
-     end
-     v = "  CONFIG[\"#{name}\"] #{eq} #{val}\n"
-     if fast[name]
-@@ -245,9 +243,6 @@ module RbConfig
-
- print(*v_fast)
- print(*v_others)
--print <<EOS if /darwin/ =~ arch
--  CONFIG["SDKROOT"] = ENV["SDKROOT"] || "" # don't run xcrun everytime, usually useless.
--EOS
- print <<EOS
-   CONFIG["archdir"] = "$(rubyarchdir)"
-   CONFIG["topdir"] = File.dirname(__FILE__)
---
-2.6.4
