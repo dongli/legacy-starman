@@ -5,9 +5,14 @@ module STARMAN
         "#{package.tag}.tgz"
       end
 
-      def init adapter
-        @@adapter = eval "#{adapter.to_s.capitalize}Adapter"
+      def init adapter_name
+        @@adapter_name = adapter_name.to_s.capitalize
+        @@adapter = eval "#{@@adapter_name}Adapter"
         @@adapter.init
+      end
+
+      def adapter_name
+        @@adapter_name
       end
 
       def check_connection

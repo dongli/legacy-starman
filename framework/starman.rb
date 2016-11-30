@@ -8,7 +8,7 @@ STARMAN::ConfigStore.init
 STARMAN::System::Shell.init
 STARMAN::ConfigStore.run
 STARMAN::PackageLoader.run
-STARMAN::Storage.init :qiniu
+STARMAN::Storage.init :bintray
 
 STARMAN::System::Xcode.init if STARMAN::OS.mac?
 

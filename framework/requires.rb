@@ -83,5 +83,6 @@ require 'package/package_installer'
 require 'package/package_uninstaller'
 require 'package/package_binary'
 
+require 'storage/bintray_adapter'
 require 'storage/qiniu_adapter'
 require 'storage/storage'

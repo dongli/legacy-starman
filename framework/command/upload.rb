@@ -22,7 +22,7 @@ module STARMAN
               begin
                 Storage.delete! package
               rescue => e
-                CLI.report_error "Failed to delete #{CLI.red package.name} on Qiniu!\n#{e}"
+                CLI.report_error "Failed to delete #{CLI.red package.name} on #{CLI.blue Storage.adapter_name}!\n#{e}"
               end
             else
               CLI.report_warning "Package #{CLI.blue package.name} has been uploaded."
@@ -33,7 +33,7 @@ module STARMAN
             Storage.upload! package
             PackageBinary.write_record package
           rescue => e
-            CLI.report_error "Failed to upload #{CLI.red package.name} to Qiniu!\n#{e}"
+            CLI.report_error "Failed to upload #{CLI.red package.name} to #{CLI.blue Storage.adapter_name}!\n#{e}"
           end
         end
       end
