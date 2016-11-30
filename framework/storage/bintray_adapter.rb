@@ -1,3 +1,9 @@
+begin
+  require 'rest-client'
+rescue LoadError
+  CLI.report_error 'rest-client is not installed!'
+end
+
 module STARMAN
   class BintrayAdapter
     extend System::Command
@@ -9,12 +15,7 @@ module STARMAN
       @@user = ENV['STARMAN_BINTRAY_USER']
       @@api_key = ENV['STARMAN_BINTRAY_API_KEY']
       if @@user and @@api_key
-        begin
-          require 'rest-client'
-          @@client = RestClient::Resource.new(API_URL, user: @@user, password: @@api_key)
-        rescue LoadError
-          PACKMAN.report_warning 'rest-client is not installed!'
-        end
+        @@client = RestClient::Resource.new(API_URL, user: @@user, password: @@api_key)
       end
     end
 
@@ -24,9 +25,8 @@ module STARMAN
 
     def self.uploaded? package
       tar_name = Storage.tar_name package
-      @@client["/packages/starman/#{REPO}/#{package.name}/versions/#{tar_name}"].get do |resp, req, res, &b|
-        resp.code == 200
-      end
+      url = "https://bintray.com/starman/#{REPO}/download_file?file_path=#{tar_name}"
+      url_exist? url
     end
 
     def self.upload! package

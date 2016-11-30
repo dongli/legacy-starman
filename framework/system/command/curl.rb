@@ -8,6 +8,14 @@ module STARMAN
           CLI.report_error "Failed to download #{CLI.red url}!" if not $?.success?
         end
       end
+
+
+      def url_exist? url
+        if system_command? :curl
+          `curl --silent --head --fail #{url}`
+          $?.success?
+        end
+      end
     end
   end
 end
