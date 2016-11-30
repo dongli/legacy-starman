@@ -12,20 +12,12 @@ module STARMAN
       end
       package = PackageLoader.packages[name][:instance]
       if package.has_label? :group_master
-        res = "#{ConfigStore.install_root}/#{name}/#{package.version}/#{master_tag options}"
+        "#{ConfigStore.install_root}/#{name}/#{package.version}/#{master_tag options}"
       elsif not self.group_master
-        res = "#{ConfigStore.install_root}/#{name}/#{package.version}/#{normal_tag options}"
+        "#{ConfigStore.install_root}/#{name}/#{package.version}/#{normal_tag options}"
       else
-        res = "#{ConfigStore.install_root}/#{package.group_master.name}/#{package.group_master.version}/#{slave_tag options}"
+        "#{ConfigStore.install_root}/#{package.group_master.name}/#{package.group_master.version}/#{slave_tag options}"
       end
-      # If prefix directory does not exist, check if there is any compatible versions.
-      if not options[:compatible_os_version] and not Dir.exist? res and package.class != Class
-        package.compats.each do |compat|
-          res = package.prefix options.merge compatible_os_version: compat
-          return res if Dir.exist? res
-        end
-      end
-      res
     end
 
     def persist
@@ -52,7 +44,7 @@ module STARMAN
         res << "-#{slave.name}_#{slave.version}"
         res << "-#{slave.revision.keys.last}" if not slave.revision.empty?
       end
-      res << "-#{OS.tag options[:compatible_os_version]}"
+      res << "-#{OS.tag}"
       if not self.group_master.has_label? :compiler and not self.group_master.has_label? :compiler_agnostic
         res << "-#{CompilerStore.active_compiler_set.tag}"
       end
@@ -73,7 +65,7 @@ module STARMAN
         res << "-#{slave.name}_#{slave.version}"
         res << "-#{slave.revision.keys.last}" if not slave.revision.empty?
       end
-      res << "-#{OS.tag options[:compatible_os_version]}"
+      res << "-#{OS.tag}"
       if not self.has_label? :compiler and not self.has_label? :compiler_agnostic
         res << "-#{CompilerStore.active_compiler_set.tag}"
       end
@@ -89,7 +81,7 @@ module STARMAN
 
     def normal_tag options = {}
       name = self.class == Class ? package_name : self.name
-      res = "#{name}-#{self.version}-#{OS.tag options[:compatible_os_version]}"
+      res = "#{name}-#{self.version}-#{OS.tag}"
       if not self.has_label? :compiler and not self.has_label? :compiler_agnostic
         res << "-#{CompilerStore.active_compiler_set.tag}"
       end

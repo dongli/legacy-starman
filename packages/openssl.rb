@@ -6,8 +6,6 @@ module STARMAN
     version '1.0.2h'
     language :c
 
-    compatible_with '10.11' if OS.mac? and OS.version =~ '10.12'
-
     option 'x86-64', {
       desc: 'Build x86-64 library.',
       accept_value: { boolean: true }

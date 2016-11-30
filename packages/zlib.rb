@@ -7,8 +7,6 @@ module STARMAN
     version '1.2.8'
     language :c
 
-    compatible_with '10.11' if OS.mac? and OS.version =~ '10.12'
-
     def install
       run './configure', "--prefix=#{prefix}"
       run 'make', 'install'

@@ -5,8 +5,6 @@ module STARMAN
     sha256 'ffb911191e509b966deb55de705387f14156e1a56b21824357cdf0053233633c'
     version '2.9.4'
 
-    compatible_with '10.11' if OS.mac? and OS.version =~ '10.12'
-
     def install
       args = %W[
         --prefix=#{prefix}

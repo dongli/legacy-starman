@@ -13,7 +13,6 @@ module STARMAN
     extend Forwardable
     def_delegators :@latest, :homepage, :url, :mirror, :sha256, :version
     def_delegators :@latest, :labels, :languages, :has_label?, :has_language?
-    def_delegators :@latest, :compats, :has_compat?
     def_delegators :@latest, :group_master, :slave, :slaves, :patches
     def_delegators :@latest, :filename, :revision, :options, :dependencies
 

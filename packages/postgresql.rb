@@ -7,8 +7,6 @@ module STARMAN
 
     label :compiler_agnostic
 
-    compatible_with '10.11' if OS.mac? and OS.version =~ '10.12'
-
     option 'with-perl', { desc: 'Build with Perl support', accept_value: { boolean: false } }
     option 'with-tcl', { desc: 'Build with Tcl support', accept_value: { boolean: false } }
     option 'with-dtrace', { desc: 'Build with DTrace support', accept_value: { boolean: false } }

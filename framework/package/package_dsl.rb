@@ -32,10 +32,6 @@ module STARMAN
       latest.revision val, options
     end
 
-    def compatible_with *val
-      latest.compat val
-    end
-
     def belongs_to val
       latest.group_master val
     end

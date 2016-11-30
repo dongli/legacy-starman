@@ -6,7 +6,6 @@ module STARMAN
       @revision = {}
       @languages = []
       @labels = {}
-      @compats = []
       @dependencies = {}
       @slaves = []
       # Common options.
@@ -24,7 +23,6 @@ module STARMAN
     def clean
       @languages = []
       @labels = {}
-      @compats = []
       @dependencies = {}
       @slaves = []
       @patches = []
@@ -39,7 +37,7 @@ module STARMAN
       EOT
     end
 
-    [:label, :language, :compat].each do |attr|
+    [:label, :language].each do |attr|
       class_eval <<-EOT
         attr_reader :#{attr}s
         def #{attr} *values, **options

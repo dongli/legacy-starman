@@ -11,8 +11,6 @@ module STARMAN
 
     label :compiler_agnostic
 
-    compatible_with '10.11' if OS.mac? and OS.version =~ '10.12'
-
     patch :DATA
 
     depends_on :pkgconfig if needs_build?
