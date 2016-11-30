@@ -16,18 +16,7 @@ module STARMAN
         CommandLine.packages.keys.reverse_each do |package_name|
           next unless CommandLine.direct_packages.include? package_name or CommandLine.options[:purely].value
           next unless (package = PackageLoader.scan_installed_package package_name)
-          rm_r package.prefix
-          # Check if there is other instances installed with same version.
-          path = Pathname.new(package.prefix).dirname
-          if path.children.empty?
-            rm_r path
-            # Check if there is other versions installed.
-            path = path.dirname
-            if path.children.empty?
-              rm_r path
-            end
-          end
-          CLI.report_notice "Package #{CLI.blue package_name} (#{CLI.red package.prefix}) has been removed."
+          PackageUninstaller.run Pathname.new(package.prefix)
         end
       end
     end

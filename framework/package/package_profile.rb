@@ -3,16 +3,19 @@ module STARMAN
     extend System::Command
 
     class << self
-      def read_profile package_or_prefix
-        case package_or_prefix
+      def read_profile package_or_prefix_or_file
+        case package_or_prefix_or_file
         when String
-          prefix = package_or_prefix
-          package_name = Pathname.new(package_or_prefix).dirname.dirname.basename
+          prefix = package_or_prefix_or_file
+          package_name = Pathname.new(package_or_prefix_or_file).dirname.dirname.basename
+          profile_file = "#{prefix}/#{package_name}.profile"
         when Package
-          prefix = package_or_prefix.prefix
-          package_name = package_or_prefix.name
+          prefix = package_or_prefix_or_file.prefix
+          package_name = package_or_prefix_or_file.name
+          profile_file = "#{prefix}/#{package_name}.profile"
+        when File
+          profile_file = package_or_prefix_or_file
         end
-        profile_file = "#{prefix}/#{package_name}.profile"
         File.exist?(profile_file) ? YAML.load(File.read(profile_file)) : {}
       end
 

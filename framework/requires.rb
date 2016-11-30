@@ -80,6 +80,7 @@ require 'package/package_alias'
 require 'package/package_loader'
 require 'package/package_downloader'
 require 'package/package_installer'
+require 'package/package_uninstaller'
 require 'package/package_binary'
 
 require 'storage/qiniu_adapter'

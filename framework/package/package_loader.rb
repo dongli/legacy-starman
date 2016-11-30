@@ -75,7 +75,7 @@ module STARMAN
       @@packages
     end
 
-    def self.scan_installed_package package_name
+    def self.scan_installed_package package_name, options = {}
       dir = "#{ConfigStore.install_root}/#{package_name}"
       return unless File.directory? dir
       load_package package_name
@@ -86,14 +86,22 @@ module STARMAN
         profile = PackageProfile.read_profile prefix
         next if not package.has_label? :compiler and not package.has_label? :compiler_agnostic and
                 profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '')
+        profile[:prefix] = prefix
         profiles << profile
       end
+      profiles.delete_if { |profile| profile[:os_tag] != OS.tag or profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '') }
       return if profiles.empty?
       if profiles.size > 1
         CLI.report_warning "There are multiple installation versions of package #{CLI.blue package_name}."
         all_options = []
         profiles.each do |profile|
-          all_options << "#{profile[:version]}#{": #{profile[:options]}" if not profile[:options].empty?}"
+          option = []
+          option << profile[:version]
+          option << profile[:options] if profile[:options]
+          option << profile[:os_tag] if profile[:os_tag]
+          option << profile[:compiler_tag] if profile[:compiler_tag]
+          option << profile[:prefix]
+          all_options << option.join(', ')
         end
         CLI.ask 'Which one do you want to use?', all_options
         i = CLI.get_answer.to_i
@@ -104,11 +112,11 @@ module STARMAN
       package
     end
 
-    def self.installed_packages
+    def self.installed_packages options = {}
       return @@installed_packages if defined? @@installed_packages
       @@installed_packages ||= {}
       Dir.glob("#{ConfigStore.install_root}/*").each do |dir|
-        package = scan_installed_package File.basename(dir).to_sym
+        package = scan_installed_package File.basename(dir).to_sym, options
         next unless package
         @@installed_packages[package.name] = package
         if package.has_label? :group_master
