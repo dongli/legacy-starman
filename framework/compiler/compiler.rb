@@ -3,13 +3,17 @@ module STARMAN
     include CompilerDSL
 
     extend Forwardable
-    def_delegators :spec, :vendor, :version, :languages, :flags, :feature?
+    def_delegators :spec, :vendor, :languages, :flags, :feature?
 
     attr_reader :spec
 
     def initialize active_language
       @active_language = active_language
       @spec = eval "@@#{self.class.name.split('::').last.downcase.to_sym}_spec.clone"
+    end
+
+    def version language = nil
+      @spec.version language || @active_language
     end
 
     def tag language

@@ -1,9 +1,3 @@
-begin
-  require 'rest-client'
-rescue LoadError
-  CLI.report_error 'rest-client is not installed!'
-end
-
 module STARMAN
   class BintrayAdapter
     extend System::Command
@@ -15,6 +9,11 @@ module STARMAN
       @@user = ENV['STARMAN_BINTRAY_USER']
       @@api_key = ENV['STARMAN_BINTRAY_API_KEY']
       if @@user and @@api_key
+        begin
+          require 'rest-client'
+        rescue LoadError
+          CLI.report_error 'rest-client is not installed!'
+        end
         @@client = RestClient::Resource.new(API_URL, user: @@user, password: @@api_key)
       end
     end
