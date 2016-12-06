@@ -8,6 +8,7 @@ module STARMAN
       [:c, :cxx, :fortran].each do |language|
         next if CompilerStore.compiler(language)
         packages.each_value do |package|
+          next unless package
           if package.languages == [language]
             # The package only provides bindings in this language, we should exclude it.
             packages.each_value do |other_package|
