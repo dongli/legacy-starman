@@ -20,14 +20,14 @@ module STARMAN
     [:labels].each do |method|
       class_eval <<-RUBY
         def self.#{method}
-          self.class_variable_get(:"@@\#{self.package_name}_latest").#{method}
+          self.class_variable_get(:"@@\#{self.name}_latest").#{method}
         end
       RUBY
     end
     [:has_label?].each do |method|
       class_eval <<-RUBY
         def self.#{method} value
-          self.class_variable_get(:"@@\#{self.package_name}_latest").#{method} value
+          self.class_variable_get(:"@@\#{self.name}_latest").#{method} value
         end
       RUBY
     end
@@ -35,7 +35,7 @@ module STARMAN
     attr_reader :name, :latest, :external_binary, :history, :resources
 
     def initialize
-      @name = self.class.package_name
+      @name = self.class.name
       @latest = eval("@@#{@name}_latest")
       @external_binary = eval("defined? @@#{@name}_external_binary") ? eval("@@#{@name}_external_binary") : {}
       # Find out matched external binary.
@@ -64,16 +64,13 @@ module STARMAN
       }
     end
 
-    def self.package_name
-      self.name.split('::').last.downcase.to_sym
-    end
-
-    def package_name
-      self.name
+    singleton_class.send(:alias_method, :old_name, :name)
+    def self.name
+      self.old_name.split('::').last.downcase.to_sym
     end
 
     def self.slaves
-      latest = eval("@@#{package_name}_latest")
+      latest = eval("@@#{name}_latest")
       latest.slaves
     end
 

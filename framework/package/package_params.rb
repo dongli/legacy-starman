@@ -5,11 +5,7 @@ module STARMAN
     end
 
     def prefix options = {}
-      if self.has_label? :parasite
-        name = self.labels[:parasite][:into]
-      else
-        name = self.class == Class ? package_name : self.name
-      end
+      name = self.has_label?(:parasite) ? self.labels[:parasite][:into] : self.name
       package = PackageLoader.packages[name][:instance]
       if package.has_label? :group_master
         "#{ConfigStore.install_root}/#{name}/#{package.version}/#{master_tag options}"
@@ -21,8 +17,7 @@ module STARMAN
     end
 
     def persist
-      name = self.class == Class ? package_name : self.name
-      "#{ConfigStore.install_root}/#{name}/persist"
+      "#{ConfigStore.install_root}/#{self.name}/persist"
     end
 
     # Tag package for creating precompiled binary.
@@ -59,8 +54,7 @@ module STARMAN
     end
 
     def master_tag options = {}
-      name = self.class == Class ? package_name : self.name
-      res = name.to_s
+      res = self.name.to_s
       self.slaves.each do |slave|
         res << "-#{slave.name}_#{slave.version}"
         res << "-#{slave.revision.keys.last}" if not slave.revision.empty?
@@ -80,8 +74,7 @@ module STARMAN
     end
 
     def normal_tag options = {}
-      name = self.class == Class ? package_name : self.name
-      res = "#{name}-#{self.version}-#{OS.tag}"
+      res = "#{self.name}-#{self.version}-#{OS.tag}"
       if not self.has_label? :compiler and not self.has_label? :compiler_agnostic
         res << "-#{CompilerStore.active_compiler_set.tag}"
       end

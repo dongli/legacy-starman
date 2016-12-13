@@ -85,7 +85,7 @@ module STARMAN
       if data == :DATA
         data = ''
         start = false
-        File.open("#{ENV['STARMAN_ROOT']}/packages/#{package_name}.rb", 'r').each do |line|
+        File.open("#{ENV['STARMAN_ROOT']}/packages/#{self.name}.rb", 'r').each do |line|
           if line =~ /__END__/
             start = true
             next
@@ -103,43 +103,43 @@ module STARMAN
     end
 
     def latest
-      if eval "not defined? @@#{package_name}_latest"
-        eval "@@#{package_name}_latest ||= PackageSpec.new"
+      if eval "not defined? @@#{self.name}_latest"
+        eval "@@#{self.name}_latest ||= PackageSpec.new"
         eval <<-EOT
-          @@#{package_name}_latest.options.each do |option_name, option_options|
+          @@#{self.name}_latest.options.each do |option_name, option_options|
             create_option_helpers option_name, :latest
           end
         EOT
       end
-      eval "@@#{package_name}_latest"
+      eval "@@#{self.name}_latest"
     end
 
     def resource tag, &block
-      eval "@@#{package_name}_resources ||= {}"
-      return eval "@@#{package_name}_resources[tag]" if not block_given?
+      eval "@@#{self.name}_resources ||= {}"
+      return eval "@@#{self.name}_resources[tag]" if not block_given?
       spec = PackageSpec.new
       spec.instance_eval(&block)
-      eval "@@#{package_name}_resources[tag] = spec"
+      eval "@@#{self.name}_resources[tag] = spec"
     end
 
     # To support external binaries of package.
     def external_binary_on *options, &block
-      eval "@@#{package_name}_external_binary ||= {}"
-      return eval "@@#{package_name}_external_binary" if not block_given?
+      eval "@@#{self.name}_external_binary ||= {}"
+      return eval "@@#{self.name}_external_binary" if not block_given?
       spec = PackageSpec.new
       spec.instance_eval(&block)
-      eval "@@#{package_name}_external_binary[options.to_s] = spec"
+      eval "@@#{self.name}_external_binary[options.to_s] = spec"
     end
 
     # To support multiple versions of package, but the history versions should
     # be limited. TODO: Maybe put the history version into a separate file is a
     # good idea.
     def history &block
-      eval "@@#{package_name}_history ||= {}"
-      return eval "@@#{package_name}_history" if not block_given?
+      eval "@@#{self.name}_history ||= {}"
+      return eval "@@#{self.name}_history" if not block_given?
       spec = PackageSpec.new
       spec.instance_eval &block
-      eval "@@#{package_name}_history[spec.version.to_s] = spec"
+      eval "@@#{self.name}_history[spec.version.to_s] = spec"
     end
 
     # Clean the internal data for reevaluating class definition, especially when
