@@ -44,6 +44,7 @@ module STARMAN
           end
         end
         package.post_install
+        true
       end
 
       protected
