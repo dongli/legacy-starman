@@ -76,6 +76,14 @@ module STARMAN
         [:ubuntu, :fedora, :centos, :suse, :scientific_linux, :aix].include? @@os.type
       end
 
+      [:ubuntu, :fedora, :centos, :suse, :scientific_linux, :aix].each do |type|
+        class_eval <<-RUBY
+          def #{type}?
+            @@os.type == :#{type}
+          end
+        RUBY
+      end
+
       def os_name
         self.name.split('::').last.downcase.to_sym
       end

@@ -56,7 +56,13 @@ module STARMAN
       def external_binary package
         CLI.report_notice "Install external binary package #{CLI.blue package.name}."
         mkdir_p package.prefix do
-          decompress "#{ConfigStore.package_root}/#{package.external_binary.filename}"
+          if package.respond_to? :install
+            package.pre_install
+            package.install
+            package.post_install
+          else
+            decompress package.external_binary_path
+          end
           PackageProfile.write_profile package
         end
       end

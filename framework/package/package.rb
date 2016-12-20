@@ -41,7 +41,8 @@ module STARMAN
       # Find out matched external binary.
       @external_binary.each do |os, spec|
         os = eval os
-        next if os.first != OS.type or not eval "OS.version #{os.last.split.first} '#{os.last.split.last}'"
+        next if os.first != OS.type
+        next if os.size == 2 and not eval "OS.version #{os.last.split.first} '#{os.last.split.last}'"
         @external_binary = spec
       end
       @history = eval("defined? @@#{@name}_history") ? eval("@@#{@name}_history") : {}

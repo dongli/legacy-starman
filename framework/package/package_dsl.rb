@@ -154,5 +154,9 @@ module STARMAN
         end
       EOT
     end
+
+    def external_binary_path
+      "#{ConfigStore.package_root}/#{self.external_binary.filename}"
+    end
   end
 end
