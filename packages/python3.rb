@@ -12,6 +12,13 @@ module STARMAN
       sha256 'c075353337f9ff3ccf8091693d278782fcdff62c113245d8de43c5c7acc57daf'
     end
 
+    if OS.mac? and OS.version =~ '10.12'
+      patch do
+        url 'https://bugs.python.org/file44575/issue28087.patch'
+        sha256 '41edcb22b529d68103cfc995041340089fd7cd08bc01168b8cfc7eef24bde787'
+      end
+    end
+
     depends_on :pkgconfig if needs_build?
     depends_on :readline
     depends_on :sqlite
@@ -24,8 +31,8 @@ module STARMAN
     end
 
     resource :pip do
-      url 'https://pypi.python.org/packages/e7/a8/7556133689add8d1a54c0b14aeff0acb03c64707ce100ecd53934da1aa13/pip-8.1.2.tar.gz'
-      sha256 '4d24b03ffa67638a3fa931c09fd9e0273ffa904e95ebebe7d4b1a54c93d7b732'
+      url 'https://pypi.python.org/packages/11/b6/abcb525026a4be042b486df43905d6893fb04f05aac21c32c638e939e447/pip-9.0.1.tar.gz'
+      sha256 '09f243e1a7b461f654c26a725fa373211bb7ff17a9300058b205c61658ca940d'
     end
 
     resource :wheel do
@@ -64,6 +71,12 @@ module STARMAN
         '/usr/local/ssl' => Openssl.prefix,
         'sqlite_defines.append(("SQLITE_OMIT_LOAD_EXTENSION", "1"))' => 'pass',
         "sqlite_inc_paths = [ '/usr/include'" => "sqlite_inc_paths = [ '#{Sqlite.inc}'"
+      }
+      inreplace 'pyconfig.h.in', {
+        '#undef HAVE_BROKEN_POLL' => '#define HAVE_BROKEN_POLL'
+      }
+      inreplace 'Modules/selectmodule.c', {
+        '#undef HAVE_BROKEN_POLL' => ''
       }
 
       run './configure', *args
@@ -105,7 +118,6 @@ module STARMAN
 
       # Install some usefull packages.
       ['ipython'].each do |package|
-        run "#{bin}/pip3", 'uninstall', '-y', package
         run "#{bin}/pip3", 'install', '--upgrade', package
       end
     end
