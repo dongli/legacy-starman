@@ -102,7 +102,7 @@ module STARMAN
       tar_name = Storage.tar_name package
       @@client["/packages/starman/#{REPO}/#{package.name}/versions/#{tar_name}"].get do |resp, req, res|
         resp.code == 200
-    	end
+      end
     end
   end
 end

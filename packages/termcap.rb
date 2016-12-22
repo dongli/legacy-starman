@@ -5,6 +5,7 @@ module STARMAN
     version '1.3.1'
 
     def install
+      inreplace 'Makefile.in', 'CFLAGS = -g' => 'CFLAGS = -g -fPIC'
       run './configure', "--prefix=#{prefix}"
       run 'make'
       run 'make', 'install'

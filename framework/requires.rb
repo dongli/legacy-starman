@@ -9,6 +9,7 @@ require 'forwardable'
 require 'uri'
 require 'digest'
 require 'yaml'
+require 'json'
 require 'pathname'
 
 require 'extends/string'

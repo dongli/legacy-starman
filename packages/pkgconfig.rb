@@ -15,6 +15,7 @@ module STARMAN
         --disable-debug
         --disable-host-tool
         --with-internal-glib
+        --with-libiconv=gnu
       ]
       System::Shell.append 'LDFLAGS', '-framework Foundation -framework Cocoa' if OS.mac?
       run './configure', *args

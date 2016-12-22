@@ -21,11 +21,12 @@ module STARMAN
       sha256 '929c618f74e89a5e42d899a962d7d2e4af75716523193af42626884eaba1d765'
     end
 
-    depends_on :pkgconfig if needs_build?
-    depends_on :readline
     depends_on :gmp
     depends_on :libyaml
     depends_on :openssl
+    depends_on :pkgconfig if needs_build?
+    depends_on :readline
+    depends_on :zlib
 
     def export_env
       System::Shell.prepend 'PATH', "#{persist}/bin", separator: ':', system: true
@@ -39,7 +40,7 @@ module STARMAN
         --disable-silent-rules
         --with-sitedir=#{persist}/lib/ruby/site_ruby
         --with-vendordir=#{persist}/lib/ruby/vendor_ruby
-        --with-opt-dir=#{Readline.prefix}:#{Gmp.prefix}:#{Libyaml.prefix}:#{Openssl.prefix}
+        --with-opt-dir=#{Readline.prefix}:#{Gmp.prefix}:#{Libyaml.prefix}:#{Openssl.prefix}:#{Zlib.prefix}
       ]
       args << '--with-out-ext=tk'
       args << '--disable-install-doc'

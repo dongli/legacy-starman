@@ -7,6 +7,8 @@ module STARMAN
     version '6.1.0'
     language :c, :cxx
 
+    depends_on :m4 if needs_build?
+
     def install
       args = %W[
         --prefix=#{prefix}
