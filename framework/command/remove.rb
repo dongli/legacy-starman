@@ -13,7 +13,7 @@ module STARMAN
       end
 
       def self.run
-        CommandLine.packages.keys.reverse_each do |package_name|
+        CommandLine.packages.each_key do |package_name|
           next unless CommandLine.direct_packages.include? package_name or CommandLine.options[:purely].value
           next unless (package = PackageLoader.scan_installed_package package_name)
           PackageUninstaller.run Pathname.new(package.prefix)

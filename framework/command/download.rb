@@ -15,7 +15,7 @@ module STARMAN
       end
 
       def self.run
-        CommandLine.packages.values.reverse_each do |package|
+        CommandLine.packages.each_value do |package|
           next if package.has_label? :group_master
           PackageDownloader.run package
         end

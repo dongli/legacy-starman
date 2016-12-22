@@ -24,6 +24,7 @@ module STARMAN
         record.each_value do |tag|
           return true if tag == _package.tag
         end
+        false
       end
 
       def match? package

@@ -30,13 +30,7 @@ module STARMAN
     end
 
     def self.load_package name, options = {}
-      if packages[name][:instance] and not options[:force]
-        # Package is depended by depended package nestly.
-        package = CommandLine.packages[name]
-        CommandLine.packages.delete(name)
-        CommandLine.packages[name] = package
-        return
-      end
+      return if packages[name][:instance] and not options[:force]
       Package.clean name
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
@@ -51,19 +45,24 @@ module STARMAN
         package.group_master packages[package.group_master][:instance]
         package.group_master.slave package
       end
-      CommandLine.packages[name] = package # Record the package to install.
       packages[name][:instance] = package
       package.dependencies.each do |depend_name, options|
         # TODO: Change package.dependencies.
         depend_name = PackageAlias.lookup depend_name if not packages.has_key? depend_name
         load_package depend_name, options
       end
+      @@package_string << package.name
     end
 
     def self.run
       return if CommandLine.command == :edit
+      @@package_string = []
       CommandLine.packages.keys.each do |name|
         load_package name.to_s.downcase.to_sym
+      end
+      CommandLine.packages = {}
+      @@package_string.each do |name|
+        CommandLine.packages[name] = packages[name][:instance]
       end
     end
 

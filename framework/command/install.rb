@@ -28,7 +28,7 @@ module STARMAN
 
       def self.run
         System::Shell.whitelist ['PATH', OS.ld_library_path, 'PKG_CONFIG_PATH'], separator: ':'
-        CommandLine.packages.values.reverse_each do |package|
+        CommandLine.packages.each_value do |package|
           if package.has_label? :group_master
             PackageProfile.write_profile package # Record the group master profile.
             next

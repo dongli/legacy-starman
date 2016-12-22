@@ -85,6 +85,10 @@ module STARMAN
       options.has_key? option
     end
 
+    def self.packages= val
+      @@packages = val
+    end
+
     def self.packages
       @@packages ||= {}
     end

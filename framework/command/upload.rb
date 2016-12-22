@@ -16,7 +16,7 @@ module STARMAN
 
       def self.run
         Storage.check_connection
-        CommandLine.packages.values.reverse_each do |package|
+        CommandLine.packages.each_value do |package|
           next if package.group_master
           next if CommandLine.options[:'without-depends'].value and not CommandLine.direct_packages.include? package.name
           if not PackageInstaller.installed? package
