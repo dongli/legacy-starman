@@ -4,6 +4,8 @@ module STARMAN
     sha256 'd7de6bf3c67009c95525dde3a0212cc110d0a70b92af2af8e3ee800e81b88400'
     version '2.4.44'
 
+    label :system_conflict if OS.ubuntu?
+
     depends_on :berkeleydb4
     depends_on :openssl
 

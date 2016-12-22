@@ -3,9 +3,13 @@ module STARMAN
     class Upload
       def self.accepted_options
         {
-          :force => OptionSpec.new(
-            :desc => 'Force to upload packages no matter other conditions.',
-            :accept_value => { :boolean => false }
+          :'without-depends' => OptionSpec.new(
+            desc: 'Do not upload dependencies.',
+            accept_value: { boolean: false }
+          ),
+          force: OptionSpec.new(
+            desc: 'Force to upload packages no matter other conditions.',
+            accept_value: { boolean: false }
           )
         }
       end
@@ -14,6 +18,7 @@ module STARMAN
         Storage.check_connection
         CommandLine.packages.values.reverse_each do |package|
           next if package.group_master
+          next if CommandLine.options[:'without-depends'].value and not CommandLine.direct_packages.include? package.name
           if not PackageInstaller.installed? package
             CLI.report_error "Package #{CLI.red package.name} has not been installed!"
           end

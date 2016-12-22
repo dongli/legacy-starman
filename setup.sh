@@ -64,11 +64,13 @@ if [[ "$SHELL" =~ "bash" ]]; then
 		echo $LINE >> ~/.bashrc
 		echo "[Notice]: Append \"$LINE\" into ~/.bashrc. Reopen or relogin to the terminal please."
 	fi
-  LINE="export PATH=$STARMAN_ROOT/ruby/bin:\$PATH"
-  if ! grep "$LINE" ~/.bashrc 1>/dev/null; then
-		echo $LINE >> ~/.bashrc
-		echo "[Notice]: Append \"$LINE\" into ~/.bashrc. Reopen or relogin to the terminal please."
-	fi
+  if [[ -f "$STARMAN_ROOT/ruby/bin" ]]; then
+    LINE="export PATH=$STARMAN_ROOT/ruby/bin:\$PATH"
+    if ! grep "$LINE" ~/.bashrc 1>/dev/null; then
+	    echo $LINE >> ~/.bashrc
+	    echo "[Notice]: Append \"$LINE\" into ~/.bashrc. Reopen or relogin to the terminal please."
+	  fi
+  fi
 else
 	echo "[Error]: Shell $SHELL is not supported currently!"
 	exit 1

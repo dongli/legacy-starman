@@ -32,7 +32,7 @@ module STARMAN
             next if package.has_label? :system_conflict
             System::Shell.prepend 'PATH', package.bin, separator: ':', system: true if Dir.exist? package.bin
             System::Shell.prepend 'MANPATH', package.man, separator: ':', system: true if Dir.exist? package.man
-            System::Shell.prepend OS.ld_library_path, package.lib, separator: ':', system: true if Dir.exist? package.lib
+            System::Shell.prepend OS.ld_library_path, package.lib, separator: ':', system: true if Dir.exist? package.lib and not package.has_label? :system_conflict
             System::Shell.prepend 'PKG_CONFIG_PATH', package.pkg_config, separator: ':', system: true if Dir.exist? package.pkg_config
             package.export_env
           end

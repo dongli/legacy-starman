@@ -6,6 +6,8 @@ module STARMAN
     version '1.0.2h'
     language :c
 
+    label :system_conflict if OS.ubuntu?
+
     option 'x86-64', {
       desc: 'Build x86-64 library.',
       accept_value: { boolean: true }

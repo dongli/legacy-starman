@@ -21,7 +21,9 @@ module STARMAN
       def has? package
         _package = package.group_master || package
         record = PackageBinary.read_record _package
-        not record.empty? and Storage.uploaded? _package
+        record.each_value do |tag|
+          return true if tag == _package.tag
+        end
       end
 
       def match? package
