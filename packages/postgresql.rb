@@ -36,6 +36,7 @@ module STARMAN
         --prefix=#{prefix}
         --localstatedir=#{persist}
         --enable-thread-safety
+        --enable-rpath
         --with-pgport=#{port}
         --with-gssapi
         --with-ldap
@@ -72,17 +73,18 @@ module STARMAN
       end
       if not Dir.exist? cluster_path
         CLI.report_notice "Initialize database cluster in #{cluster_path}."
-        run "sudo mkdir -p #{cluster_path}"
+        run 'sudo', 'mkdir', "-p #{cluster_path}"
         OS.change_owner persist, admin_user
         OS.change_owner cluster_path, admin_user
-        run "sudo -u #{admin_user} #{bin}/initdb --pwprompt -U #{admin_user} -D #{cluster_path} -E UTF8"
+        run 'sudo', "-u #{admin_user}", "#{bin}/initdb", '--pwprompt',
+          "-U #{admin_user}", "-D #{cluster_path}", '-E UTF8', :preserve_ld_library_path
       end
     end
 
     def start
       cmd = "#{bin}/pg_ctl start -D #{cluster_path} -l #{persist}/postgres.log"
       if ENV['USER'] != admin_user
-        run "sudo -u #{admin_user} #{cmd}", :screen_output, :skip_error
+        run 'sudo', "-u #{admin_user}", cmd, :screen_output, :skip_error, :preserve_ld_library_path
       else
         run cmd, :skip_error
       end
@@ -91,7 +93,7 @@ module STARMAN
     def stop
       cmd = "#{bin}/pg_ctl stop -D #{cluster_path}"
       if ENV['USER'] != admin_user
-        run "sudo -u #{admin_user} #{cmd}", :screen_output, :skip_error
+        run 'sudo', "-u #{admin_user}", cmd, :screen_output, :skip_error, :preserve_ld_library_path
       else
         run cmd, :skip_error
       end
@@ -100,7 +102,7 @@ module STARMAN
     def status
       cmd = "#{bin}/pg_ctl status -D #{cluster_path}"
       if ENV['USER'] != admin_user
-        run "sudo -u #{admin_user} #{cmd}", :screen_output, :skip_error
+        run 'sudo', "-u #{admin_user}", cmd, :screen_output, :skip_error, :preserve_ld_library_path
       else
         run cmd, :skip_error
       end

@@ -27,6 +27,7 @@ require 'system/command/pkgconfig'
 require 'system/command/curl'
 require 'system/command/patch'
 require 'system/command/compression'
+require 'system/command/run'
 
 require 'system/shell/bash'
 require 'system/shell/shell'
