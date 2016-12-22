@@ -13,6 +13,12 @@ module STARMAN
 
     depends_on :zlib
 
+    resource :cert_file do
+      url 'http://curl.haxx.se/ca/cacert.pem'
+      sha256 'cc7c9e2d259e20b72634371b146faec98df150d18dd9da9ad6ef0b2deac2a9d3'
+      filename 'cert.pem'
+    end
+
     def arch_flags
       if OS.mac?
         { x86_64: 'darwin64-x86_64-cc', i386: 'darwin-i386-cc' }
@@ -44,8 +50,9 @@ module STARMAN
     end
 
     def post_install
-      valid_certs = []
+      mkdir_p "#{etc}/openssl"
       if OS.mac?
+        valid_certs = []
         keychains = %w[
           /System/Library/Keychains/SystemRootCertificates.keychain
         ]
@@ -62,9 +69,10 @@ module STARMAN
           end
           $?.success?
         end
+        write_file "#{etc}/openssl/cert.pem", valid_certs.join("\n")
+      else
+        cp resource(:cert_file).path, "#{etc}/openssl/"
       end
-      mkdir_p "#{etc}/openssl"
-      write_file "#{etc}/openssl/cert.pem", valid_certs.join("\n")
     end
   end
 end
