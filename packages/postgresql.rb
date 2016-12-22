@@ -13,11 +13,18 @@ module STARMAN
     option 'admin-user', { desc: 'Set admin user name.', accept_value: { string: 'postgres' }, extra: { profile: false } }
     option 'port', { desc: 'Set the default port number.', accept_value: { string: '5432' } }
 
+    depends_on :libxml2
     depends_on :openssl
     depends_on :readline
-    depends_on :libxml2
-    depends_on :uuid if not OS.mac?
     depends_on :zlib
+    if not OS.mac?
+      depends_on :krb5
+      depends_on :libxslt
+      depends_on :openldap
+      depends_on :openpam
+      depends_on :termcap
+      depends_on :uuid
+    end
 
     def cluster_path
       "#{persist}/data"
@@ -30,16 +37,28 @@ module STARMAN
         --localstatedir=#{persist}
         --enable-thread-safety
         --with-pgport=#{port}
-        --with-bonjour
         --with-gssapi
         --with-ldap
         --with-openssl
         --with-pam
         --with-libxml
         --with-libxslt
-        --with-uuid=e2fs
+        --with-uuid=#{OS.mac? ? 'e2fs' : 'ossp'}
         --without-tcl
+        --with-readline
       ]
+      args << '--with-bonjour' if OS.mac?
+      cppflags = ["-I#{Readline.inc}", "-I#{Openssl.inc}", "-I#{Zlib.inc}"]
+      ldflags = ["-L#{Readline.lib}", "-L#{Openssl.lib}", "-L#{Zlib.lib}"]
+      if not OS.mac?
+        cppflags << "-I#{Termcap.inc}"; ldflags << "-L#{Termcap.lib}"
+        cppflags << "-I#{Krb5.inc}"; ldflags << "-L#{Krb5.lib}"
+        cppflags << "-I#{Openpam.inc}"; ldflags << "-L#{Openpam.lib}"
+        cppflags << "-I#{Libxslt.inc}"; ldflags << "-L#{Libxslt.lib}"
+        cppflags << "-I#{Openldap.inc}"; ldflags << "-L#{Openldap.lib}"
+        cppflags << "-I#{Uuid.inc}"; ldflags << "-L#{Uuid.lib}"
+      end
+      args << "CPPFLAGS='#{cppflags.join(' ')}' LDFLAGS='#{ldflags.join(' ')}'"
 
       run './configure', *args
       run 'make'

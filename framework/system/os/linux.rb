@@ -32,10 +32,10 @@ module STARMAN
       else
         args << '--shell bash'
       end
-      res = `sudo useradd #{args.join(' ')}`
-      if not $?.success?
-        CLI.report_error "Failed to create user #{CLI.red name}! See errors:\n#{res}"
-      end
+      res = `sudo useradd #{args.join(' ')} #{name}`
+      CLI.report_error "Failed to create user #{CLI.red name}! See errors:\n#{res}" if not $?.success?
+      res = `sudo passwd #{name}`
+      CLI.report_error "Failed to set password for user #{CLI.red name}! See errors:\n#{res}" if not $?.success?
     end
     command :change_owner do |path, owner|
       CLI.report_notice "Change owner of #{CLI.blue path} to #{CLI.blue owner}."
