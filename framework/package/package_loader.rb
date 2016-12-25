@@ -88,7 +88,9 @@ module STARMAN
         profile[:prefix] = prefix
         profiles << profile
       end
-      profiles.delete_if { |profile| profile[:os_tag] != OS.tag or profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '') }
+      # Filter profiles.
+      profiles.delete_if { |profile| profile[:os_tag] != OS.tag }
+      profiles.delete_if { |profile| profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '') } unless package.has_label? :compiler
       return if profiles.empty?
       if profiles.size > 1
         CLI.report_warning "There are multiple installation versions of package #{CLI.blue package_name}."
