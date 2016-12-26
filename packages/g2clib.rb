@@ -18,6 +18,7 @@ module STARMAN
       cp 'grib2.h', inc
       mkdir_p lib
       cp 'libg2c_v1.6.0.a', lib
+      cp 'libg2c_v1.6.0.a', lib + '/libgrib2c.a'
     end
   end
 end

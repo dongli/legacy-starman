@@ -1,9 +1,9 @@
 module STARMAN
   class Gsl < Package
     homepage 'https://www.gnu.org/software/gsl/'
-    url 'https://ftpmirror.gnu.org/gsl/gsl-2.2.1.tar.gz'
-    sha256 '13d23dc7b0824e1405f3f7e7d0776deee9b8f62c62860bf66e7852d402b8b024'
-    version '2.2.1'
+    url 'https://ftpmirror.gnu.org/gsl/gsl-2.3.tar.gz'
+    sha256 '562500b789cd599b3a4f88547a7a3280538ab2ff4939504c8b4ac4ca25feadfb'
+    version '2.3'
 
     def install
       args = %W[

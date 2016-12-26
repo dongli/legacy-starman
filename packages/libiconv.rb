@@ -27,15 +27,17 @@ end
 __END__
 diff -Naur a/srclib/stdio.in.h b/srclib/stdio.in.h
 --- a/srclib/stdio.in.h	2011-08-07 21:42:06.000000000 +0800
-+++ b/srclib/stdio.in.h	2016-12-22 14:51:05.620349665 +0800
-@@ -695,8 +695,10 @@
++++ b/srclib/stdio.in.h	2016-12-26 10:58:38.000000000 +0800
+@@ -695,8 +695,12 @@
  /* It is very rare that the developer ever has full control of stdin,
     so any use of gets warrants an unconditional warning.  Assume it is
     always declared, since it is required by C89.  */
-+#if defined(__GLIBC__) && !defined(__UCLIBC__) && !__GLIBC_PREREQ(2,16)
++#if defined(__GLIBC__) && !defined(__UCLIBC__) && defined(__GLIBC_PREREQ)
++#if !__GLIBC_PREREQ(2,16)
  _GL_WARN_ON_USE (gets, "gets is a security hole - use fgets instead");
  #endif
 +#endif
- 
- 
++#endif
+
+
  #if @GNULIB_OBSTACK_PRINTF@ || @GNULIB_OBSTACK_PRINTF_POSIX@

@@ -4,6 +4,11 @@ module STARMAN
 
     label :group_master
 
+    option 'with-legacy-cxx', {
+      desc: 'Build legacy C++ API bindings.',
+      accept_value: { boolean: false },
+      cascade: false
+    }
     option 'with-cxx', {
       desc: 'Build C++ API bindings.',
       accept_value: { boolean: true },
@@ -24,8 +29,9 @@ module STARMAN
       accept_value: { boolean: false }
     }
 
-    depends_on :netcdf_cxx if with_cxx?
-    depends_on :netcdf_fortran if with_fortran?
     depends_on :netcdf_c
+    depends_on :netcdf_cxx_legacy if with_legacy_cxx?
+    depends_on :netcdf_cxx if with_cxx? and not with_legacy_cxx?
+    depends_on :netcdf_fortran if with_fortran?
   end
 end
