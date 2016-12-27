@@ -90,7 +90,7 @@ module STARMAN
       end
       # Filter profiles.
       profiles.delete_if { |profile| profile[:os_tag] != OS.tag }
-      profiles.delete_if { |profile| profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '') } unless package.has_label? :compiler
+      profiles.delete_if { |profile| profile[:compiler_tag] != CompilerStore.active_compiler_set.tag.gsub(/^-/, '') } unless package.has_label? :compiler or package.has_label? :compiler_agnostic
       return if profiles.empty?
       if profiles.size > 1
         CLI.report_warning "There are multiple installation versions of package #{CLI.blue package_name}."
