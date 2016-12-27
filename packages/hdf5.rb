@@ -6,16 +6,20 @@ module STARMAN
     version '1.8.18'
 
     option 'with-mpi', {
-      :desc => 'Build with parallel IO. MPI library is needed.',
-      :accept_value => { :boolean => false }
+      desc: 'Build with parallel IO. MPI library is needed.',
+      accept_value: { boolean: false }
     }
     option 'with-cxx', {
-      :desc => 'Build C++ API bindings.',
-      :accept_value => { :boolean => true }
+      desc: 'Build C++ API bindings.',
+      accept_value: { boolean: true }
     }
     option 'with-fortran', {
-      :desc => 'Build Fortran API bindings.',
-      :accept_value => { :boolean => true }
+      desc: 'Build Fortran API bindings.',
+      accept_value: { boolean: true }
+    }
+    option 'with-threadsafe', {
+      desc: 'Turn on thread safe.',
+      accept_value: { boolean: false }
     }
 
     language :c
@@ -36,8 +40,6 @@ module STARMAN
         --with-szlib=#{Szip.prefix}
         --enable-static=yes
         --enable-shared=yes
-        --enable-threadsafe
-        --enable-unsupported
       ]
       if with_cxx?
         args << '--enable-cxx'
@@ -49,6 +51,10 @@ module STARMAN
         args << '--enable-fortran2003' if CompilerStore.compiler(:fortran).feature?(:fortran2003)
       else
         args << '--disable-fortran'
+      end
+      if with_threadsafe?
+        args << '--enable-threadsafe'
+        args << '--enable-unsupported'
       end
       run './configure', *args
       run 'make'
