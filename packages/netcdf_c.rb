@@ -42,7 +42,7 @@ module STARMAN
       end
       run './configure', *args
       run 'make'
-      run 'make', 'check' if not skip_test?
+      run 'make', 'check', :single_job unless skip_test?
       run 'make', 'install'
     end
   end

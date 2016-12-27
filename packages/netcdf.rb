@@ -29,9 +29,11 @@ module STARMAN
       accept_value: { boolean: false }
     }
 
+    option('with-cxx').value = false if with_legacy_cxx?
+
     depends_on :netcdf_c
     depends_on :netcdf_cxx_legacy if with_legacy_cxx?
-    depends_on :netcdf_cxx if with_cxx? and not with_legacy_cxx?
+    depends_on :netcdf_cxx if with_cxx?
     depends_on :netcdf_fortran if with_fortran?
   end
 end

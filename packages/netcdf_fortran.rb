@@ -25,7 +25,7 @@ module STARMAN
       args << '--enable-parallel-tests' if with_mpi?
       run './configure', *args
       run 'make'
-      run 'make', 'check'
+      run 'make', 'check', :single_job unless skip_test?
       run 'make', 'install'
     end
   end

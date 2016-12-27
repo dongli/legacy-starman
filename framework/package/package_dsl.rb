@@ -75,10 +75,14 @@ module STARMAN
       end
     end
 
-    def option val, options = {}
-      latest.option val, options
-      # Only allow latest spec can have options.
-      create_option_helpers val, :latest
+    def option val, options = nil
+      if options
+        latest.option val, options
+        # Only allow latest spec can have options.
+        create_option_helpers val, :latest
+      else
+        latest.options[val.to_sym]
+      end
     end
 
     def patch data = nil, &block

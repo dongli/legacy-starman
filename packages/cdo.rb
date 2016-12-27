@@ -21,6 +21,9 @@ module STARMAN
     depends_on :zlib
 
     def install
+      inreplace 'test/tsformat.test.in', {
+        'test -n "$CDO"      || CDO=cdo' => "CDO='#{pwd}/src/cdo -L'"
+      }
       args = %W[
         --prefix=#{prefix}
         --with-hdf5=#{Hdf5.prefix}

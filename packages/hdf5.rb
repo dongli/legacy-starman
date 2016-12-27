@@ -9,6 +9,10 @@ module STARMAN
       desc: 'Build with parallel IO. MPI library is needed.',
       accept_value: { boolean: false }
     }
+    option 'with-threadsafe', {
+      desc: 'Turn on thread safe.',
+      accept_value: { boolean: false }
+    }
     option 'with-cxx', {
       desc: 'Build C++ API bindings.',
       accept_value: { boolean: true }
@@ -16,10 +20,6 @@ module STARMAN
     option 'with-fortran', {
       desc: 'Build Fortran API bindings.',
       accept_value: { boolean: true }
-    }
-    option 'with-threadsafe', {
-      desc: 'Turn on thread safe.',
-      accept_value: { boolean: false }
     }
 
     language :c
@@ -31,6 +31,11 @@ module STARMAN
     depends_on :mpi if with_mpi?
 
     def install
+      # When use --enable-threadsafe option, C++ and Fortran bindings are not working properly.
+      if with_threadsafe?
+        option('with-cxx').value = false
+        option('with-fortran').value = false
+      end
       args = %W[
         --prefix=#{prefix}
         --enable-production
@@ -52,10 +57,7 @@ module STARMAN
       else
         args << '--disable-fortran'
       end
-      if with_threadsafe?
-        args << '--enable-threadsafe'
-        args << '--enable-unsupported'
-      end
+      args << '--enable-threadsafe' if with_threadsafe?
       run './configure', *args
       run 'make'
       run 'make', 'check' unless skip_test?
