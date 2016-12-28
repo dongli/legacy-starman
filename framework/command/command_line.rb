@@ -24,7 +24,7 @@ module STARMAN
     }
 
     def self.run
-      @@options ||= {}
+      @@options = {}
       ARGV.each do |arg|
         if not defined? @@command and Command.constants.include? arg.capitalize.to_sym
           @@command = arg.to_sym
