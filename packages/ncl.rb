@@ -16,6 +16,12 @@ module STARMAN
       filename 'ncl_ncarg-6.3.0.MacOS_10.11_64bit_gcc610.tar.gz'
     end
 
+    external_binary_on :centos, '>= 7.0' do
+      url 'https://www.earthsystemgrid.org/download/fileDownload.html?logicalFileId=e083a923-cd9a-11e4-bb80-00c0f03d5b7c'
+      sha256 'd4ee2904d95ce1e86b5c7bafcf14b9222642c5e4d60d10972b3bb57b10ede131'
+      filename 'ncl_ncarg-6.3.0.Linux_CentOS7.0_x86_64_gcc482.tar.gz'
+    end
+
     def export_env
       System::Shell.set 'NCARG_ROOT', prefix
     end
