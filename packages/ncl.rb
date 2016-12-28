@@ -24,11 +24,13 @@ module STARMAN
       # Change link path.
       if OS.mac?
         FileUtils.mkdir_p "#{persist}/lib" if not Dir.exist? "#{persist}/lib"
-        ["#{Gcc.lib}/gcc/#{VersionSpec.new(Gcc.version).major}/libgomp.1.dylib",
-         "#{Gcc.lib}/gcc/#{VersionSpec.new(Gcc.version).major}/libstdc++.6.dylib",
-         "#{Gcc.lib}/gcc/#{VersionSpec.new(Gcc.version).major}/libgcc_s.1.dylib",
-         "#{Fontconfig.lib}/libfontconfig.1.dylib"].each do |lib|
-          FileUtils.ln_s lib, "#{persist}/lib" if not File.exist? "#{persist}/lib/#{lib}"
+        ['libgomp.1.dylib', 'libstdc++.6.dylib', 'libgcc_s.1.dylib'].each do |lib|
+          rm_f "#{persist}/lib/#{lib}" if File.symlink? "#{persist}/lib/#{lib}"
+          ln_s "#{Gcc.lib}/gcc/#{VersionSpec.new(Gcc.version).major}/#{lib}", "#{persist}/lib"
+        end
+        ['libfontconfig.1.dylib'].each do |lib|
+          rm_f "#{persist}/lib/#{lib}" if File.symlink? "#{persist}/lib/#{lib}"
+          ln_s "#{Fontconfig.lib}/#{lib}", "#{persist}/lib"
         end
         files = ['ncl', 'ncargpath']
         files.each do |file|
