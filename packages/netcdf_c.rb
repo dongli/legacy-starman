@@ -18,10 +18,11 @@ module STARMAN
       :accept_value => { :boolean => false }
     }
 
-    depends_on :m4
-    depends_on :hdf5
     depends_on :curl if with_dap?
+    depends_on :hdf5
+    depends_on :m4
     depends_on :pnetcdf if with_mpi?
+    depends_on :zlib
 
     def install
       args = %W[
@@ -32,7 +33,7 @@ module STARMAN
         --enable-static
         --disable-dap-remote-tests
         --disable-doxygen
-        LDFLAGS='-L#{Hdf5.lib}'
+        LDFLAGS='-L#{Hdf5.lib} -L#{Zlib.lib}'
       ]
       args << '--enable-pnetcdf' if with_mpi?
       if with_dap?

@@ -8,11 +8,14 @@ module STARMAN
     label :compiler_agnostic
     label :system_conflict
 
+    depends_on :zlib
+
     def install
       args = %W[
         --disable-dependency-tracking
         --disable-silent-rules
         --prefix=#{prefix}
+        --with-zlib-prefix=#{Zlib.prefix}
       ]
       run './configure', *args
       run 'make'
