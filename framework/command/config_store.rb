@@ -30,6 +30,7 @@ module STARMAN
       end
 
       def run
+        return if CommandLine.command == :config
         @@config[:package_root] = File.expand_path @@config[:package_root]
         @@config[:install_root] = File.expand_path @@config[:install_root]
         mkdir_p @@config[:package_root] if not Dir.exist? @@config[:package_root]
