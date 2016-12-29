@@ -23,16 +23,8 @@ module STARMAN
     attr_reader :version
     def version val = nil, &block
       if block_given?
-        begin
-          @version = VersionSpec.new block.call, raise_exception: true
-        rescue => e
-          case e
-          when Errno::ENOENT
-            @version = nil
-          else
-            @version = block.call
-          end
-        end
+        res = block.call
+        @version = VersionSpec.new(res) rescue res
       else
         @version = VersionSpec.new val if val
       end
