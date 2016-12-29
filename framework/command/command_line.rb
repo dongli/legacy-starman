@@ -59,6 +59,7 @@ module STARMAN
         end
         options[name] = option_spec
       end
+      CLI.report_error 'No command specified!' unless defined? @@command
       @@options = eval("Command::#{@@command.capitalize.to_sym}").accepted_options.merge(@@options)
       @@options = CommonOptions.merge(@@options)
     end

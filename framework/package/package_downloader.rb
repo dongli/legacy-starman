@@ -4,13 +4,14 @@ module STARMAN
     extend Utils
 
     def self.run package
+      download_command = ConfigStore.config[:defaults][:download_command]
       # Check if there is any resource to download.
       if not package.resources.empty?
         package.resources.each do |tag, resource|
           file_path = "#{ConfigStore.package_root}/#{resource.filename}"
           if not ( File.exist? file_path and sha_same? file_path, resource.sha256 )
             CLI.report_notice "Downloading resource #{CLI.blue tag}."
-            curl resource.url, ConfigStore.package_root, rename: resource.filename
+            send download_command, resource.url, ConfigStore.package_root, rename: resource.filename
           end
         end
       end
@@ -22,13 +23,13 @@ module STARMAN
             file_path = "#{ConfigStore.package_root}/#{package.name}.patch.#{index}"
             if not ( File.exist? file_path and sha_same? file_path, patch.sha256 )
               CLI.report_notice "Downloading patch #{CLI.blue index}."
-              curl patch.url, ConfigStore.package_root, rename: "#{package.name}.patch.#{index}"
+              send download_command, patch.url, ConfigStore.package_root, rename: "#{package.name}.patch.#{index}"
             end
           when Array
             file_path = "#{ConfigStore.package_root}/#{patch.first.filename}"
             if not ( File.exist? file_path and sha_same? file_path, patch.first.sha256 )
               CLI.report_notice "Downloading patch #{CLI.blue patch.first.filename}."
-              curl patch.first.url, ConfigStore.package_root, rename: patch.first.filename
+              send download_command, patch.first.url, ConfigStore.package_root, rename: patch.first.filename
             end
           end
         end
@@ -50,7 +51,7 @@ module STARMAN
         file_path = "#{ConfigStore.package_root}/#{package.external_binary.filename}"
         if not ( File.exist? file_path and sha_same? file_path, package.external_binary.sha256 )
           CLI.report_notice "Downloading package #{CLI.blue package.name}."
-          curl package.external_binary.url, ConfigStore.package_root, rename: package.external_binary.filename
+          send download_command, package.external_binary.url, ConfigStore.package_root, rename: package.external_binary.filename
         end
         return :binary
       else
@@ -58,7 +59,7 @@ module STARMAN
         file_path = "#{ConfigStore.package_root}/#{package.filename}"
         if not ( File.exist? file_path and sha_same? file_path, package.sha256 )
           CLI.report_notice "Downloading package #{CLI.blue package.name}."
-          curl package.url, ConfigStore.package_root, rename: package.filename
+          send download_command, package.url, ConfigStore.package_root, rename: package.filename
         end
         return :source
       end
