@@ -48,6 +48,8 @@ require 'system/os/aix'
 
 require 'system/ide/xcode'
 
+require 'system/server/remote_server'
+
 require 'compiler/compiler_spec'
 require 'compiler/compiler_dsl'
 require 'compiler/compiler'
@@ -61,6 +63,7 @@ require 'compiler/compiler_store'
 require 'command/config'
 require 'command/download'
 require 'command/edit'
+require 'command/deploy'
 require 'command/install'
 require 'command/remove'
 require 'command/upload'
