@@ -20,6 +20,10 @@ module STARMAN
       :'relax-env' => OptionSpec.new(
         desc: 'Do not limit the content of the given environment variables.',
         accept_value: { string: '' }
+      ),
+      remote: OptionSpec.new(
+        desc: 'Specify the remote server to work with.',
+        accept_value: { string: '' }
       )
     }
 
