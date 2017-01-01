@@ -64,6 +64,22 @@ module STARMAN
       @server.exec! "chmod #{mode} #{remote_path}"
     end
 
+    def command? cmd
+      found = false
+      @server.exec! "which #{cmd}" do |channel, stream, data|
+        found = stream == :stdout
+      end
+      found
+    end
+
+    def sha256 remote_path
+      if self.command? 'shasum'
+        @server.exec!("shasum -a256 #{remote_path}").chomp
+      elsif self.command? 'sha256sum'
+        @server.exec!("sha256sum #{remote_path}").chomp.split.first
+      end
+    end
+
     def exec! cmd
       CLI.report_notice "Execute #{CLI.blue cmd} on #{CLI.blue @remote[:host]}."
       @server.exec! cmd

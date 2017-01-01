@@ -1,6 +1,8 @@
 module STARMAN
   module Command
     class Download
+      extend Utils
+
       def self.accepted_options
         {
           :'local-build' => OptionSpec.new(
@@ -22,7 +24,10 @@ module STARMAN
           # Upload downloaded packages to remote server.
           RemoteServer.instances.each do |name, server|
             package_root = ConfigStore.config[:remote][name][:starman][:package_root]
-            server.upload "#{ConfigStore.config[:package_root]}/#{package.filename}", "#{package_root}/#{package.filename}", file: true
+            local_file = "#{ConfigStore.config[:package_root]}/#{package.filename}"
+            remote_file = "#{package_root}/#{package.filename}"
+            next if sha_same? local_file, server.sha256(remote_file)
+            server.upload local_file, remote_file, file: true
           end
         end
       end
