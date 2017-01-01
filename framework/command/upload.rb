@@ -14,7 +14,7 @@ module STARMAN
         }
       end
 
-      def self.run
+      def self.__run__
         Storage.check_connection
         CommandLine.packages.each_value do |package|
           next if package.group_master

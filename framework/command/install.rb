@@ -26,7 +26,7 @@ module STARMAN
         }
       end
 
-      def self.run
+      def self.__run__
         System::Shell.whitelist ['PATH', OS.ld_library_path, 'PKG_CONFIG_PATH'], separator: ':'
         CommandLine.packages.each_value do |package|
           if package.has_label? :group_master

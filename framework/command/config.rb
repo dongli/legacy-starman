@@ -5,7 +5,7 @@ module STARMAN
         {}
       end
 
-      def self.run
+      def self.__run__
         editor = 'vim'
         system "#{editor} -c 'set filetype=yaml' #{CommandLine.options[:config].value}"
       end

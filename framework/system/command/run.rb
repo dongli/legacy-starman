@@ -18,15 +18,22 @@ module STARMAN
           handle_sudo_command options
         end
         cmd_str = "#{cmd} #{options.select { |option| option.class == String }.join(' ')}"
-        if not CommandLine.options[:verbose].value and not options.include? :screen_output
+        if not CommandLine.options[:verbose].value and
+           not options.include? :screen_output and
+           not options.include? :capture_output
           cmd_str << " 1>#{ConfigStore.package_root}/stdout.#{Process.pid}" +
                      " 2>#{ConfigStore.package_root}/stderr.#{Process.pid}"
         end
-        system sources + cmd_str
+        if options.include? :capture_output
+          res = `#{sources} #{cmd_str}`
+        else
+          system sources + cmd_str
+        end
         if not $?.success? and not options.include? :skip_error
           CLI.report_error "Failed to run #{cmd_str}.\n"
         end
         CompilerStore.unset_flags
+        return res if options.include? :capture_output
       end
 
       private

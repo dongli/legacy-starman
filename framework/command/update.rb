@@ -7,7 +7,7 @@ module STARMAN
         {}
       end
 
-      def self.run
+      def self.__run__
         work_in ENV['STARMAN_ROOT'] do
           if Dir.exist? '.git'
             system 'git', 'pull'

@@ -5,7 +5,7 @@ module STARMAN
         {}
       end
 
-      def self.run
+      def self.__run__
         CommandLine.packages.each_value do |package|
           next if not package.respond_to? :start
           package.start

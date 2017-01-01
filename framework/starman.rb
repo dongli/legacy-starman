@@ -9,6 +9,7 @@ STARMAN::System::Shell.init
 STARMAN::ConfigStore.run
 STARMAN::Storage.init :bintray
 STARMAN::PackageLoader.run
+STARMAN::RemoteServer.init
 
 STARMAN::System::Xcode.init if STARMAN::OS.mac?
 

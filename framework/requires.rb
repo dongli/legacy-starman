@@ -2,6 +2,7 @@ begin
   require 'byebug'
   require 'readline'
   require 'net/http'
+  require 'ruby-progressbar'
 rescue LoadError
 end
 

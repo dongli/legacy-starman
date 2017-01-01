@@ -16,7 +16,7 @@ module STARMAN
         }
       end
 
-      def self.run
+      def self.__run__
         if CommandLine.options[:'compiler-set'].value == -1
           CommandLine.options[:'compiler-set'].check ConfigStore.defaults[:compiler_set_index]
         end

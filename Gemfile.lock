@@ -32,6 +32,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
+    ruby-progressbar (1.8.1)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
@@ -45,6 +46,7 @@ DEPENDENCIES
   net-ssh-gateway
   rest-client
   rspec
+  ruby-progressbar
 
 BUNDLED WITH
    1.13.6

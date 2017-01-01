@@ -5,7 +5,7 @@ module STARMAN
         {}
       end
 
-      def self.run
+      def self.__run__
         CommandLine.packages.each_value do |package|
           next unless CommandLine.direct_packages.include? package.name
           profile = PackageProfile.read_profile package.prefix
