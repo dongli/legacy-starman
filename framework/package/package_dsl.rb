@@ -150,13 +150,15 @@ module STARMAN
     # setting options like 'with-mpi' or 'with-cxx'.
     def clean package_name
       eval "@@#{package_name}_latest.clean if defined? @@#{package_name}_latest"
-      eval <<-EOT
+      eval <<-RUBY
         if defined? @@#{package_name}_history
           @@#{package_name}_history.each do |spec|
             spec.clean
           end
         end
-      EOT
+      RUBY
+      # Clean resources.
+      eval "@@#{package_name}_resources = {}"
     end
 
     def external_binary_path
