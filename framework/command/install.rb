@@ -18,10 +18,6 @@ module STARMAN
           post: OptionSpec.new(
             desc: 'Only execute post install procedures.',
             accept_value: { boolean: false }
-          ),
-          remote: OptionSpec.new(
-            desc: 'Install package on remote server.',
-            accept_value: :string
           )
         }
       end

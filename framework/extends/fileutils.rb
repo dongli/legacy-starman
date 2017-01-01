@@ -82,6 +82,22 @@ module FileUtils
     cd :back
   end
 
+  def append_file file_path, content = nil, &block
+    dir = File.dirname file_path
+    mkdir_p dir if not Dir.exist? dir
+    if File.exist? file_path
+      file = File.open file_path, 'a'
+    else
+      file = File.new file_path, 'w'
+    end
+    if block_given?
+      content ||= ''
+      yield content
+    end
+    file << content
+    file.close
+  end
+
   def write_file file_path, content = nil, &block
     dir = File.dirname file_path
     mkdir_p dir if not Dir.exist? dir
