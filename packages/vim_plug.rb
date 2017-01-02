@@ -34,16 +34,13 @@ module STARMAN
           " +++ Neocomplete.vim settings +++
           let g:neocomplete#enable_at_startup = 1
           let g:neocomplete#enable_smart_case = 1
-          inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
-          inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
-          inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
-          inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
-          imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-            \ "\<Plug>(neosnippet_expand_or_jump)"
-            \: pumvisible() ? "\<C-n>" : "\<TAB>"
-          smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-            \ "\<Plug>(neosnippet_expand_or_jump)"
-            \: "\<TAB>"
+          imap <expr><Left>  neocomplete#close_popup()."\\<Left>"
+          imap <expr><Right> neocomplete#close_popup()."\\<Right>"
+          imap <expr><Up>    neocomplete#close_popup()."\\<Up>"
+          imap <expr><Down>  neocomplete#close_popup()."\\<Down>"
+          imap <expr><TAB>   pumvisible() ? "\\<C-n>" : "\\<TAB>"
+          imap <expr><CR>    neosnippet#expandable_or_jumpable() ? "\\<Plug>(neosnippet_expand_or_jump)" : "\\<CR>"
+          smap <expr><CR>    neosnippet#expandable_or_jumpable() ? "\\<Plug>(neosnippet_expand_or_jump)" : "\\<CR>"
         EOT
         CLI.report_notice "Run #{CLI.blue ':PlugInstall'} in VIM."
       end
