@@ -7,6 +7,8 @@ module STARMAN
 
     label :compiler_agnostic
 
+    depends_on :flex
+    depends_on :bison
     depends_on :antlr2
     depends_on :gsl
     depends_on :netcdf
