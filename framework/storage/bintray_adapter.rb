@@ -6,15 +6,14 @@ module STARMAN
     REPO = 'precompiled'
 
     def self.init
-      @@user = ENV['STARMAN_BINTRAY_USER']
-      @@api_key = ENV['STARMAN_BINTRAY_API_KEY']
+      @@user = ConfigStore.config[:storage][:bintray][:username] rescue nil
+      @@api_key = ConfigStore.config[:storage][:bintray][:api_key] rescue nil
       if @@user and @@api_key
         begin
-          require 'rest-client'
-        rescue LoadError
+          @@client = RestClient::Resource.new(API_URL, user: @@user, password: @@api_key)
+        rescue
           CLI.report_error 'rest-client is not installed!'
         end
-        @@client = RestClient::Resource.new(API_URL, user: @@user, password: @@api_key)
       end
     end
 

@@ -2,6 +2,7 @@ begin
   require 'byebug'
   require 'readline'
   require 'net/http'
+  require 'rest-client' # TODO: Try to replace it.
   require 'ruby-progressbar'
 rescue LoadError
 end
