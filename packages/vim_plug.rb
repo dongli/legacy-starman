@@ -17,7 +17,7 @@ module STARMAN
 
     def post_install
       vimrc = "#{ENV['HOME']}/.vimrc"
-      if not File.exist? vimrc or File.read(vimrc).include?(/" +++ Plug.vim settings added by STARMAN +++/)
+      if not File.exist? vimrc or File.read(vimrc).include?('" +++ Plug.vim settings added by STARMAN +++')
         append_file "#{ENV['HOME']}/.vimrc", <<-EOT.keep_indent
           " +++ Plug.vim settings added by STARMAN +++
           set runtimepath+=#{prefix}
