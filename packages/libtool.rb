@@ -7,6 +7,8 @@ module STARMAN
 
     label :compiler_agnostic
 
+    depends_on :m4
+
     def install
       args = %W[
         --prefix=#{prefix}
