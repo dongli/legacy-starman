@@ -9,9 +9,9 @@ module STARMAN
         CommandLine.packages.each_value do |package|
           next if not package.respond_to? :status
           case package.status
-          when :on
+          when :on, true
             CLI.report_notice "#{CLI.blue package.name} is #{CLI.green 'on'}."
-          when :off
+          when :off, nil
             CLI.report_notice "#{CLI.blue package.name} is #{CLI.red 'off'}."
           end
         end

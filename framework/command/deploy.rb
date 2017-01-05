@@ -20,6 +20,7 @@ module STARMAN
             CLI.report_notice "Pack STARMAN in #{ConfigStore.config[:package_root]}."
             run "git clone #{ENV['STARMAN_ROOT']}"
             compress 'starman', "starman.#{git_sha}.tgz"
+            rm_r 'starman'
           end
         end
         RemoteServer.instances.each do |name, server|

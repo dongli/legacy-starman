@@ -14,7 +14,7 @@ module STARMAN
         /^\s*CC\s*=.*$/ => "CC = #{CompilerStore.compiler(:c).command}",
         /^\s*CFLAGS\s*=(.*)$/ => "CFLAGS = \\1 -I#{Readline.inc} -I#{Ncurses.inc}",
         /^\s*LDFLAGS\s*=(.*)$/ => "LDFLAGS = \\1 -L#{Readline.lib} -L#{Ncurses.lib}",
-        /^\s*LIBS\s*=(.*)$/ => "LIBS = \\1 -lncurses"
+        /^\s*LIBS\s*=(.*)$/ => "LIBS = \\1 -lncursesw"
       }
       inreplace 'src/luaconf.h', {
         /#define LUA_ROOT.*/ => "#define LUA_ROOT \"#{prefix}\""

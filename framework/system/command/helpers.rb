@@ -6,6 +6,19 @@ module STARMAN
         $?.success?
       end
 
+      def process_running? pid
+        if pid.class == String
+          pid = pid.chomp
+          return false if pid == ''
+        end
+        begin
+          Process.kill 0, pid.to_i
+          true
+        rescue Errno::ESRCH
+          false
+        end
+      end
+
       def full_command_path cmd
         `which #{cmd}`.chomp
       end
