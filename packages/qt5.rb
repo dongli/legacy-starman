@@ -1,9 +1,9 @@
 module STARMAN
   class Qt5 < Package
     homepage 'http://www.qt.io/developers/'
-    url 'https://mirrors.tuna.tsinghua.edu.cn/qt/archive/qt/5.7/5.7.0/single/qt-everywhere-opensource-src-5.7.0.tar.gz'
-    sha256 '4661905915d6265243e17fe59852930a229cf5b054ce5af5f48b34da9112ab5f'
-    version '5.7.0'
+    url 'https://mirrors.tuna.tsinghua.edu.cn/qt/archive/qt/5.7/5.7.1/single/qt-everywhere-opensource-src-5.7.1.tar.gz'
+    sha256 'c86684203be61ae7b33a6cf33c23ec377f246d697bd9fb737d16f0ad798f89b7'
+    version '5.7.1'
     language :cxx
 
     label :compiler_agnostic

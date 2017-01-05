@@ -7,11 +7,11 @@ module STARMAN
       res[1]
     end
     language :c,   command: 'clang',   default_flags: '-O2'
-    language :cxx, command: 'clang++', default_flags: '-O2'
+    language :cxx, command: 'clang++', default_flags: '-O2 -stdlib=libc++'
     flag :openmp => nil
     flag :pic => '-fPIC'
     flag :libcxx => '-lc++'
-    flag :cxx11 => '-std=c++11 -stdlib=libc++'
+    flag :cxx11 => '-std=c++11'
     feature :openmp do
       false
     end

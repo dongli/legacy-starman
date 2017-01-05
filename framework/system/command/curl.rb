@@ -1,11 +1,19 @@
 module STARMAN
   module System
     module Command
+      include FileUtils
+
       def curl url, root, **options
         if system_command? :curl
           filename = options[:rename] ? options[:rename] : File.basename(URI.parse(url).path)
           system "curl -f#L -C - -o #{root}/#{filename} #{url}"
-          CLI.report_error "Failed to download #{CLI.red url}!" if not $?.success?
+          unless $?.success?
+            if $?.exitstatus == 33
+              rm "#{root}/#{filename}"
+              curl url, root, options
+            end
+            CLI.report_error "Failed to download #{CLI.red url}!"
+          end
         end
       end
 

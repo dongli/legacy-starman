@@ -32,8 +32,9 @@ module STARMAN
     def install
       # Unset these so that installing pip and setuptools puts them where we want
       # and not into some other Python the user has installed.
-      ENV["PYTHONHOME"] = nil
-      ENV["PYTHONPATH"] = nil
+      ENV['PYTHONHOME'] = nil
+      ENV['PYTHONPATH'] = nil
+      ENV['LC_CTYPE'] = 'en_US.UTF-8'
 
       args = %W[
         --prefix=#{prefix}
@@ -61,7 +62,8 @@ module STARMAN
 
       run './configure', *args
 
-      inreplace 'pyconfig.h', /.*?(HAVE_POLL[_A-Z]*).*/, '#undef \1'
+      inreplace 'pyconfig.h', '/* #undef HAVE_BROKEN_POLL */', '#define HAVE_BROKEN_POLL 1'
+      inreplace 'Modules/selectmodule.c', '#undef HAVE_BROKEN_POLL', ''
 
       run 'make'
       run 'make', 'install', "PYTHONAPPSDIR=#{prefix}"

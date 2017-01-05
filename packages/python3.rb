@@ -72,12 +72,8 @@ module STARMAN
         'sqlite_defines.append(("SQLITE_OMIT_LOAD_EXTENSION", "1"))' => 'pass',
         "sqlite_inc_paths = [ '/usr/include'" => "sqlite_inc_paths = [ '#{Sqlite.inc}'"
       }
-      inreplace 'pyconfig.h.in', {
-        '#undef HAVE_BROKEN_POLL' => '#define HAVE_BROKEN_POLL'
-      }
-      inreplace 'Modules/selectmodule.c', {
-        '#undef HAVE_BROKEN_POLL' => ''
-      }
+      inreplace 'pyconfig.h.in', '#undef HAVE_BROKEN_POLL', '#define HAVE_BROKEN_POLL'
+      inreplace 'Modules/selectmodule.c', '#undef HAVE_BROKEN_POLL', ''
 
       run './configure', *args
 
