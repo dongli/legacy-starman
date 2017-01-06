@@ -1,9 +1,9 @@
 module STARMAN
   class Boost < Package
     homepage 'http://www.boost.org/'
-    url 'http://heanet.dl.sourceforge.net/project/boost/boost/1.61.0/boost_1_61_0.tar.bz2'
-    sha256 'a547bd06c2fd9a71ba1d169d9cf0339da7ebf4753849a8f7d6fdb8feee99b640'
-    version '1.61.0'
+    url 'https://downloads.sourceforge.net/project/boost/boost/1.63.0/boost_1_63_0.tar.bz2'
+    sha256 'beae2529f759f6b3bf3f4969a19c2e9d6f0c503edcb2de4a61d1428519fcb3b0'
+    version '1.63.0'
 
     option 'with-mpi', {
       desc: 'Build with parallel support.',
