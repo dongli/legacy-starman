@@ -32,7 +32,7 @@ module STARMAN
             next
           end
           # Skip installation if package has system_first label.
-          next if package.has_label? :system_first and system_command?(package.labels[:system_first][:command])
+          next if skip? package
           case PackageDownloader.run package
           when :binary
             installed = PackageBinary.run package
@@ -55,6 +55,18 @@ module STARMAN
           end
           ConfigStore.write_config
         end
+      end
+
+      private
+
+      def self.skip? package
+        return false unless package.has_label? :system_first
+        command = package.labels[:system_first][:command]
+        return false unless system_command? command
+        version_condition = package.labels[:system_first][:version_condition]
+        return false unless version_condition
+        version = VersionSpec.new package.labels[:system_first][:version].call(command)
+        eval "version #{version_condition.split.first} '#{version_condition.split.last}'"
       end
     end
   end
