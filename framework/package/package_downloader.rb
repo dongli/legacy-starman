@@ -20,10 +20,12 @@ module STARMAN
         package.patches.each_with_index do |patch, index|
           case patch
           when PackageSpec
-            file_path = "#{ConfigStore.package_root}/#{package.name}.patch.#{index}"
+            # Change patch filename.
+            patch.filename "#{package.name}.patch.#{index}"
+            file_path = "#{ConfigStore.package_root}/#{patch.filename}"
             if not ( File.exist? file_path and sha_same? file_path, patch.sha256 )
               CLI.report_notice "Downloading patch #{CLI.blue index}."
-              send download_command, patch.url, ConfigStore.package_root, rename: "#{package.name}.patch.#{index}"
+              send download_command, patch.url, ConfigStore.package_root, rename: patch.filename
             end
           when Array
             file_path = "#{ConfigStore.package_root}/#{patch.first.filename}"

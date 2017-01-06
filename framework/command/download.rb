@@ -24,10 +24,12 @@ module STARMAN
           # Upload downloaded packages to remote server.
           RemoteServer.instances.each do |name, server|
             package_root = ConfigStore.config[:remote][name][:starman][:package_root]
-            local_file = "#{ConfigStore.config[:package_root]}/#{package.filename}"
-            remote_file = "#{package_root}/#{package.filename}"
-            next if sha_same? local_file, server.sha256(remote_file)
-            server.upload local_file, remote_file, file: true
+            ([package.filename] + package.patches.map(&:filename) + package.resources.map(&:filename)).each do |filename|
+              local_file = "#{ConfigStore.config[:package_root]}/#{filename}"
+              remote_file = "#{package_root}/#{filename}"
+              next if sha_same? local_file, server.sha256(remote_file)
+              server.upload local_file, remote_file, file: true
+            end
           end
         end
       end
