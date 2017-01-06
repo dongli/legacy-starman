@@ -17,7 +17,13 @@ module STARMAN
       sha256 '6b1371b9abd391e1654f7d730aae9c4dee703a867276b1e8a9ef97a2a906b7cf'
     end
 
+    depends_on :xz
+
     def install
+      if CompilerStore.compiler(:c).vendor == :intel
+        CLI.report_error "#{CLI.blue 'tar'} can not be built by Intel C compiler!"
+      end
+
       # Work around unremovable, nested dirs bug that affects lots of
       # GNU projects. See:
       # https://github.com/Homebrew/homebrew/issues/45273
@@ -28,7 +34,12 @@ module STARMAN
         ENV['gl_cv_func_getcwd_abort_bug'] = 'no'
       end
 
-      run './configure', "--prefix=#{prefix}"
+      args = %W[
+        --prefix=#{prefix}
+        --with-xz=#{Xz.bin}/xz
+      ]
+
+      run './configure', *args
       run 'make', 'install'
     end
   end

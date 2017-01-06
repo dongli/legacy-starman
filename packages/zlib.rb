@@ -9,6 +9,7 @@ module STARMAN
 
     def install
       run './configure', "--prefix=#{prefix}"
+      inreplace 'Makefile', 'LDSHARED=cc -shared', "LDSHARED=#{CompilerStore.compiler(:c).command} -shared"
       run 'make', 'install'
     end
   end

@@ -8,6 +8,7 @@ module STARMAN
     label :compiler_agnostic
     label :system_conflict
 
+    depends_on :tar if needs_build?
     depends_on :zlib
 
     def install

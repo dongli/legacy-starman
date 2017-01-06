@@ -64,7 +64,7 @@ module STARMAN
         command = package.labels[:system_first][:command]
         return false unless system_command? command
         version_condition = package.labels[:system_first][:version_condition]
-        return false unless version_condition
+        return true unless version_condition
         version = VersionSpec.new package.labels[:system_first][:version].call(command)
         eval "version #{version_condition.split.first} '#{version_condition.split.last}'"
       end
