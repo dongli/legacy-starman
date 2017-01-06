@@ -1,6 +1,8 @@
 module STARMAN
   module Command
     class Install
+      extend System::Command
+
       def self.accepted_options
         {
           :'local-build' => OptionSpec.new(
@@ -30,7 +32,7 @@ module STARMAN
             next
           end
           # Skip installation if package has system_first label.
-          next if System::Command.system_command? package.labels[:system_first][:command] rescue nil
+          next if package.has_label? :system_first and system_command?(package.labels[:system_first][:command])
           case PackageDownloader.run package
           when :binary
             installed = PackageBinary.run package
