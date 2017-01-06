@@ -29,6 +29,8 @@ module STARMAN
             PackageProfile.write_profile package # Record the group master profile.
             next
           end
+          # Skip installation if package has system_first label.
+          next if System::Command.system_command? package.labels[:system_first][:command] rescue nil
           case PackageDownloader.run package
           when :binary
             installed = PackageBinary.run package
