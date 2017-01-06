@@ -30,12 +30,14 @@ module STARMAN
         BLASLIB="-L#{Openblas.lib} -lopenblas"
       ]
       run 'make', 'lib', *args
-      run 'make', 'testing' if not skip_test?
-      work_in 'TESTING' do
-        %w[stest dtest ctest ztest].each do |test|
-          run 'make', *args
+      unless skip_test?
+        run 'make', 'testing', *args
+        work_in 'TESTING' do
           %w[stest dtest ctest ztest].each do |test|
-            CLI.blue_arrow `tail -1 #{test}.out`.chomp
+            run 'make', *args
+            %w[stest dtest ctest ztest].each do |test|
+              CLI.blue_arrow `tail -1 #{test}.out`.chomp
+            end
           end
         end
       end

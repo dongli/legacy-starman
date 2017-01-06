@@ -6,6 +6,7 @@ module STARMAN
     version '3.5.2'
 
     label :compiler_agnostic
+    label :system_first, command: 'cmake'
 
     # TODO: Should we specify these two dependencies?
     depends_on :zlib

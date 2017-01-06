@@ -125,7 +125,6 @@ module STARMAN
 
       mkdir 'build' do
         run 'cmake', '..', *args
-        inreplace 'modules/sfm/CMakeFiles/opencv_sfm.dir/link.txt', '-lglog', ''
         run 'make'
         run 'make', 'install'
       end

@@ -1,9 +1,9 @@
 module STARMAN
   class Armadillo < Package
     homepage 'http://arma.sourceforge.net/'
-    url 'http://heanet.dl.sourceforge.net/project/arma/armadillo-7.200.2.tar.xz'
+    url 'http://heanet.dl.sourceforge.net/project/arma/armadillo-7.600.2.tar.xz'
     sha256 '55ab2e62e305da66de6e1c80d91a55511a924cbcfa95ceb13c87e8a958397dfb'
-    version '7.200.2'
+    version '7.600.2'
     language :cxx
 
     option 'with-hdf5', {
