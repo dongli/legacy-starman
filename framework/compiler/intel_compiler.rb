@@ -2,7 +2,7 @@ module STARMAN
   class IntelCompiler < Compiler
     vendor :intel
     version do |command|
-      res = `#{command} -v 2>&1`.match(/version (\d+\.\d+\.\d+)/)
+      res = `#{command} -v 2>&1`.match(/version (\d+\.\d+(\.\d+)?)/i)
       CLI.report_error "Failed to query version of #{CLI.red command}!" if not res
       res[1]
     end
