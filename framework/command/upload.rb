@@ -19,7 +19,7 @@ module STARMAN
         CommandLine.packages.each_value do |package|
           next if package.group_master
           next if CommandLine.options[:'without-depends'].value and not CommandLine.direct_packages.include? package.name
-          if not PackageInstaller.installed? package
+          if not Install.installed? package
             CLI.report_error "Package #{CLI.red package.name} has not been installed!"
           end
           if Storage.uploaded? package

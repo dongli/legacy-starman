@@ -23,7 +23,7 @@ module STARMAN
       accept_value: { boolean: false }
     }
 
-    depends_on :m4
+    depends_on :autoconf if needs_build?
     depends_on :ncurses
     depends_on :openssl
     depends_on :termcap
@@ -63,9 +63,11 @@ module STARMAN
         --enable-shared-zlib
         --enable-smp-support
         --enable-native-libs
-        --with-dynamic-trace=dtrace
       ]
-      args << '--enable-darwin-64bit' if OS.mac?
+      if OS.mac?
+        args << '--with-dynamic-trace=dtrace'
+        args << '--enable-darwin-64bit'
+      end
       args << '--enable-dirty-schedulers' if with_dirty_schedulers?
       if without_hipe?
         args << '--disable-hipe'
@@ -77,6 +79,8 @@ module STARMAN
       else
         args << '--without-javac'
       end
+      args << "CPPFLAGS='-I#{Ncurses.inc} -I#{Termcap.inc}'"
+      args << "LDFLAGS='-L#{Ncurses.lib} -L#{Termcap.lib}'"
       run './otp_build', 'autoconf' unless File.exist? 'configure'
       run './configure', *args
       run 'make'
