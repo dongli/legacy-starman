@@ -12,6 +12,7 @@ module STARMAN
     option 'with-dtrace', { desc: 'Build with DTrace support', accept_value: { boolean: false } }
     option 'admin-user', { desc: 'Set admin user name.', accept_value: { string: 'postgres' }, extra: { profile: false } }
     option 'port', { desc: 'Set the default port number.', accept_value: { string: '5432' } }
+    option 'data-root', { desc: 'Set data cluster root.', accept_value: { string: "#{persist}/data" }, extra: { profile: false } }
 
     depends_on :libxml2
     depends_on :openssl
@@ -27,7 +28,7 @@ module STARMAN
     end
 
     def cluster_path
-      "#{persist}/data"
+      
     end
 
     def install
@@ -71,18 +72,18 @@ module STARMAN
         CLI.report_notice "Create system user #{CLI.blue admin_user}."
         OS.create_user(admin_user, :hide_login)
       end
-      if not Dir.exist? cluster_path
-        CLI.report_notice "Initialize database cluster in #{cluster_path}."
-        run 'sudo', 'mkdir', "-p #{cluster_path}"
+      if not Dir.exist? data_root
+        CLI.report_notice "Initialize database cluster in #{data_root}."
+        run 'sudo', 'mkdir', "-p #{data_root}"
         OS.change_owner persist, admin_user
-        OS.change_owner cluster_path, admin_user
+        OS.change_owner data_root, admin_user
         run 'sudo', "-u #{admin_user}", "#{bin}/initdb", '--pwprompt',
-          "-U #{admin_user}", "-D #{cluster_path}", '-E UTF8', :preserve_ld_library_path
+          "-U #{admin_user}", "-D #{data_root}", '-E UTF8', :preserve_ld_library_path
       end
     end
 
     def start
-      cmd = "#{bin}/pg_ctl start -D #{cluster_path} -l #{persist}/postgres.log"
+      cmd = "#{bin}/pg_ctl start -D #{data_root} -l #{persist}/postgres.log"
       if ENV['USER'] != admin_user
         run 'sudo', "-u #{admin_user}", cmd, :screen_output, :skip_error, :preserve_ld_library_path
       else
@@ -91,7 +92,7 @@ module STARMAN
     end
 
     def stop
-      cmd = "#{bin}/pg_ctl stop -D #{cluster_path}"
+      cmd = "#{bin}/pg_ctl stop -D #{data_root}"
       if ENV['USER'] != admin_user
         run 'sudo', "-u #{admin_user}", cmd, :screen_output, :skip_error, :preserve_ld_library_path
       else
@@ -100,7 +101,7 @@ module STARMAN
     end
 
     def status
-      cmd = "#{bin}/pg_ctl status -D #{cluster_path}"
+      cmd = "#{bin}/pg_ctl status -D #{data_root}"
       if ENV['USER'] != admin_user
         run 'sudo', "-u #{admin_user}", cmd, :screen_output, :skip_error, :preserve_ld_library_path
       else
