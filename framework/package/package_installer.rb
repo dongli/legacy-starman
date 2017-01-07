@@ -4,23 +4,7 @@ module STARMAN
     extend FileUtils
 
     class << self
-      def installed? package
-        if package.has_label? :parasite
-          profile = PackageProfile.read_profile PackageLoader.packages[package.labels[:parasite][:into]][:instance]
-          sha256 = profile.fetch(:parasites, {}).fetch(package.name, {}).fetch(:sha256, nil)
-        else
-          profile = PackageProfile.read_profile package
-          sha256 = profile[:sha256]
-        end
-        if package.has_label? :external_binary
-          sha256 == package.external_binary.sha256
-        else
-          sha256 == package.sha256
-        end
-      end
-
       def run package
-        return false if installed? package
         CLI.report_notice "Install package #{CLI.blue package.name}."
         dir = "#{ConfigStore.package_root}/#{package.name}"
         mkdir dir, force: true
@@ -53,9 +37,7 @@ module STARMAN
                 end
               end
             end
-            package.pre_install
             package.install
-            package.post_install
             PackageProfile.write_profile package
           end
         end

@@ -9,11 +9,7 @@ module STARMAN
       @@user = ConfigStore.config[:storage][:bintray][:username] rescue nil
       @@api_key = ConfigStore.config[:storage][:bintray][:api_key] rescue nil
       if @@user and @@api_key
-        begin
-          @@client = RestClient::Resource.new(API_URL, user: @@user, password: @@api_key)
-        rescue
-          CLI.report_error 'rest-client is not installed!'
-        end
+        @@client = RestClient::Resource.new(API_URL, user: @@user, password: @@api_key) rescue nil
       end
     end
 
@@ -28,6 +24,7 @@ module STARMAN
     end
 
     def self.upload! package
+      CLI.report_error 'rest-client is not installed!' unless @@client
       tar_name = Storage.tar_name package
       # Compress built package.
       CLI.report_notice "Compress package #{CLI.blue package.name}."

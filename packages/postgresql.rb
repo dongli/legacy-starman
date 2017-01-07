@@ -68,14 +68,17 @@ module STARMAN
     end
 
     def post_install
-      if not OS.check_user admin_user
+      unless OS.check_user admin_user
         CLI.report_notice "Create system user #{CLI.blue admin_user}."
         OS.create_user(admin_user, :hide_login)
       end
-      if not Dir.exist? data_root
+      unless Dir.exist? persist
+        mkdir persist
+        OS.change_owner persist, admin_user
+      end
+      unless Dir.exist? data_root
         CLI.report_notice "Initialize database cluster in #{data_root}."
         run 'sudo', 'mkdir', "-p #{data_root}"
-        OS.change_owner persist, admin_user
         OS.change_owner data_root, admin_user
         run 'sudo', "-u #{admin_user}", "#{bin}/initdb", '--pwprompt',
           "-U #{admin_user}", "-D #{data_root}", '-E UTF8', :preserve_ld_library_path

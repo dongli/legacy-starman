@@ -35,8 +35,6 @@ module STARMAN
       end
 
       def run package
-        return false if PackageInstaller.installed? package
-        package.pre_install
         if package.has_label? :external_binary
           external_binary package
         else
@@ -46,8 +44,6 @@ module STARMAN
             normal_binary package
           end
         end
-        package.post_install
-        true
       end
 
       protected

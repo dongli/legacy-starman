@@ -1,10 +1,8 @@
-begin
-  require 'byebug'
-  require 'readline'
-  require 'net/http'
-  require 'rest-client' # TODO: Try to replace it.
-  require 'ruby-progressbar'
-rescue LoadError
+['byebug', 'readline', 'net/http', 'rest-client', 'ruby-progressbar'].each do |gem|
+  begin
+    require gem
+  rescue LoadError
+  end
 end
 
 require 'forwardable'
