@@ -24,6 +24,10 @@ module STARMAN
       "#{prefix}/libexec"
     end
 
+    def frameworks
+      "#{prefix}/Frameworks"
+    end
+
     def share
       "#{prefix}/share"
     end

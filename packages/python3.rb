@@ -54,7 +54,6 @@ module STARMAN
         --prefix=#{prefix}
         --enable-ipv6
         --without-ensurepip
-        --enable-shared
       ]
 
       if CompilerStore.compiler(:c).vendor == :gnu
@@ -64,7 +63,13 @@ module STARMAN
         args << '--with-icc' if CompilerStore.compiler(:c).vendor == :intel
       end
 
-      args << "MACOSX_DEPLOYMENT_TARGET=#{OS.version.major_minor}"
+      if OS.mac?
+        # Matplotlib needs Python to be installed as framework for using macosx backend.
+        args << "--enable-framework=#{frameworks}"
+        args << "MACOSX_DEPLOYMENT_TARGET=#{OS.version.major_minor}"
+      else
+        args << '--enable-shared'
+      end
 
       inreplace 'setup.py', {
         "do_readline = self.compiler.find_library_file(lib_dirs, 'readline')" => "do_readline = '#{Readline.prefix}/libhistory.dylib'",
@@ -79,7 +84,7 @@ module STARMAN
 
       run 'make'
       run 'make', 'install', "PYTHONAPPSDIR=#{prefix}"
-      # run 'make', 'frameworkinstallextras', "PYTHONAPPSDIR=#{persist}/share"
+      run 'make', 'frameworkinstallextras', "PYTHONAPPSDIR=#{persist}/share"
       run 'make', 'quicktest' if not skip_test?
 
       install_resource :setuptools, "#{libexec}/setuptools", strip_leading_dirs: 1
@@ -88,6 +93,13 @@ module STARMAN
     end
 
     def post_install
+      if OS.mac?
+        # Link bin directory.
+        rm_rf bin
+        ln_sf "#{frameworks}/Python.framework/Versions/Current/bin", prefix
+        # Lib is in different place.
+        lib = "#{frameworks}/Python.framework/Versions/Current/lib"
+      end
       # Install modules into persistent directory.
       mkdir_p site_packages
       rm_rf "#{lib}/python3.5/site-packages"
