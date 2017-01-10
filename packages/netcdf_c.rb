@@ -1,10 +1,10 @@
 module STARMAN
   class Netcdf_c < Package
     homepage 'http://www.unidata.ucar.edu/software/netcdf'
-    url 'https://github.com/Unidata/netcdf-c/archive/v4.4.0.tar.gz'
-    sha256 '09b78b152d3fd373bee4b5738dc05c7b2f5315fe34aa2d94ee9256661119112f'
-    version '4.4.0'
-    filename 'netcdf-c-4.4.0.tar.gz'
+    url 'https://github.com/Unidata/netcdf-c/archive/v4.4.1.1.tar.gz'
+    sha256 '7f040a0542ed3f6d27f3002b074e509614e18d6c515b2005d1537fec01b24909'
+    version '4.4.1.1'
+    filename 'netcdf-c-4.4.1.1.tar.gz'
     language :c
 
     belongs_to :netcdf

@@ -42,6 +42,7 @@ module STARMAN
       package = eval("#{name.to_s.capitalize}").new
       # Connect group master and slave.
       if package.group_master
+        load_package package.group_master, options
         package.group_master packages[package.group_master][:instance]
         package.group_master.slave package
       end

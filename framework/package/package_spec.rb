@@ -13,7 +13,8 @@ module STARMAN
         :'skip-test' => OptionSpec.new(
           :desc => 'Skip the build test.',
           :accept_value => { :boolean => false },
-          :extra => { :profile => false }
+          :extra => { :profile => false },
+          cascade: true
         )
       }
       @patches = []

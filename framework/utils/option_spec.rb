@@ -24,7 +24,7 @@ module STARMAN
         @type = options[:accept_value].keys.first
         @default = options[:accept_value].values.first
       end
-      @cascade = false # Control whether the option can be transferred, e.g., from one package to another package.
+      @cascade = options[:cascade] || false # Control whether the option can be transferred, e.g., from one package to another package.
       @extra = options[:extra] || {}
     end
 
