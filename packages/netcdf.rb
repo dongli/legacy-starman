@@ -1,6 +1,6 @@
 module STARMAN
   class Netcdf < Package
-    version '4.4.0'
+    version '4.4.1.1'
 
     label :group_master
 

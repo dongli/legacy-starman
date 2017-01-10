@@ -6,6 +6,7 @@ module STARMAN
     filename 'netcdf-python-1.2.7.tar.gz'
 
     belongs_to :netcdf
+    label :untagged
 
     depends_on :python3
 

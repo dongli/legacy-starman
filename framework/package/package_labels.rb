@@ -5,7 +5,8 @@ module STARMAN
       :external_binary,
       :system_conflict,
       :parasite,
-      :system_first
+      :system_first,
+      :untagged
     ].freeze
 
     def self.valid? label
