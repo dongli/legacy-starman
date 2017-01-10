@@ -21,8 +21,8 @@ module STARMAN
     depends_on :zlib
 
     def install
-      if CompilerStore.compiler(:c).vendor == :intel
-        CLI.report_error "#{CLI.blue 'cdo'} can not be built by Intel C compiler!"
+      if CompilerStore.compiler(:c).vendor == :intel and OS.mac?
+        CLI.report_error "#{CLI.blue 'cdo'} can not be built by Intel C compiler on Mac!"
       end
       inreplace 'test/tsformat.test.in', {
         'test -n "$CDO"      || CDO=cdo' => "CDO='#{pwd}/src/cdo -L'"
