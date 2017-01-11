@@ -5,6 +5,7 @@ module STARMAN
     version '3.0.4'
 
     label :compiler_agnostic
+    label :system_first, command: 'bison'
 
     depends_on :m4 if needs_build?
     depends_on :libiconv
