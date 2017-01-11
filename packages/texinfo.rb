@@ -6,6 +6,7 @@ module STARMAN
     version '6.1'
 
     label :compiler_agnostic
+    label :system_first, command: 'texi2pdf'
 
     def install
       args =  %W[
