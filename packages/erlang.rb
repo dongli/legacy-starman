@@ -81,6 +81,8 @@ module STARMAN
       end
       args << "CPPFLAGS='-I#{Ncurses.inc} -I#{Termcap.inc}'"
       args << "LDFLAGS='-L#{Ncurses.lib} -L#{Termcap.lib}'"
+      # TODO: Why we need this? I have compiled successfully previously.
+      args << "MACOSX_DEPLOYMENT_TARGET=#{OS.version}" if OS.mac?
       run './otp_build', 'autoconf' unless File.exist? 'configure'
       run './configure', *args
       run 'make'

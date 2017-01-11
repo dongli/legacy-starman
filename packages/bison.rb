@@ -6,7 +6,7 @@ module STARMAN
 
     label :compiler_agnostic
 
-    depends_on :m4
+    depends_on :m4 if needs_build?
     depends_on :libiconv
     depends_on :gettext
 

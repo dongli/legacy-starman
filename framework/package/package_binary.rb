@@ -13,7 +13,7 @@ module STARMAN
         file = record_file package
         record = File.exist?(file) ? YAML.load(File.open(file, 'r').read) : {}
         sha = Digest::SHA256.hexdigest(File.read "#{ConfigStore.package_root}/#{package.tag}.tgz")
-        record[sha] = package.tag
+        record[package.tag] = sha
         CLI.report_notice "Record binary #{CLI.blue package.tag}."
         File.open(file, 'w').write record.to_yaml
       end
@@ -21,17 +21,14 @@ module STARMAN
       def has? package
         _package = package.group_master || package
         record = PackageBinary.read_record _package
-        record.each_value do |tag|
-          return true if tag == _package.tag
-        end
-        false
+        record.has_key? _package.tag
       end
 
       def match? package
         _package = package.group_master || package
         record = PackageBinary.read_record _package
         file_path = "#{ConfigStore.package_root}/#{Storage.tar_name _package}"
-        File.exist? file_path and record.keys.include? Digest::SHA256.hexdigest(File.read file_path)
+        File.exist? file_path and record.values.include? Digest::SHA256.hexdigest(File.read file_path)
       end
 
       def run package
