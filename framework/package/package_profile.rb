@@ -25,10 +25,11 @@ module STARMAN
           profile = host_package.profile
           profile[:parasites] ||= {}
           profile[:parasites][package.name] = package.profile
+          profile[:parasites][package.name][:dependencies] ||= {}
           package.dependencies.each do |depend_name, options|
             next if depend_name == package.labels[:parasite][:into]
             depend = CommandLine.packages[depend_name]
-            profile[:parasites][package.name][:dependencies] ||= {}
+            next if Install.skip? depend
             profile[:parasites][package.name][:dependencies][depend_name] = depend.profile
           end
           profile_file = "#{host_package.prefix}/#{host_package.name}.profile"
@@ -41,9 +42,10 @@ module STARMAN
           end
           profile_file = "#{package.prefix}/#{package.name}.profile"
         end
+        profile[:dependencies] ||= {}
         host_package.dependencies.each do |depend_name, options|
           depend = CommandLine.packages[depend_name]
-          profile[:dependencies] ||= {}
+          next if Command::Install.skip? depend
           profile[:dependencies][depend_name] = depend.profile
         end
         File.open(profile_file, 'w') do |file|

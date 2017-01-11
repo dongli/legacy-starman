@@ -20,7 +20,7 @@ module STARMAN
       ]
       run './configure', *args
       run 'make'
-      run 'make', 'test'
+      run 'make', 'test' unless skip_test?
       run 'make', 'install'
     end
   end

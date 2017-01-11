@@ -52,6 +52,11 @@ module STARMAN
         depend_name = PackageAlias.lookup depend_name if not packages.has_key? depend_name
         load_package depend_name, options
       end
+      # Remove skipped dependencies.
+      package.dependencies.delete_if do |depend_name, options|
+        depend = packages[depend_name][:instance]
+        Command::Install.skip? depend
+      end
       @@package_string << package.name
     end
 
@@ -107,9 +112,18 @@ module STARMAN
         end
         CLI.ask 'Which one do you want to use?', all_options
         i = CLI.get_answer.to_i
-        transfer_profile_to package, profiles[i]
       else
-        transfer_profile_to package, profiles.first
+        i = 0
+      end
+      transfer_profile_to package, profiles[i]
+      # Handle cases where some slaves are not tagged.
+      if package.has_label? :group_master
+        profiles[i][:dependencies].each do |depend_name, options|
+          unless @@packages[depend_name][:instance] and package.dependencies.has_key? depend_name
+            load_package depend_name, options
+            package.dependencies[depend_name] = @@packages[depend_name][:instance]
+          end
+        end
       end
       package
     end

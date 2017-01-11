@@ -30,8 +30,7 @@ module STARMAN
     }
     option 'with-python', {
       desc: 'Build Python bindings.',
-      accept_value: { boolean: false },
-      extra: { profile: false }
+      accept_value: { boolean: false }
     }
 
     option('with-cxx').value = false if with_legacy_cxx?
