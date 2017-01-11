@@ -6,7 +6,7 @@ module STARMAN
     version '6.1'
 
     label :compiler_agnostic
-    label :system_first, command: 'texi2pdf'
+    label :system_first, command: 'texi2pdf' unless OS.mac?
 
     def install
       args =  %W[

@@ -6,7 +6,7 @@ module STARMAN
 
     option 'with-fortran', {
       desc: 'Build Fortran bindings',
-      accept_value: { boolean: false }
+      accept_value: { boolean: true }
     }
 
     option 'with-netcdf', {
@@ -16,7 +16,7 @@ module STARMAN
 
     option 'with-python', {
       desc: 'Enable the Python interface in the build.',
-      accept_value: { boolean: false }
+      accept_value: { boolean: true }
     }
 
     language :c
