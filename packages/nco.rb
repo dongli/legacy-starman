@@ -7,12 +7,12 @@ module STARMAN
 
     label :compiler_agnostic
 
-    depends_on :flex
-    depends_on :bison
+    depends_on :flex if needs_build?
+    depends_on :bison if needs_build?
     depends_on :antlr2
     depends_on :gsl
     depends_on :netcdf
-    depends_on :texinfo
+    depends_on :texinfo if needs_build?
     depends_on :udunits
 
     def install
@@ -31,6 +31,7 @@ module STARMAN
         ANTLR_ROOT=#{Antlr2.prefix}
       ]
       run './configure', *args
+      inreplace 'src/nco/ncap_lex.l', /^\s*yy_scan_string/, 'nco_yy_scan_string' if OS.mac?
       run 'make'
       run 'make', 'check' if not skip_test?
       run 'make', 'install'
