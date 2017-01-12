@@ -57,7 +57,7 @@ module STARMAN
         depend = packages[depend_name][:instance]
         Command::Install.skip? depend
       end
-      @@package_string << package.name
+      @@package_string << package.name unless Command::Install.skip? package
     end
 
     def self.run
