@@ -49,6 +49,7 @@ module STARMAN
       # and not into some other Python the user has installed.
       ENV["PYTHONHOME"] = nil
       ENV["PYTHONPATH"] = nil
+      ENV['LC_CTYPE'] = 'en_US.UTF-8'
 
       args = %W[
         --prefix=#{prefix}

@@ -6,7 +6,7 @@ module STARMAN
 
     label :compiler_agnostic
     label :system_first, command: 'tar', version: Proc.new { |cmd|
-      `#{cmd} --version`.match(/\d+\.\d+(\.\d+)/)[0]
+      `#{cmd} --version`.match(/\d+\.\d+(\.\d+)?/)[0]
     }, version_condition: '>= 1.23'
 
     # CVE-2016-6321

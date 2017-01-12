@@ -6,6 +6,7 @@ module STARMAN
     version '0.29.1'
 
     label :compiler_agnostic
+    label :system_first, command: 'pkg-config'
 
     depends_on :libiconv
 
