@@ -26,6 +26,21 @@ module STARMAN
     depends_on :jasper
     depends_on :libpng
     depends_on :netcdf if with_netcdf?
+    depends_on :zlib
+
+    if with_python?
+      depends_on :python3
+
+      resource :pygrib do
+        url 'https://github.com/jswhit/pygrib/archive/v2.0.2rel.tar.gz'
+        sha256 '7e91608ddb01bf842e26764bcaa013d1d7e35c641ba4ab0b9d7f4272b581a43a'
+        filename 'pygrib-2.0.2.tar.gz'
+      end
+
+      def export_env
+        System::Shell.append 'PYTHONPATH', "#{prefix}/lib/python3.5/site-packages", separator: ':'
+      end
+    end
 
     def install
       # inreplace 'src/grib_jasper_encoding.c', 'image.inmem_    = 1;', ''
@@ -34,13 +49,24 @@ module STARMAN
         --disable-dependency-tracking
         --with-jasper=#{Jasper.prefix}
         --with-png-support
-        CPPFLAGS='-I#{Libpng.inc}'
-        LDFLAGS='-L#{Libpng.lib}'
+        CPPFLAGS='-I#{Libpng.inc} -I#{Zlib.inc}'
+        LDFLAGS='-L#{Libpng.lib} -L#{Zlib.lib}'
       ]
       args << '--disable-fortran' unless with_fortran?
-      args << '--enable-python' if with_python?
       run './configure', *args
       run 'make', 'install'
+      if with_python?
+        install_resource :pygrib, '.'
+        work_in 'pygrib-2.0.2rel' do
+          export_env
+          mkdir_p "#{prefix}/lib/python3.5/site-packages"
+          ENV['JASPER_DIR'] = Jasper.prefix
+          ENV['PNG_DIR'] = Libpng.prefix
+          ENV['ZLIB_DIR'] = Zlib.prefix
+          ENV['GRIBAPI_DIR'] = prefix
+          run 'python3', 'setup.py', 'install', "--prefix=#{prefix}"
+        end
+      end
     end
   end
 end
