@@ -31,7 +31,7 @@ module STARMAN
         ANTLR_ROOT=#{Antlr2.prefix}
       ]
       run './configure', *args
-      inreplace 'src/nco/ncap_lex.l', /^\s*yy_scan_string/, 'nco_yy_scan_string' if OS.mac?
+      inreplace 'src/nco/ncap_lex.l', 'yy_size_t yyget_leng', 'int yyget_leng' if OS.linux?
       run 'make'
       run 'make', 'check' if not skip_test?
       run 'make', 'install'

@@ -37,7 +37,9 @@ module STARMAN
         sftp.upload! local_path, remote_path do |event, uploader, *args|
           case event
           when :open
-            @progressbar = ProgressBar.create(title: 'Uploading', total: args[0].size, progress_mark: '#', format: '%B %p%%')
+            @progressbar = ProgressBar.create(title: 'Uploading', total: args[0].size,
+                                              progress_mark: '#', format: '%B %p%%',
+                                              length: [CLI.width, 80].min)
           when :put
             @progressbar.progress += args[2].length
           end
@@ -74,7 +76,7 @@ module STARMAN
 
     def sha256 remote_path
       if self.command? 'shasum'
-        @server.exec!("shasum -a256 #{remote_path}").chomp
+        @server.exec!("shasum -a256 #{remote_path}").chomp.split.first
       elsif self.command? 'sha256sum'
         @server.exec!("sha256sum #{remote_path}").chomp.split.first
       end
