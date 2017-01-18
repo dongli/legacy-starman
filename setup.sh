@@ -42,6 +42,7 @@ function install_ruby
   make install 1>> $STARMAN_ROOT/ruby/out 2>&1
   cd $STARMAN_ROOT/ruby
   rm -rf $RUBY_PACKAGE_DIR
+  export PATH=$STARMAN_ROOT/ruby/bin:$PATH
 }
 
 if ! which ruby 2>&1 1> /dev/null 2>&1; then
