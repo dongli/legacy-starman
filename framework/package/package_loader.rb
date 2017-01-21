@@ -30,7 +30,7 @@ module STARMAN
     end
 
     def self.load_package name, options = {}
-      return if packages[name][:instance] and not options[:force]
+      return if (not packages.has_key? name or packages[name][:instance]) and not options[:force]
       Package.clean name
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
@@ -82,7 +82,7 @@ module STARMAN
 
     def self.scan_installed_package package_name, options = {}
       dir = "#{ConfigStore.install_root}/#{package_name}"
-      return unless File.directory? dir
+      return unless File.directory? dir and packages.has_key? package_name
       load_package package_name
       package = packages[package_name][:instance]
       profiles = []
