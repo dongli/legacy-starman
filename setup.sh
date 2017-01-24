@@ -19,16 +19,20 @@ fi
 
 function install_ruby
 {
+  if [[ -f "$STARMAN_ROOT/ruby/bin/ruby" ]]; then
+    export PATH=$STARMAN_ROOT/ruby/bin:$PATH
+    return
+  fi
   if [[ ! -d "$STARMAN_ROOT/ruby" ]]; then
-      mkdir "$STARMAN_ROOT/ruby"
+    mkdir "$STARMAN_ROOT/ruby"
   fi
   cd $STARMAN_ROOT/ruby
   if [[ ! -f $RUBY_PACKAGE ]]; then
-      wget $RUBY_URL -O $RUBY_PACKAGE
+    wget $RUBY_URL -O $RUBY_PACKAGE
   fi
   if [[ "$SHASUM" == 'none' || "$($SHASUM $RUBY_PACKAGE | cut -d ' ' -f 1)" != "$RUBY_SHA1" ]]; then
-      echo '[Error]: Ruby is not downloaded successfully!'
-      exit 1
+    echo '[Error]: Ruby is not downloaded successfully!'
+    exit 1
   fi
   rm -rf $RUBY_PACKAGE_DIR
   tar -xzf $RUBY_PACKAGE
@@ -60,19 +64,19 @@ cd "$OLD_DIR"
 
 # Check .bashrc in HOME.
 if [[ "$SHELL" =~ "bash" ]]; then
-	LINE="source $STARMAN_ROOT/shells/bashrc"
-	if ! grep "$LINE" ~/.bashrc 1>/dev/null; then
-		echo $LINE >> ~/.bashrc
-		echo "[Notice]: Append \"$LINE\" into ~/.bashrc. Reopen or relogin to the terminal please."
-	fi
-  if [[ -f "$STARMAN_ROOT/ruby/bin" ]]; then
+  LINE="source $STARMAN_ROOT/shells/bashrc"
+  if ! grep "$LINE" ~/.bashrc 1>/dev/null; then
+    echo $LINE >> ~/.bashrc
+    echo "[Notice]: Append \"$LINE\" into ~/.bashrc. Reopen or relogin to the terminal please."
+  fi
+  if [[ -d "$STARMAN_ROOT/ruby/bin" ]]; then
     LINE="export PATH=$STARMAN_ROOT/ruby/bin:\$PATH"
     if ! grep "$LINE" ~/.bashrc 1>/dev/null; then
-	    echo $LINE >> ~/.bashrc
-	    echo "[Notice]: Append \"$LINE\" into ~/.bashrc. Reopen or relogin to the terminal please."
-	  fi
+      echo $LINE >> ~/.bashrc
+      echo "[Notice]: Append \"$LINE\" into ~/.bashrc. Reopen or relogin to the terminal please."
+    fi
   fi
 else
-	echo "[Error]: Shell $SHELL is not supported currently!"
-	exit 1
+  echo "[Error]: Shell $SHELL is not supported currently!"
+  exit 1
 fi
