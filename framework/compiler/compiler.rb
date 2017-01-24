@@ -45,8 +45,8 @@ module STARMAN
               return spec
             end
           end
-          nil
         end
+        CLI.report_error "Unknown compiler #{CLI.red command}!"
       end
 
       def compiler_name
