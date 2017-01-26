@@ -36,7 +36,6 @@ module STARMAN
     def slave_tag options = {}
       res = "#{self.group_master.name}"
       self.group_master.slaves.each do |slave|
-        next if slave.has_label? :untagged
         res << "-#{slave.name}_#{slave.version}"
         res << "-#{slave.revision.keys.last}" if not slave.revision.empty?
       end
@@ -57,7 +56,6 @@ module STARMAN
     def master_tag options = {}
       res = self.name.to_s
       self.slaves.each do |slave|
-        next if slave.has_label? :untagged
         res << "-#{slave.name}_#{slave.version}"
         res << "-#{slave.revision.keys.last}" if not slave.revision.empty?
       end

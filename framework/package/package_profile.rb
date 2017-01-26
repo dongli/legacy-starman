@@ -29,7 +29,7 @@ module STARMAN
           package.dependencies.each do |depend_name, options|
             next if depend_name == package.labels[:parasite][:into]
             depend = CommandLine.packages[depend_name]
-            next if Install.skip? depend
+            next if Command::Install.skip? depend
             profile[:parasites][package.name][:dependencies][depend_name] = depend.profile
           end
           profile_file = "#{host_package.prefix}/#{host_package.name}.profile"

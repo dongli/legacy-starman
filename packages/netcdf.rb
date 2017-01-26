@@ -28,10 +28,6 @@ module STARMAN
       desc: 'Build with DAP remote access client support.',
       accept_value: { boolean: false }
     }
-    option 'with-python', {
-      desc: 'Build Python bindings.',
-      accept_value: { boolean: false }
-    }
 
     option('with-cxx').value = false if with_legacy_cxx?
 
@@ -39,6 +35,5 @@ module STARMAN
     depends_on :netcdf_cxx_legacy if with_legacy_cxx?
     depends_on :netcdf_cxx if with_cxx?
     depends_on :netcdf_fortran if with_fortran?
-    depends_on :netcdf_python if with_python?
   end
 end

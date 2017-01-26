@@ -5,9 +5,7 @@ module STARMAN
     version '1.2.7'
     filename 'netcdf-python-1.2.7.tar.gz'
 
-    belongs_to :netcdf
-    label :untagged
-
+    depends_on :netcdf
     depends_on :python3
 
     def export_env
