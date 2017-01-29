@@ -7,9 +7,9 @@ module STARMAN
       def run package
         CLI.report_notice "Install package #{CLI.blue package.name}."
         dir = "#{ConfigStore.package_root}/#{package.name}"
-        mkdir dir, force: true
+        mkdir dir, force: true unless CommandLine.options[:continue].value
         work_in dir do
-          decompress "#{ConfigStore.package_root}/#{package.filename}"
+          decompress "#{ConfigStore.package_root}/#{package.filename}" unless CommandLine.options[:continue].value
           subdirs = Dir.glob('*')
           if subdirs.size > 1
             working_dir = dir

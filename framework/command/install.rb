@@ -20,6 +20,11 @@ module STARMAN
           post: OptionSpec.new(
             desc: 'Only execute post install procedures.',
             accept_value: { boolean: false }
+          ),
+          continue: OptionSpec.new(
+            desc: 'Continue install procedures.',
+            accept_value: { boolean: false }
+          )
           )
         }
       end

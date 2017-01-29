@@ -12,6 +12,10 @@ module STARMAN
       desc: "Build with Google's libkml driver (requires libkml --HEAD or >= 1.3).",
       accept_value: { boolean: false }
     }
+    option :'with-python', {
+      desc: 'Build Python bindings.',
+      accept_value: { boolean: true }
+    }
 
     depends_on :armadillo
     depends_on :curl
@@ -30,7 +34,16 @@ module STARMAN
     depends_on :pcre
     depends_on :postgresql
     depends_on :proj
+    depends_on :python3 if with_python?
     depends_on :zlib
+
+    def site_packages
+      "#{lib}/python#{Python3.version.gsub(/\.\d+$/, '')}/site-packages"
+    end
+
+    def export_env
+      System::Shell.append 'PYTHONPATH', site_packages, separator: ':'
+    end
 
     def install
       inreplace 'frmts/jpeg2000/jpeg2000_vsil_io.cpp',
@@ -80,6 +93,14 @@ module STARMAN
       run 'make'
       run 'make', 'install'
       run 'make', 'install-man'
+      if with_python?
+        work_in 'swig/python' do
+          mkdir_p site_packages
+          ENV['PYTHONPATH'] = site_packages
+          run 'python3', 'setup.py', 'build'
+          run 'python3', 'setup.py', 'install', "--prefix=#{prefix}"
+        end
+      end
     end
   end
 end
