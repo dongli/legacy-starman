@@ -25,7 +25,6 @@ module STARMAN
             desc: 'Continue install procedures.',
             accept_value: { boolean: false }
           )
-          )
         }
       end
 
