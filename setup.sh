@@ -4,10 +4,10 @@ STARMAN_ROOT=$(cd $(dirname $BASH_SOURCE) && pwd)
 OLD_DIR=$(pwd)
 
 # Check Ruby availability.
-RUBY_URL=http://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.1.tar.gz
-RUBY_SHA1=c39b4001f7acb4e334cb60a0f4df72d434bef711
+RUBY_URL=https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.3.tar.bz2
+RUBY_SHA1=a8db9ce7f9110320f33b8325200e3ecfbd2b534b
 RUBY_PACKAGE=$(basename $RUBY_URL)
-RUBY_PACKAGE_DIR=$(basename $RUBY_PACKAGE .tar.gz)
+RUBY_PACKAGE_DIR=$(basename $RUBY_PACKAGE .tar.bz2)
 
 if which shasum 2>&1 1> /dev/null 2>&1; then
   SHASUM=shasum
