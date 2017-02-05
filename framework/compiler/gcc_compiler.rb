@@ -6,9 +6,9 @@ module STARMAN
       CLI.report_error "Failed to query version of #{CLI.red "#{spec.languages[:c][:command]}"}!" if not res
       res[1]
     end
-    language :c,       command: 'gcc',      default_flags: '-O2'
-    language :cxx,     command: 'g++',      default_flags: '-O2'
-    language :fortran, command: 'gfortran', default_flags: '-O2'
+    language :c,       command: 'gcc',      default_flags: '-O2 -fPIC'
+    language :cxx,     command: 'g++',      default_flags: '-O2 -fPIC'
+    language :fortran, command: 'gfortran', default_flags: '-O2 -fPIC'
     flag openmp: '-fopenmp'
     flag pic: '-fPIC'
     flag libcxx: '-lstdc++'

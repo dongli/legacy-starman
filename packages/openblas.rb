@@ -21,6 +21,10 @@ module STARMAN
       ENV['USE_OPENMP'] = '1' if with_openmp?
       ENV['NO_LAPACK'] = '1' if not with_lapack?
       ENV['NO_LAPACKE'] = '1' if not with_lapack?
+      if OS.neokylin?
+        ENV['NO_AVX'] = '1'
+        ENV['NO_AVX2'] = '1'
+      end
       run 'make', 'libs', 'netlib', 'shared'
       run 'make', 'tests' if not skip_test?
       run 'make', "PREFIX=#{prefix}", 'install'

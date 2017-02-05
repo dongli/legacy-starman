@@ -37,6 +37,8 @@ module STARMAN
             @@os = CentOS.new
           when /Debian GNU\/Linux/
             @@os = Debian.new
+          when /NeoKylin release/
+            @@os = Neokylin.new
           when /SUSE Linux/
             @@os = SUSE.new
           when /Scientific Linux/
@@ -73,10 +75,10 @@ module STARMAN
 
       def linux?
         # FIXME: Check if aix can be covered in linux?
-        [:ubuntu, :fedora, :centos, :suse, :scientific_linux, :aix].include? @@os.type
+        [:ubuntu, :fedora, :centos, :neokylin, :suse, :scientific_linux, :aix].include? @@os.type
       end
 
-      [:ubuntu, :fedora, :centos, :suse, :scientific_linux, :aix].each do |type|
+      [:ubuntu, :fedora, :centos, :neokylin, :suse, :scientific_linux, :aix].each do |type|
         class_eval <<-RUBY
           def #{type}?
             @@os.type == :#{type}

@@ -20,6 +20,7 @@ module STARMAN
         cp 'MAKE_INC/make.mac-x', 'make.inc'
       end
       inreplace 'make.inc', '-fopenmp', '' if not CompilerStore.compiler(:c).feature?(:openmp)
+      inreplace 'make.inc', '-O3', "-O3 #{CompilerStore.compiler(:c).flag(:pic)}"
       args = %W[
         RANLIB=true
         CC="${CC}"

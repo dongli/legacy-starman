@@ -35,7 +35,7 @@ function install_ruby
     exit 1
   fi
   rm -rf $RUBY_PACKAGE_DIR
-  tar -xzf $RUBY_PACKAGE
+  tar -xf $RUBY_PACKAGE
   cd $RUBY_PACKAGE_DIR
   echo "[Notice]: Building Ruby, please wait for a moment! If anything is wrong, please see $STARMAN_ROOT/ruby/out!"
   if ! which gcc 2>&1 1> /dev/null 2>&1; then

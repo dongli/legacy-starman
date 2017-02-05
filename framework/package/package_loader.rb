@@ -116,15 +116,6 @@ module STARMAN
         i = 0
       end
       transfer_profile_to package, profiles[i]
-      # Handle cases where some slaves are not tagged.
-      if package.has_label? :group_master
-        profiles[i][:dependencies].each do |depend_name, options|
-          unless @@packages[depend_name][:instance] and package.dependencies.has_key? depend_name
-            load_package depend_name, options
-            package.dependencies[depend_name] = @@packages[depend_name][:instance]
-          end
-        end
-      end
       package
     end
 

@@ -12,6 +12,10 @@ module STARMAN
       desc: "Build with Google's libkml driver (requires libkml --HEAD or >= 1.3).",
       accept_value: { boolean: false }
     }
+    option :'with-pg', {
+      desc: 'Build with PostgreSQL support.',
+      accept_value: { boolean: false }
+    }
     option :'with-python', {
       desc: 'Build Python bindings.',
       accept_value: { boolean: true }
@@ -32,7 +36,7 @@ module STARMAN
     depends_on :libgeotiff
     depends_on :libxml2
     depends_on :pcre
-    depends_on :postgresql
+    depends_on :postgresql if with_pg?
     depends_on :proj
     depends_on :python3 if with_python?
     depends_on :zlib
@@ -80,7 +84,6 @@ module STARMAN
         --with-libjson-c=#{Json_c.prefix}
         --without-grass
         --without-libgrass
-        --with-pg=#{Postgresql.bin}/pg_config
         --without-mysql
         --without-python
         --without-perl
@@ -88,6 +91,7 @@ module STARMAN
         --without-ruby
         --with-armadillo=#{Armadillo.prefix}
       ]
+      args << "--with-pg=#{Postgresql.bin}/pg_config" if with_pg?
 
       run './configure', *args
       run 'make'

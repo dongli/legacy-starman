@@ -18,6 +18,7 @@ module STARMAN
         --disable-silent-rules
         --prefix=#{prefix}
         --with-zlib-prefix=#{Zlib.prefix}
+        LDFLAGS='-L#{Zlib.lib}'
       ]
       run './configure', *args
       run 'make'

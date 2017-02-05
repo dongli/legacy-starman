@@ -12,7 +12,6 @@ module STARMAN
         --disable-samples
         --disable-tests
         --enable-static
-        --enable-rpath
         --with-library-bits=64
       ]
       work_in 'source' do

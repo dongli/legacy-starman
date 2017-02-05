@@ -6,7 +6,9 @@ module STARMAN
     version '1.4.17'
 
     label :compiler_agnostic
-    label :system_first, command: 'm4'
+    label :system_first, command: 'm4', version: Proc.new { |cmd|
+      `#{cmd} --version`.match(/\d+\.\d+\.\d+?/)[0]
+    }, version_condition: '>= 1.4.16'
 
     def install
       args = %W[
