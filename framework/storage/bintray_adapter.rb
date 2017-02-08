@@ -8,13 +8,16 @@ module STARMAN
     def self.init
       @@user = ConfigStore.config[:storage][:bintray][:username] rescue nil
       @@api_key = ConfigStore.config[:storage][:bintray][:api_key] rescue nil
-      if @@user and @@api_key
-        @@client = RestClient::Resource.new(API_URL, user: @@user, password: @@api_key) rescue nil
-      end
     end
 
     def self.check_connection
       true
+    end
+
+    def self.auth options
+      options[:username] = @@user
+      options[:password] = @@api_key
+      options
     end
 
     def self.uploaded? package
@@ -24,7 +27,6 @@ module STARMAN
     end
 
     def self.upload! package
-      CLI.report_error 'rest-client is not installed!' unless @@client
       tar_name = Storage.tar_name package
       # Compress built package.
       CLI.report_notice "Compress package #{CLI.blue package.name}."
@@ -34,17 +36,14 @@ module STARMAN
       create_package package if not package_exist? package
       delete_version package if version_exist? package
       create_version package
-      @@client["/content/starman/#{REPO}/#{package.name}/#{tar_name}/#{tar_name};publish=1"].put(
-        File.new("#{ConfigStore.package_root}/#{tar_name}"),  content_type: 'application/octet-stream', multipart: true) do |resp, req, res, &b|
-        CLI.report_error "Failed to upload package #{CLI.blue name} to Bintray!" if resp.code != 201
-      end
+      curl API_URL + "/content/starman/#{REPO}/#{package.name}/#{tar_name}/#{tar_name};publish=1",
+        "#{ConfigStore.package_root}/#{tar_name}",
+        auth(method: :put, content_type: :octet_stream, multipart: true)
     end
 
     def self.delete! package
       tar_name = Storage.tar_name package
-      @@client["/packages/starman/#{REPO}/#{package.name}/versions/#{tar_name}"].delete do |resp, req, res, &b|
-        CLI.report_error "Failed to delete #{STARMAN.blue tar_name} due to #{STARMAN.red res.message}!" if resp.code != 200
-      end
+      curl API_URL + "/packages/starman/#{REPO}/#{package.name}/versions/#{tar_name}", nil, auth(method: :delete)
     end
 
     def self.download package
@@ -62,43 +61,32 @@ module STARMAN
         licenses: [ 'Unlicense' ],
         vcs_url: 'None'
       }.to_json
-      @@client["/packages/starman/#{REPO}"].post(payload, content_type: :json) do |resp, req, res|
-        CLI.report_error "Failed to create #{CLI.blue package.name} due to #{CLI.red res.message}!" if resp.code != 201
-      end
+      curl API_URL + "/packages/starman/#{REPO}", nil, auth(method: :post, content_type: :json, payload: payload)
     end
 
     def self.delete_package package
-      @@client["/packages/starman/#{REPO}/#{package.name}"].delete do |resp, req, res|
-        CLI.report_error "Failed to delete #{CLI.blue package.name} due to #{CLI.red res.message}!" if resp.code != 200
-      end
+      curl API_URL + "/packages/starman/#{REPO}/#{package.name}", nil, auth(method: :delete)
     end
 
     def self.package_exist? package
-      @@client["/packages/starman/#{REPO}/#{package.name}"].get do |resp, req, res|
-        resp.code == 200
-      end
+      url_exist? API_URL + "/packages/starman/#{REPO}/#{package.name}"
     end
 
     def self.create_version package
       tar_name = Storage.tar_name package
       payload = { name: tar_name, released: Time.now.utc.iso8601 }.to_json
-      @@client["/packages/starman/#{REPO}/#{package.name}/versions"].post(payload, content_type: :json) do |resp, req, res|
-        CLI.report_error "Failed to create this version due to #{CLI.red res.message}!" if resp.code != 201
-      end
+      curl API_URL + "/packages/starman/#{REPO}/#{package.name}/versions", nil,
+        auth(method: :post, content_type: :json, payload: payload)
     end
 
     def self.delete_version package
       tar_name = Storage.tar_name package
-      @@client["/packages/starman/#{REPO}/#{package.name}/versions/#{tar_name}"].delete do |resp, req, res|
-        CLI.report_error "Failed to delete this version due to #{CLI.red res.message}!" if resp.code != 200
-      end
+      curl API_URL + "/packages/starman/#{REPO}/#{package.name}/versions/#{tar_name}", nil, auth(method: :delete)
     end
 
     def self.version_exist? package
       tar_name = Storage.tar_name package
-      @@client["/packages/starman/#{REPO}/#{package.name}/versions/#{tar_name}"].get do |resp, req, res|
-        resp.code == 200
-      end
+      url_exist? API_URL + "/packages/starman/#{REPO}/#{package.name}/versions/#{tar_name}"
     end
   end
 end

@@ -1,4 +1,4 @@
-['byebug', 'readline', 'net/http', 'rest-client', 'ruby-progressbar'].each do |gem|
+['byebug', 'readline', 'net/http', 'ruby-progressbar'].each do |gem|
   begin
     require gem
   rescue LoadError
@@ -11,6 +11,7 @@ require 'digest'
 require 'yaml'
 require 'json'
 require 'pathname'
+require 'time'
 
 require 'extends/string'
 require 'extends/fileutils'

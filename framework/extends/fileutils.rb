@@ -75,8 +75,8 @@ module FileUtils
   end
 
   def work_in dir
-    CLI.report_error 'No work block is given!' if not block_given?
-    CLI.report_error "Directory #{CLI.red dir} does not exist!" if not Dir.exist? dir
+    STARMAN::CLI.report_error 'No work block is given!' if not block_given?
+    STARMAN::CLI.report_error "Directory #{STARMAN::CLI.red dir} does not exist!" if not Dir.exist? dir
     cd dir
     yield
     cd :back
