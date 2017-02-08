@@ -9,13 +9,13 @@ module STARMAN
     depends_on :libeemd
 
     def export_env
-      System::Shell.append 'PYTHONPATH', "#{prefix}/lib/python3.5/site-packages", separator: ':'
+      System::Shell.append 'PYTHONPATH', "#{prefix}/lib/python#{Python3.xy}/site-packages", separator: ':'
     end
 
     def install
       ENV['LIBRARY_PATH'] = Libeemd.lib
       export_env
-      mkdir_p "#{prefix}/lib/python3.5/site-packages"
+      mkdir_p "#{prefix}/lib/python#{Python3.xy}/site-packages"
       run 'python3', 'setup.py', 'install', "--prefix=#{prefix}"
     end
   end

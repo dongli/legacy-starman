@@ -87,8 +87,8 @@ module STARMAN
       if with_python3?
         args << '-DBUILD_opencv_python3=ON'
         args << "-DPYTHON3_EXECUTABLE=#{Python3.bin}/python3"
-        args << "-DPYTHON3_LIBRARY=#{Python3.lib}/libpython3.5m.#{OS.soname}"
-        args << "-DPYTHON3_INCLUDE_DIR=#{Python3.inc}/python3.5m"
+        args << "-DPYTHON3_LIBRARY=#{Python3.lib}/libpython#{Python3.xy}m.#{OS.soname}"
+        args << "-DPYTHON3_INCLUDE_DIR=#{Python3.inc}/python#{Python3.xy}m"
       else
         args << '-DBUILD_opencv_python3=OFF'
         args << "-DPYTHON3_EXECUTABLE=''"

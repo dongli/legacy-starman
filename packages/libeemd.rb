@@ -8,7 +8,7 @@ module STARMAN
     depends_on :gsl
     depends_on :pkgconfig if needs_build?
 
-    patch :DATA
+    patch :DATA if OS.mac?
 
     def install
       CLI.report_error "You should use a C compiler with OpenMP support!" unless CompilerStore.compiler(:c).feature? :openmp

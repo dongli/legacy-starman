@@ -6,7 +6,10 @@ module STARMAN
     version '1.0.6'
 
     def install
-      inreplace 'Makefile', '$(PREFIX)/man', '$(PREFIX)/share/man'
+      inreplace 'Makefile', {
+        '$(PREFIX)/man' => '$(PREFIX)/share/man',
+        'CFLAGS=' => "CFLAGS=-fPIC "
+      }
       run 'make', 'install', "PREFIX=#{prefix}"
     end
   end

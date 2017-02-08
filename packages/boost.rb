@@ -62,7 +62,7 @@ module STARMAN
         content << "using #{toolset} : : #{ENV['CXX']} ;\n"
         content << "using mpi ;\n" if with_mpi?
         content << "using python : 2.7 : #{Python2.bin}/python : #{Python2.inc}/python2.7 : #{Python2.lib} : ;\n" if with_python2?
-        content << "using python : 3.5 : #{Python3.bin}/python3 : #{Python3.inc}/python3.5m : #{Python3.lib} : ;\n" if with_python3?
+        content << "using python : #{Python3.xy} : #{Python3.bin}/python3 : #{Python3.inc}/python#{Python3.xy}m : #{Python3.lib} : ;\n" if with_python3?
       end
 
       args = %W[

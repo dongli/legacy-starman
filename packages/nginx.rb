@@ -1,8 +1,8 @@
 module STARMAN
   class Nginx < Package
-    url 'https://nginx.org/download/nginx-1.10.2.tar.gz'
-    sha256 '1045ac4987a396e2fa5d0011daf8987b612dd2f05181b67507da68cbe7d765c2'
-    version '1.10.2'
+    url 'https://nginx.org/download/nginx-1.10.3.tar.gz'
+    sha256 '75020f1364cac459cb733c4e1caed2d00376e40ea05588fb8793076a4c69dd90'
+    version '1.10.3'
 
     label :compiler_agnostic
 
@@ -48,7 +48,7 @@ module STARMAN
         --with-pcre
         --sbin-path=#{bin}/nginx
         --with-cc-opt='-I#{Openssl.inc} -I#{Pcre.inc} -I#{Zlib.inc}'
-        --with-ld-opt='-L#{Openssl.lib} -L#{Pcre.lib} -L#{Zlib.lib}'
+        --with-ld-opt='-L#{Openssl.lib} -Wl,-rpath,#{Openssl.lib} -L#{Pcre.lib} -L#{Zlib.lib}'
         --conf-path=#{persist}/etc/nginx/nginx.conf
         --pid-path=#{var}/run/nginx.pid
         --lock-path=#{var}/run/nginx.lock

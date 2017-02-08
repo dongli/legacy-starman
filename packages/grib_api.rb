@@ -38,7 +38,7 @@ module STARMAN
       end
 
       def export_env
-        System::Shell.append 'PYTHONPATH', "#{prefix}/lib/python3.5/site-packages", separator: ':'
+        System::Shell.append 'PYTHONPATH', "#{prefix}/lib/python#{Python3.xy}/site-packages", separator: ':'
       end
     end
 
@@ -56,10 +56,12 @@ module STARMAN
       run './configure', *args
       run 'make', 'install'
       if with_python?
+        run 'pip3', 'install', '--upgrade', 'numpy'
+        run 'pip3', 'install', '--upgrade', 'pyproj'
         install_resource :pygrib, '.'
         work_in 'pygrib-2.0.2rel' do
           export_env
-          mkdir_p "#{prefix}/lib/python3.5/site-packages"
+          mkdir_p "#{prefix}/lib/python#{Python3.xy}/site-packages"
           ENV['JASPER_DIR'] = Jasper.prefix
           ENV['PNG_DIR'] = Libpng.prefix
           ENV['ZLIB_DIR'] = Zlib.prefix

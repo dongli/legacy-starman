@@ -1,25 +1,15 @@
 module STARMAN
   class Ruby < Package
     homepage 'https://www.ruby-lang.org/'
-    url 'https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.3.tar.bz2'
-    sha256 '882e6146ed26c6e78c02342835f5d46b86de95f0dc4e16543294bc656594cc5b'
-    version '2.3.3'
+    url 'https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.0.tar.gz'
+    sha256 '152fd0bd15a90b4a18213448f485d4b53e9f7662e1508190aa5b702446b29e3d'
+    version '2.4.0'
 
     def abi_version
-      '2.3.0'
+      '2.4.0'
     end
 
     label :compiler_agnostic
-
-    # Reverts an upstream commit which incorrectly tries to install headers
-    # into SDKROOT, if defined
-    # See https://bugs.ruby-lang.org/issues/11881
-    # The issue has been fixed on HEAD as of 1 Jan 2016, but has not been
-    # backported to the 2.3 branch yet and patch is still required.
-    patch do
-      url 'https://raw.githubusercontent.com/Homebrew/formula-patches/ba8cc6b88e6b7153ac37739e5a1a6bbbd8f43817/ruby/mkconfig.patch'
-      sha256 '929c618f74e89a5e42d899a962d7d2e4af75716523193af42626884eaba1d765'
-    end
 
     depends_on :gmp
     depends_on :libyaml

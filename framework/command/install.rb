@@ -73,7 +73,7 @@ module STARMAN
       def self.skip? package
         return false unless package.has_label? :system_first
         command = package.labels[:system_first][:command]
-        return false unless system_command? command
+        return false unless system_command? command and not `which #{command}`.include? package.bin
         version_condition = package.labels[:system_first][:version_condition]
         return true unless version_condition
         version = VersionSpec.new package.labels[:system_first][:version].call(command)
