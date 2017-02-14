@@ -27,10 +27,6 @@ module STARMAN
       depends_on :uuid
     end
 
-    def cluster_path
-      
-    end
-
     def install
       args = %W[
         --disable-debug
