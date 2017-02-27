@@ -1,9 +1,9 @@
 module STARMAN
   class Elixir < Package
-    url 'https://github.com/elixir-lang/elixir/archive/v1.3.4.tar.gz'
-    sha256 'f5ee5353d8dbe610b1dfd276d22f2038d57d9a7d3cea69dac10da2b098bd2033'
-    version '1.3.4'
-    filename 'elixir-1.3.4.tar.gz'
+    url 'https://github.com/elixir-lang/elixir/archive/v1.4.2.tar.gz'
+    sha256 'cb4e2ec4d68b3c8b800179b7ae5779e2999aa3375f74bd188d7d6703497f553f'
+    version '1.4.2'
+    filename 'elixir-1.4.2.tar.gz'
 
     label :compiler_agnostic
 
