@@ -7,7 +7,7 @@ OLD_DIR=$(pwd)
 RUBY_URL=https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.0.tar.gz
 RUBY_SHA=d44a3c50a0e742341ed3033d5db79d865151a4f4
 RUBY_PACKAGE=$(basename $RUBY_URL)
-RUBY_PACKAGE_DIR=$(basename $RUBY_PACKAGE .tar.bz2)
+RUBY_PACKAGE_DIR=$(basename $RUBY_PACKAGE .tar.gz)
 
 if which shasum 2>&1 1> /dev/null 2>&1; then
   SHASUM=shasum
@@ -30,7 +30,7 @@ function install_ruby
   if [[ ! -f $RUBY_PACKAGE ]]; then
     wget $RUBY_URL -O $RUBY_PACKAGE
   fi
-  if [[ "$SHASUM" == 'none' || "$($SHASUM $RUBY_PACKAGE | cut -d ' ' -f 1)" != "$RUBY_SHA1" ]]; then
+  if [[ "$SHASUM" == 'none' || "$($SHASUM $RUBY_PACKAGE | cut -d ' ' -f 1)" != "$RUBY_SHA" ]]; then
     echo '[Error]: Ruby is not downloaded successfully!'
     exit 1
   fi
