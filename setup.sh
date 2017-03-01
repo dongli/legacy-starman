@@ -4,8 +4,8 @@ STARMAN_ROOT=$(cd $(dirname $BASH_SOURCE) && pwd)
 OLD_DIR=$(pwd)
 
 # Check Ruby availability.
-RUBY_URL=https://cache.ruby-lang.org/pub/ruby/2.3/ruby-2.3.3.tar.bz2
-RUBY_SHA1=a8db9ce7f9110320f33b8325200e3ecfbd2b534b
+RUBY_URL=https://cache.ruby-lang.org/pub/ruby/2.4/ruby-2.4.0.tar.gz
+RUBY_SHA=d44a3c50a0e742341ed3033d5db79d865151a4f4
 RUBY_PACKAGE=$(basename $RUBY_URL)
 RUBY_PACKAGE_DIR=$(basename $RUBY_PACKAGE .tar.bz2)
 
@@ -35,7 +35,7 @@ function install_ruby
     exit 1
   fi
   rm -rf $RUBY_PACKAGE_DIR
-  tar -xf $RUBY_PACKAGE
+  tar -xzf $RUBY_PACKAGE
   cd $RUBY_PACKAGE_DIR
   echo "[Notice]: Building Ruby, please wait for a moment! If anything is wrong, please see $STARMAN_ROOT/ruby/out!"
   if ! which gcc 2>&1 1> /dev/null 2>&1; then
