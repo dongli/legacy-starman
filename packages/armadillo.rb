@@ -1,9 +1,9 @@
 module STARMAN
   class Armadillo < Package
     homepage 'http://arma.sourceforge.net/'
-    url 'http://heanet.dl.sourceforge.net/project/arma/armadillo-7.600.2.tar.xz'
-    sha256 '6790d5e6b41fcac6733632a9c3775239806d00178886226dec3f986a884f4c2d'
-    version '7.600.2'
+    url 'http://sourceforge.net/projects/arma/files/armadillo-7.800.1.tar.xz'
+    sha256 '5ada65a5a610301ae188bb34f0ac6e7fdafbdbcd0450b0adb7715349ae14b8db'
+    version '7.800.1'
     language :cxx
 
     option 'with-hdf5', {
@@ -12,14 +12,16 @@ module STARMAN
     }
 
     depends_on :cmake if needs_build?
-    depends_on :arpack
+    depends_on :arpack if CompilerStore.compiler(:fortran)
     depends_on :superlu
     depends_on :hdf5 if with_hdf5?
 
     def install
-      inreplace 'cmake_aux/Modules/ARMA_FindARPACK.cmake',
-        'PATHS ${CMAKE_SYSTEM_LIBRARY_PATH}',
-        "PATHS ${CMAKE_SYSTEM_LIBRARY_PATH} #{Arpack.lib}"
+      if CompilerStore.compiler(:fortran)
+        inreplace 'cmake_aux/Modules/ARMA_FindARPACK.cmake',
+          'PATHS ${CMAKE_SYSTEM_LIBRARY_PATH}',
+          "PATHS ${CMAKE_SYSTEM_LIBRARY_PATH} #{Arpack.lib}"
+      end
       inreplace 'cmake_aux/Modules/ARMA_FindSuperLU5.cmake', {
         'find_path(SuperLU_INCLUDE_DIR slu_ddefs.h' => "find_path(SuperLU_INCLUDE_DIR slu_ddefs.h\n#{Superlu.inc}/superlu",
         'PATHS ${CMAKE_SYSTEM_LIBRARY_PATH}' => "PATHS ${CMAKE_SYSTEM_LIBRARY_PATH} #{Superlu.lib}"

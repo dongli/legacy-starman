@@ -1,9 +1,9 @@
 module STARMAN
   class Mlpack < Package
     homepage 'http://www.mlpack.org'
-    url 'http://www.mlpack.org/files/mlpack-2.0.3.tar.gz'
-    sha256 '3682c698aac1cd0f2f00d0484fdd033ab33f0ead88666c392312272919e20adb'
-    version '2.0.3'
+    url 'http://www.mlpack.org/files/mlpack-2.1.1.tar.gz'
+    sha256 'c2249bbab5686bb8658300ebcf814b81ac7b8050a10f1a517ba5530c58dbac31'
+    version '2.1.1'
     language :cxx
 
     depends_on :cmake if needs_build?
@@ -16,7 +16,7 @@ module STARMAN
       args << "-DBOOST_ROOT=#{Boost.prefix}"
       args << "-DARMADILLO_INCLUDE_DIR=#{Armadillo.inc}"
       args << "-DARMADILLO_LIBRARY=#{Armadillo.lib}/libarmadillo.#{OS.soname}"
-      work_in 'build' do
+      mkdir 'build' do
         run 'cmake', '..', *args
         run 'make'
         run 'make', 'test' if not skip_test?
