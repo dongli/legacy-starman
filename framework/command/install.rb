@@ -71,7 +71,7 @@ module STARMAN
       private
 
       def self.skip? package
-        return false unless package.has_label? :system_first
+        return false if not package.has_label? :system_first or CommandLine.option(:force)
         command = package.labels[:system_first][:command]
         return false unless system_command? command and not `which #{command}`.include? package.bin
         version_condition = package.labels[:system_first][:version_condition]

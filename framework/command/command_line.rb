@@ -86,6 +86,11 @@ module STARMAN
       @@options ||= {}
     end
 
+    def self.option option
+      return unless @@options[option]
+      @@options[option].value
+    end
+
     def self.has_option? option
       options.has_key? option
     end
