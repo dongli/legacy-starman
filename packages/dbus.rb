@@ -5,6 +5,8 @@ module STARMAN
     sha256 'baf3d22baa26d3bdd9edc587736cd5562196ce67996d65b82103bedbe1f0c014'
     version '1.10.8'
 
+    depends_on :expat unless OS.mac?
+
     patch do
       url 'https://raw.githubusercontent.com/Homebrew/formula-patches/0a8a55872e/d-bus/org.freedesktop.dbus-session.plist.osx.diff'
       sha256 'a8aa6fe3f2d8f873ad3f683013491f5362d551bf5d4c3b469f1efbc5459a20dc'
@@ -17,11 +19,13 @@ module STARMAN
         --prefix=#{prefix}
         --disable-xml-docs
         --disable-doxygen-docs
-        --enable-launchd
-        --with-launchd-agent-dir=#{prefix}
         --without-x
         --disable-tests
       ]
+      if OS.mac?
+        args << '--enable-launchd'
+        args << '--with-launchd-agent-dir=#{prefix}'
+      end
       run './configure', *args
       run 'make'
       run 'make', 'install'

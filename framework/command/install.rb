@@ -90,7 +90,7 @@ module STARMAN
         end
         if package.has_label? :external_binary
           sha256 == package.external_binary.sha256
-        else
+        elsif package.sha256
           sha256 == package.sha256
         end
       end

@@ -1,9 +1,9 @@
 module STARMAN
   class Qt5 < Package
     homepage 'http://www.qt.io/developers/'
-    url 'https://mirrors.tuna.tsinghua.edu.cn/qt/archive/qt/5.7/5.7.1/single/qt-everywhere-opensource-src-5.7.1.tar.gz'
-    sha256 'c86684203be61ae7b33a6cf33c23ec377f246d697bd9fb737d16f0ad798f89b7'
-    version '5.7.1'
+    url 'https://download.qt.io/official_releases/qt/5.8/5.8.0/single/qt-everywhere-opensource-src-5.8.0.tar.xz'
+    sha256 '0f4c54386d3dbac0606a936a7145cebb7b94b0ca2d29bc001ea49642984824b6'
+    version '5.8.0'
     language :cxx
 
     label :compiler_agnostic
@@ -22,12 +22,16 @@ module STARMAN
     }
 
     depends_on :dbus
-    depends_on :postgresql
     depends_on :icu4c if with_qtwebkit? # FIXME: Check this dependency.
 
+    patch do
+      url 'https://raw.githubusercontent.com/Homebrew/formula-patches/634a19fb/qt5/QTBUG-57656.patch'
+      sha256 'a69fc727f4378dbe0cf05ecf6e633769fe7ee6ea52b1630135a05d5adfa23d87'
+    end
+
     resource :qtwebkit do
-      url 'https://download.qt.io/community_releases/5.7/5.7.0/qtwebkit-opensource-src-5.7.0.tar.gz'
-      sha256 '30672ad5b5a12ef8ac1f07408f67713f9eb2e2688df77336047984326c294f74'
+      url 'https://download.qt.io/community_releases/5.8/5.8.0-final/qtwebkit-opensource-src-5.8.0.tar.xz'
+      sha256 '79ae8660086bf92ffb0008b17566270e6477c8fa0daf9bb3ac29404fb5911bec'
     end
 
     def install
@@ -51,6 +55,9 @@ module STARMAN
         -ldbus-1
         -dbus-linked
       ]
+      if OS.linux? and CompilerStore.compiler(:cxx).vendor == :intel
+        args << '-platform linux-icc-64'
+      end
       args << '-nomake' << 'examples' if not with_examples?
       args << '-nomake' << 'tests' if skip_test?
       if with_qtwebkit?
@@ -76,8 +83,6 @@ module STARMAN
         run 'make', 'docs'
         run 'make', 'install_docs'
       end
-      inreplace "#{prefix}/mkspecs/qconfig.pri",
-        /\n# pkgconfig\n(PKG_CONFIG_(SYSROOT_DIR|LIBDIR) = .*\n){2}\n/, "\n"
     end
   end
 end

@@ -56,7 +56,7 @@ module STARMAN
           send download_command, package.external_binary.url, ConfigStore.package_root, rename: package.external_binary.filename
         end
         return :binary
-      else
+      elsif package.url
         # Package is not compiled before.
         file_path = "#{ConfigStore.package_root}/#{package.filename}"
         if not ( File.exist? file_path and sha_same? file_path, package.sha256 )
