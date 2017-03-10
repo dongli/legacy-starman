@@ -111,8 +111,8 @@ end
 __END__
 diff --git a/tools/build/src/tools/python.jam b/tools/build/src/tools/python.jam
 index 90377ea..123f66a 100644
---- a/boost/tools/build/src/tools/python.jam
-+++ b/boost/tools/build/src/tools/python.jam
+--- a/tools/build/src/tools/python.jam
++++ b/tools/build/src/tools/python.jam
 @@ -493,6 +493,10 @@ local rule probe ( python-cmd )
                  sys.$(s) = [ SUBST $(output) \\<$(s)=([^$(nl)]+) $1 ] ;
              }

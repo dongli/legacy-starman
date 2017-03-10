@@ -53,7 +53,7 @@ module STARMAN
 
     def install
       ENV.delete 'LD'
-      ENV['LIBRARY_PATH'] = ENV['LIBRARY_PATH'].gsub(/:$/, '')
+      ENV['LIBRARY_PATH'] = ENV['LIBRARY_PATH'].gsub(/:$/, '') if ENV['LIBRARY_PATH']
       args = %W[
         --prefix=#{prefix}
         --libdir=#{lib}/gcc/#{version_suffix}

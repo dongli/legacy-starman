@@ -11,7 +11,6 @@ module STARMAN
     language :fortran, command: 'gfortran', default_flags: '-O2 -fPIC'
     flag openmp: '-fopenmp'
     flag pic: '-fPIC'
-    flag libcxx: '-lstdc++'
     flag cxx11: '-std=c++11'
     feature :openmp do
       true

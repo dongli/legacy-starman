@@ -92,6 +92,8 @@ module STARMAN
           sha256 == package.external_binary.sha256
         elsif package.sha256
           sha256 == package.sha256
+        elsif profile and package.has_label? :group_master
+          true
         end
       end
     end

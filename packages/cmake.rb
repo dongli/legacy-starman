@@ -13,6 +13,9 @@ module STARMAN
     depends_on :bzip2
 
     def install
+      if CompilerStore.compiler(:c).vendor == :gnu and OS.mac?
+        CLI.report_error "#{CLI.blue 'cmake'} can not be built by GCC compiler on Mac!"
+      end
       args = %W[
         --prefix=#{prefix}
         --parallel=#{CommandLine.options[:'make-jobs'].value}

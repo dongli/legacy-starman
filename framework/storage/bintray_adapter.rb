@@ -36,7 +36,7 @@ module STARMAN
       create_package package if not package_exist? package
       delete_version package if version_exist? package
       create_version package
-      curl API_URL + "/content/starman/#{REPO}/#{package.name}/#{tar_name}/#{tar_name};publish=1",
+      curl API_URL + "/content/starman/#{REPO}/#{package.name}/#{tar_name}/#{tar_name}?publish=1",
         "#{ConfigStore.package_root}/#{tar_name}",
         auth(method: :put, content_type: :octet_stream, multipart: true)
     end
