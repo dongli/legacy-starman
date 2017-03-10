@@ -24,6 +24,7 @@ module STARMAN
         --system-bzip2
         --system-curl
       ]
+      inreplace 'CMakeLists.txt', 'find_package(ZLIB)', "set(ZLIB_ROOT '#{Zlib.prefix}')\nfind_package(ZLIB)"
       run './bootstrap', *args
       run 'make'
       run 'make', 'install'
