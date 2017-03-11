@@ -53,10 +53,10 @@ module STARMAN
           write_file rc_file, content
         when :env
           Array(keys).map(&:to_s).each do |key|
-            if ENV[key]
-              ENV[key] = "#{ENV[key]}#{separator}#{value}"
-            else
+            if not ENV[key]
               ENV[key] = value
+            elsif not ENV[key].include? value
+              ENV[key] = "#{ENV[key]}#{separator}#{value}"
             end
           end
         end

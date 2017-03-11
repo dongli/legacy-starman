@@ -49,7 +49,7 @@ module STARMAN
       ENV['PYTHONPATH'] = nil
       ENV['LC_CTYPE'] = 'en_US.UTF-8'
 
-      System::Shell.append 'LDFLAGS', "-Wl,-rpath=#{Openssl.lib}"
+      System::Shell.append 'LDFLAGS', "-Wl,-rpath,#{Openssl.lib}"
 
       args = %W[
         --prefix=#{prefix}
