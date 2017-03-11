@@ -5,6 +5,8 @@ module STARMAN
     version '1.2.7'
     filename 'netcdf-python-1.2.7.tar.gz'
 
+    label :compiler_agnostic
+
     depends_on :netcdf
     depends_on :python3
 
