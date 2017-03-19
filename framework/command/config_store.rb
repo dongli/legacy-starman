@@ -62,6 +62,18 @@ module STARMAN
       end
 
       def write_template file_path
+        if OS.mac?
+          default_compilers = {
+            'c' => '/usr/bin/clang',
+            'cxx' => '/usr/bin/clang++'
+          }
+        else
+          default_compilers = {
+            'c' => '/usr/bin/gcc',
+            'cxx' => '/usr/bin/g++',
+            'fortran' => '/usr/bin/gfortran'
+          }
+        end
         template = {
           'package_root' => '/opt/starman/packages',
           'install_root' => '/opt/starman/software',
@@ -71,7 +83,7 @@ module STARMAN
             'compiler_set_index' => 0,
             'mpi' => 'mpich'
           },
-          'compiler_set_0' => nil
+          'compiler_set_0' => default_compilers
         }
         write_file file_path, template.to_yaml
       end
