@@ -73,7 +73,7 @@ module STARMAN
 
     def self.report_warning message
       print "[#{yellow 'Warning'}]: #{message}\n"
-      print_call_stack if CommandLine.options[:debug].value
+      print_call_stack if CommandLine.option(:debug)
     end
 
     def self.report_error message, options = {}
@@ -81,7 +81,7 @@ module STARMAN
         raise message
       else
         print "[#{red 'Error'}]: #{message}\n"
-        print_call_stack if CommandLine.options[:debug].value rescue exit
+        print_call_stack if CommandLine.option(:debug) rescue exit
         exit
       end
     end

@@ -6,7 +6,6 @@ module STARMAN
     version '1.6.26'
     filename 'libpng-1.6.26.tar.xz'
 
-    label :compiler_agnostic
     label :system_conflict
 
     depends_on :tar if needs_build?

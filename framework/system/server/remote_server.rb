@@ -22,12 +22,12 @@ module STARMAN
       if options[:file]
         remote_dir = Pathname.new(remote_path).dirname
       else
-        if self.dir? remote_path
-          remote_dir = remote_path
+        remote_dir = remote_path
+        if self.dir? remote_dir
           if options[:force]
             self.rmdir remote_dir
           else
-            CLI.report_error "Remote #{CLI.red remote_path} exists!"
+            CLI.report_error "Remote #{CLI.red remote_dir} exists!"
           end
         end
       end
@@ -47,6 +47,10 @@ module STARMAN
       end
     end
 
+    def file? remote_file
+      @server.exec!("test -f #{remote_file} && echo yes").chomp == "yes"
+    end
+
     def dir? remote_dir
       @server.exec!("test -d #{remote_dir} && echo yes").chomp == 'yes'
     end
@@ -64,6 +68,11 @@ module STARMAN
     def chmod remote_path, mode
       CLI.report_notice "Change #{CLI.blue remote_path} permissions to #{CLI.blue mode}."
       @server.exec! "chmod #{mode} #{remote_path}"
+    end
+
+    def cp remote_src_file, remote_dst_file
+      CLI.report_notice "Copy file #{CLI.red remote_src_file} to #{CLI.blue remote_dst_file}."
+      @server.exec! "cp #{remote_src_file} #{remote_dst_file}"
     end
 
     def command? cmd
