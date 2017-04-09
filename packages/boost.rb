@@ -41,6 +41,8 @@ module STARMAN
         if compiler.version <= '11.1'
           CLI.report_error 'Intel compiler is too old to compile Boost! See ' +
             'https://software.intel.com/en-us/articles/boost-1400-compilation-error-while-building-with-intel-compiler/'
+        elsif compiler.version == '15.0.2' and (with_python2? or with_python3?)
+          CLI.report_error 'Intel compiler 15.0.2 could not build boost with python!'
         end
         if OS.mac?
           @toolset = 'intel-darwin'

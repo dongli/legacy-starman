@@ -5,6 +5,8 @@ module STARMAN
     sha256 '93dcf69e67165a626b7268432b9da9d3f55284a54145dc94caf7bc509c25ec87'
     version '4.5.0'
 
+    label :compiler_agnostic
+
     option 'with-python3', {
       desc: 'Build Python 3 API.',
       accept_value: { boolean: false }

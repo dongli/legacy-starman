@@ -14,13 +14,21 @@ module STARMAN
       end
 
       def self.__run__
-        git_sha = run('git', "--git-dir=#{ENV['STARMAN_ROOT']}/.git", 'rev-parse', 'origin/master', :capture_output).chomp
-        work_in ConfigStore.config[:package_root] do
-          unless File.exist? "starman.#{git_sha}.tgz"
-            CLI.report_notice "Pack STARMAN in #{ConfigStore.config[:package_root]}."
-            run "git clone #{ENV['STARMAN_ROOT']}"
-            compress 'starman', "starman.#{git_sha}.tgz"
-            rm_r 'starman'
+        if system_command? :git
+          git_sha = run('git', "--git-dir=#{ENV['STARMAN_ROOT']}/.git", 'rev-parse', 'origin/master', :capture_output).chomp
+          tar_name = "starman.#{git_sha}.tgz"
+          work_in ConfigStore.config[:package_root] do
+            unless File.exist? tar_name
+              CLI.report_notice "Pack STARMAN in #{ConfigStore.config[:package_root]}."
+              run "git clone #{ENV['STARMAN_ROOT']}"
+              compress 'starman', tar_name
+              rm_r 'starman'
+            end
+          end
+        else
+          tar_name = 'starman.tgz'
+          work_in ConfigStore.config[:package_root] do
+            compress ENV['STARMAN_ROOT'], tar_name
           end
         end
         RemoteServer.instances.each do |name, server|

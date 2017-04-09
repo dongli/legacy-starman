@@ -47,6 +47,7 @@ module STARMAN
       end
 
       def set_default_flags
+        return unless @@active_compiler_set
         LanguageCompilerFlagNames.each do |language, flag_names|
           Array(flag_names).each do |flag_name|
             compiler = CompilerStore.compiler(language)
@@ -59,6 +60,7 @@ module STARMAN
       end
 
       def unset_flags
+        return unless @@active_compiler_set
         LanguageCompilerFlagNames.each do |language, flags|
           Array(flags).each do |flag|
             System::Shell.set flag, ''

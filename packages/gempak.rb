@@ -102,7 +102,7 @@ module STARMAN
         }
       end
       System::Shell.append_source_file './Gemenviron.profile'
-      run 'make', 'everything'
+      run 'make', '--ignore-errors', 'everything'
     end
   end
 end
