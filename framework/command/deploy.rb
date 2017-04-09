@@ -33,7 +33,7 @@ module STARMAN
         end
         RemoteServer.instances.each do |name, server|
           location = ConfigStore.config[:remote][name][:starman][:location]
-          local_tgz = "#{ConfigStore.config[:package_root]}/starman.#{git_sha}.tgz"
+          local_tgz = "#{ConfigStore.config[:package_root]}/#{tar_name}"
           remote_tgz = "#{location}/.tmp/starman.#{git_sha}.tgz"
           if not server.dir? location or CommandLine.option :force
             # Backup existing files.
