@@ -32,4 +32,4 @@ Kernel.trap('INT') do
 end
 
 # FIXME: This may not be right.
-at_exit { clean if $! }
+at_exit { clean unless $! }

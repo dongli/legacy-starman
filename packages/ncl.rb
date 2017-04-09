@@ -24,7 +24,7 @@ module STARMAN
 
     external_binary_on :centos, '>= 7.0' do
       url 'https://www.earthsystemgrid.org/download/fileDownload.html?logicalFileId=191cb88a-fa02-11e6-a976-00c0f03d5b7c'
-      sha256 '85620a87e626bef385d0b0c821a3de147c41fc4b8170be64d5757eb60d0695dc'
+      sha256 '97b646c43e56e34fc9621b2b2ec1da0513e85b3ef9e72e716553754d108c407d'
       filename 'ncl_ncarg-6.4.0-CentOS7.3_64bit_gnu485.tar.gz'
     end
 

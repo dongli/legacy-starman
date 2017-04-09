@@ -27,15 +27,44 @@ module STARMAN
           location = ConfigStore.config[:remote][name][:starman][:location]
           local_tgz = "#{ConfigStore.config[:package_root]}/starman.#{git_sha}.tgz"
           remote_tgz = "#{location}/.tmp/starman.#{git_sha}.tgz"
-          if not server.dir? location or CommandLine.options[:force].value
+          if not server.dir? location or CommandLine.option :force
+            # Backup existing files.
+            remote_config_file = "#{location}/starman.config"
+            if server.file? remote_config_file
+              server.cp remote_config_file, "#{location}/.."
+            else
+              remote_config_file = nil
+            end
+            remote_ruby_dir = "#{location}/ruby"
+            if server.dir? remote_ruby_dir
+              server.cp remote_ruby_dir, "#{location}/.."
+            else
+              remote_ruby_dir = nil
+            end
             server.rmdir location
             server.upload local_tgz, remote_tgz, file: true
             server.exec! "tar xf #{remote_tgz} -C #{location}"
             server.exec! "rm -rf #{location}/.tmp"
+            # Copy back backup files.
+            if remote_config_file
+              server.mv "#{location}/../starman.config", location
+            end
+            if remote_ruby_dir
+              server.mv "#{location}/../ruby", location
+            else
+              ruby_tgz = "#{ConfigStore.config[:package_root]}/ruby-2.4.0.tar.gz"
+              server.upload ruby_tgz, "#{location}/ruby/" unless is_ruby_ok? server
+            end
           else
             CLI.report_warning "Already uploaded, use -force to override."
           end
         end
+      end
+
+      def self.is_ruby_ok? server
+        return false unless server.command? 'ruby'
+        version = VersionSpec.new(server.exec!('ruby -v').match(/(\d+)\.(\d+)\.(\d+)/)[0])
+        version >= '2.0.0'
       end
     end
   end

@@ -30,6 +30,7 @@ module STARMAN
             CLI.report_error "Remote #{CLI.red remote_dir} exists!"
           end
         end
+        remote_path = "#{remote_dir}/#{Pathname.new(local_path).basename}"
       end
       self.mkdir remote_dir unless self.dir? remote_dir
       CLI.report_notice "Upload #{CLI.red local_path} to #{CLI.red remote_path} on server #{CLI.blue @remote[:host]}."
@@ -72,7 +73,12 @@ module STARMAN
 
     def cp remote_src_file, remote_dst_file
       CLI.report_notice "Copy file #{CLI.red remote_src_file} to #{CLI.blue remote_dst_file}."
-      @server.exec! "cp #{remote_src_file} #{remote_dst_file}"
+      @server.exec! "cp -r #{remote_src_file} #{remote_dst_file}"
+    end
+
+    def mv remote_src_file, remote_dst_file
+      CLI.report_notice "Move file #{CLI.red remote_src_file} to #{CLI.blue remote_dst_file}."
+      @server.exec! "mv #{remote_src_file} #{remote_dst_file}"
     end
 
     def command? cmd
