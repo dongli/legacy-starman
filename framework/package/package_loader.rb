@@ -63,7 +63,7 @@ module STARMAN
     def self.run
       return if CommandLine.command == :edit
       # Always load gcc ...
-      load_package :gcc
+      load_package :gcc unless CommandLine.packages.keys.include? :gcc
       @@package_string = []
       CommandLine.packages.keys.each do |name|
         load_package name.to_s.downcase.to_sym
