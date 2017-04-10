@@ -42,6 +42,7 @@ function install_ruby
     echo '[Error]: There is no GCC compiler!'
     exit 1
   fi
+  export LD_LIBRARY_PATH=
   CC=gcc CFLAGS=-fPIC ./configure --prefix=$STARMAN_ROOT/ruby --disable-install-rdoc 1> $STARMAN_ROOT/ruby/out 2>&1
   make install 1>> $STARMAN_ROOT/ruby/out 2>&1
   cd $STARMAN_ROOT/ruby

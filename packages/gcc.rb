@@ -47,6 +47,15 @@ module STARMAN
       @compilers
     end
 
+    def export_env
+      if OS.mac?
+        System::Shell.prepend OS.ld_library_path, "#{lib}/gcc/#{version_suffix}", separator: ':'
+      else OS.linux?
+        System::Shell.prepend OS.ld_library_path, "#{lib}/gcc/lib64", separator: ':'
+      end
+      System::Shell.prepend 'PATH', bin, separator: ':'
+    end
+
     def version_suffix
       version.to_s.slice(/\d/)
     end

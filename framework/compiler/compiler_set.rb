@@ -3,12 +3,6 @@ module STARMAN
     include System::Command
 
     def initialize command_hash
-      if command_hash.has_key? :installed_by_starman
-        compiler_name = command_hash[:installed_by_starman]
-        if not PackageLoader.has_package? compiler_name
-          CLI.report_error "Unknown STARMAN installed compiler #{CLI.red compiler_name}!"
-        end
-      end
       @compilers = {}
       command_hash.each do |language, command|
         if language.to_s =~ /^mpi_(c|cxx|fortran)/
