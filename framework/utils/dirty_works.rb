@@ -1,7 +1,7 @@
 module STARMAN
   module DirtyWorks
     def self.handle_absent_compiler packages
-      return if CommandLine.command == :config
+      return if [:config, :download].include? CommandLine.command
       ################################################################################
       # The following codes are really mess! They are just used to handle edge cases.
       # Change command line and package options that set build language bindings.

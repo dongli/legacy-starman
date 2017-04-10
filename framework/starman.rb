@@ -20,8 +20,8 @@ end
 STARMAN::CommandLine.check_invalid_options
 
 def clean
-  FileUtils.rm_f "#{STARMAN::ConfigStore.package_root}/stdout.#{Process.pid}"
-  FileUtils.rm_f "#{STARMAN::ConfigStore.package_root}/stderr.#{Process.pid}"
+  FileUtils.rm_f "#{STARMAN::ConfigStore.package_root}/stdout.#{Process.pid}" rescue nil
+  FileUtils.rm_f "#{STARMAN::ConfigStore.package_root}/stderr.#{Process.pid}" rescue nil
   STARMAN::System::Xcode.final if STARMAN::OS.mac?
 end
 
