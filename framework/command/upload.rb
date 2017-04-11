@@ -18,7 +18,7 @@ module STARMAN
         Storage.check_connection
         CommandLine.packages.each_value do |package|
           next if package.group_master
-          next if CommandLine.options[:'without-depends'].value and not CommandLine.direct_packages.include? package.name
+          next if CommandLine.option(:'without-depends') and not CommandLine.direct_packages.keys.include? package.name
           if not Install.installed? package
             CLI.report_error "Package #{CLI.red package.name} has not been installed!"
           end

@@ -46,7 +46,7 @@ module STARMAN
         end
       end
       check_command_options
-      @@direct_packages = @@packages.keys if defined? @@packages
+      @@direct_packages = @@packages if defined? @@packages
     end
 
     def self.check_command_options
@@ -104,7 +104,7 @@ module STARMAN
     end
 
     def self.direct_packages
-      @@direct_packages ||= []
+      @@direct_packages ||= {}
     end
   end
 end

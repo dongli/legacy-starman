@@ -41,7 +41,7 @@ module STARMAN
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
       # Set package version to user specified one.
-      if CommandLine.option :version and CommandLine.direct_packages.include? package.name
+      if CommandLine.option :version and CommandLine.direct_packages.keys.include? package.name
         package.latest = package.history[CommandLine.option(:version)]
       elsif options.keys.include? :version
         package.latest = package.history[options[:version]]
@@ -77,6 +77,7 @@ module STARMAN
       CommandLine.packages = {}
       @@package_string.each do |name|
         CommandLine.packages[name] = packages[name][:instance]
+        CommandLine.direct_packages[name] = packages[name][:instance] if CommandLine.direct_packages.keys.include? name
       end
     end
 

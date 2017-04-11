@@ -14,7 +14,7 @@ module STARMAN
 
       def self.__run__
         CommandLine.packages.each_key do |package_name|
-          next unless CommandLine.direct_packages.include? package_name or CommandLine.options[:purely].value
+          next unless CommandLine.direct_packages.keys.include? package_name or CommandLine.option :purely
           next unless (package = PackageLoader.scan_installed_package package_name)
           PackageUninstaller.run Pathname.new(package.prefix)
         end

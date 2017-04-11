@@ -6,8 +6,7 @@ module STARMAN
       end
 
       def self.__run__
-        CommandLine.packages.each_value do |package|
-          next unless CommandLine.direct_packages.include? package.name
+        CommandLine.direct_packages.each_value do |package|
           profile = PackageProfile.read_profile package.prefix
           CLI.blue_arrow "name: #{profile[:name]}"
           CLI.blue_arrow "version: #{profile[:version]}"
