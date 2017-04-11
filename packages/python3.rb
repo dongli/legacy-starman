@@ -144,11 +144,11 @@ module STARMAN
       rm_rf "#{bin}/pip"
       rm_rf "#{bin}/easy_install"
       mv "#{bin}/wheel", "#{bin}/wheel3"
+    end
 
-      # Install some usefull packages.
-      ['ipython'].each do |package|
-        run "#{bin}/pip3", 'install', '--upgrade', package
-      end
+    def call
+      Pip3.parse CommandLine.option(:command)
+      Pip3.send Pip3.command
     end
   end
 end

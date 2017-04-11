@@ -63,6 +63,7 @@ require 'compiler/pgi_compiler'
 require 'compiler/compiler_set'
 require 'compiler/compiler_store'
 
+require 'command/call'
 require 'command/config'
 require 'command/download'
 require 'command/edit'
@@ -98,3 +99,5 @@ require 'package/package_binary'
 require 'storage/bintray_adapter'
 require 'storage/qiniu_adapter'
 require 'storage/storage'
+
+require 'extern/pip3'
