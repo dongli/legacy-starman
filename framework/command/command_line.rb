@@ -9,6 +9,10 @@ module STARMAN
         desc: 'Show more outputs, such as command run output.',
         accept_value: { boolean: false }
       ),
+      version: OptionSpec.new(
+        desc: 'Select which version to operate on.',
+        accept_value: :string
+      ),
       config: OptionSpec.new(
         desc: 'Configuration file.',
         accept_value: { path: "#{ENV['STARMAN_ROOT']}/starman.config" }

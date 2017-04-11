@@ -9,10 +9,6 @@ module STARMAN
             desc: 'Force to build package locally from source codes.',
             accept_value: { boolean: false }
           ),
-          version: OptionSpec.new(
-            desc: 'Select which version to install.',
-            accept_value: :string
-          ),
           force: OptionSpec.new(
             desc: 'Force to install packages no matter other conditions.',
             accept_value: { boolean: false }

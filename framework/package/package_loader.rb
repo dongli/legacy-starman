@@ -63,7 +63,7 @@ module STARMAN
         depend = packages[depend_name][:instance]
         Command::Install.skip? depend
       end
-      @@package_string << package.name if defined? @@package_string and not Command::Install.skip? package
+      @@package_string << package.name unless options[:not_record] or Command::Install.skip? package
     end
 
     def self.run
@@ -81,9 +81,10 @@ module STARMAN
           end
         end
       end
-      # Always load gcc ...
-      load_package :gcc unless CommandLine.packages.keys.include? :gcc
+      # Load packages in sequence.
       @@package_string = []
+      # Always load gcc ... TODO: This may need check.
+      load_package :gcc, not_record: true unless CommandLine.packages.keys.include? :gcc
       CommandLine.packages.keys.each do |name|
         load_package name.to_s.downcase.to_sym, force: true
       end

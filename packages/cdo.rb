@@ -27,6 +27,8 @@ module STARMAN
       inreplace 'test/tsformat.test.in', {
         'test -n "$CDO"      || CDO=cdo' => "CDO='#{pwd}/src/cdo -L'"
       }
+      # To avoid potential conflict with cdo test scripts.
+      ENV.delete 'suffix'
       args = %W[
         --prefix=#{prefix}
         --with-hdf5=#{Hdf5.prefix}
