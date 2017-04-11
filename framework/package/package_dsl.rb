@@ -152,7 +152,7 @@ module STARMAN
       eval "@@#{package_name}_latest.clean if defined? @@#{package_name}_latest"
       eval <<-RUBY
         if defined? @@#{package_name}_history
-          @@#{package_name}_history.each do |spec|
+          @@#{package_name}_history.each_value do |spec|
             spec.clean
           end
         end

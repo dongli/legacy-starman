@@ -8,6 +8,12 @@ module STARMAN
 
     label :system_conflict if OS.ubuntu?
 
+    history do
+      url 'https://www.openssl.org/source/openssl-1.0.2k.tar.gz'
+      sha256 '6b3977c61f2aedf0f96367dcfb5c6e578cf37e7b8d913b4ecb6643c3cb88d8c0'
+      version '1.0.2k'
+    end
+
     option 'x86-64', {
       desc: 'Build x86-64 library.',
       accept_value: { boolean: true }

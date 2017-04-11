@@ -40,6 +40,12 @@ module STARMAN
       Package.clean name
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
+      # Set package version to user specified one.
+      if CommandLine.option :version and CommandLine.direct_packages.include? package.name
+        package.latest = package.history[CommandLine.option(:version)]
+      elsif options.keys.include? :version
+        package.latest = package.history[options[:version]]
+      end
       # Connect group master and slave.
       if package.group_master
         load_package package.group_master, options

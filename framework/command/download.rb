@@ -12,7 +12,11 @@ module STARMAN
           :'without-depends' => OptionSpec.new(
             desc: 'Do not download dependencies.',
             accept_value: { boolean: false }
-          )
+          ),
+          version: OptionSpec.new(
+            desc: 'Select which version to install.',
+            accept_value: :string
+          ),
         }
       end
 

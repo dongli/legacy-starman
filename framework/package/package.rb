@@ -65,6 +65,14 @@ module STARMAN
       }
     end
 
+    # Reset latest spec to given spec.
+    def latest= spec
+      # Just change url, sha256, version
+      @latest.url spec.url
+      @latest.sha256 spec.sha256
+      @latest.version spec.version
+    end
+
     singleton_class.send(:alias_method, :old_name, :name)
     def self.name
       self.old_name.split('::').last.downcase.to_sym

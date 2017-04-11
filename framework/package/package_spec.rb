@@ -70,7 +70,7 @@ module STARMAN
     def url val = nil
       if val
         @url = val
-        @filename = File.basename(URI.parse(val).path) if not @filename
+        @filename = File.basename(URI.parse(val).path)
       end
       @url
     end
