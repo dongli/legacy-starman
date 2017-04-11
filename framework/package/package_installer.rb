@@ -9,7 +9,7 @@ module STARMAN
         dir = "#{ConfigStore.package_root}/#{package.name}"
         mkdir dir, force: true unless CommandLine.options[:continue].value
         work_in dir do
-          decompress "#{ConfigStore.package_root}/#{package.filename}" unless CommandLine.options[:continue].value
+          decompress "#{ConfigStore.package_root}/#{package.filename}" unless CommandLine.option :continue
           subdirs = Dir.glob('*')
           if subdirs.size > 1
             working_dir = dir

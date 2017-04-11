@@ -63,7 +63,7 @@ module STARMAN
         depend = packages[depend_name][:instance]
         Command::Install.skip? depend
       end
-      @@package_string << package.name unless Command::Install.skip? package rescue nil
+      @@package_string << package.name if defined? @@package_string and not Command::Install.skip? package
     end
 
     def self.run
@@ -72,7 +72,7 @@ module STARMAN
       load_package :gcc unless CommandLine.packages.keys.include? :gcc
       @@package_string = []
       CommandLine.packages.keys.each do |name|
-        load_package name.to_s.downcase.to_sym
+        load_package name.to_s.downcase.to_sym, force: true
       end
       CommandLine.packages = {}
       @@package_string.each do |name|
