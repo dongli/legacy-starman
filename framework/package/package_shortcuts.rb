@@ -20,6 +20,10 @@ module STARMAN
       "#{prefix}/lib"
     end
 
+    def lib64
+      "#{prefix}/lib64"
+    end
+
     def libexec
       "#{prefix}/libexec"
     end
