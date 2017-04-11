@@ -12,7 +12,7 @@ module STARMAN
       @@options = []
       @@wheels = []
       args.each do |arg|
-        if arg =~ /-/
+        if arg =~ /^-/
           @@options << arg
         else
           @@wheels << arg
@@ -28,7 +28,7 @@ module STARMAN
       @@wheels.each do |wheel|
         mkdir_p "#{ConfigStore.package_root}/#{wheel}"
         work_in "#{ConfigStore.package_root}/#{wheel}" do
-          run 'pip3', 'download', wheel
+          run 'pip3', 'download', *@@options, wheel
           RemoteServer.instances.each do |name, server|
             package_root = ConfigStore.config[:remote][name][:starman][:package_root]
             Dir.glob('*') do |filename|
