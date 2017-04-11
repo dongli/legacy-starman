@@ -41,10 +41,10 @@ module STARMAN
       load packages[name][:file]
       package = eval("#{name.to_s.capitalize}").new
       # Set package version to user specified one.
-      if CommandLine.option :version and CommandLine.direct_packages.keys.include? package.name
-        package.latest = package.history[CommandLine.option(:version)]
-      elsif options.keys.include? :version
-        package.latest = package.history[options[:version]]
+      if @@versions[package.name]
+        package.latest = package.history[@@versions[package.name]]
+      elsif @@versions[:all] and CommandLine.direct_packages.keys.include? package.name
+        package.latest = package.history[@@versions[:all]]
       end
       # Connect group master and slave.
       if package.group_master
@@ -68,6 +68,19 @@ module STARMAN
 
     def self.run
       return if CommandLine.command == :edit
+      # Check version option.
+      @@versions = {}
+      if CommandLine.option :version
+        CommandLine.option(:version).split(',').each do |version|
+          if version.include? '@'
+            tmp = version.split('@')
+            @@versions[tmp.first.to_sym] = tmp.last
+          else
+            CLI.report_warning "Version option contains multiple versions without specifying packages! Use #{CLI.red version}." if @@versions[:all]
+            @@versions[:all] = version
+          end
+        end
+      end
       # Always load gcc ...
       load_package :gcc unless CommandLine.packages.keys.include? :gcc
       @@package_string = []
