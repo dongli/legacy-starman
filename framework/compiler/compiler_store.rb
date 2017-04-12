@@ -50,7 +50,15 @@ module STARMAN
         case CompilerStore.compiler(:c).vendor
         when :intel
           bin = Pathname.new(CompilerStore.compiler(:c).command).dirname
-          System::Shell.prepend OS.ld_library_path, `source #{bin}/iccvars*.sh && env`.match(/^#{OS.ld_library_path}=(.*)/)[1], separator: ':'
+          # Look for iccvars.sh.
+          while true
+            if bin.entries.index { |x| x.to_s == 'iccvars.sh' }
+              library_path = `source #{bin}/iccvars.sh intel64 && env`.match(/^#{OS.ld_library_path}=(.*)/)[1] rescue nil
+              System::Shell.prepend OS.ld_library_path, library_path, separator: ':' if library_path and not library_path.empty?
+              break
+            end
+            bin = bin.dirname
+          end
         when :gnu
           # If compiler is GNU installed by STARMAN, export some environment variables for it.
           Gcc.new.export_env if CompilerStore.compiler(:c).command.to_s.include? Gcc.bin
@@ -58,10 +66,20 @@ module STARMAN
         case CompilerStore.compiler(:fortran).vendor
         when :intel
           bin = Pathname.new(CompilerStore.compiler(:fortran).command).dirname
-          System::Shell.prepend OS.ld_library_path, `source #{bin}/ifortvars*.sh && env`.match(/^#{OS.ld_library_path}=(.*)/)[1], separator: ':'
+          # Look for ifortvars.sh.
+          while true
+            if bin.entries.index { |x| x.to_s == 'ifortvars.sh' }
+              library_path = `source #{bin}/ifortvars.sh intel64 && env`.match(/^#{OS.ld_library_path}=(.*)/)[1] rescue nil
+              System::Shell.prepend OS.ld_library_path, library_path, separator: ':' if library_path and not library_path.empty?
+              break
+            end
+            bin = bin.dirname
+          end
+        when :gnu
         end
         # Check if there is any library_path set in config file.
-        System::Shell.prepend OS.ld_library_path, ConfigStore.send(:"compiler_set_#{@@active_compiler_set_index}")[:library_path], separator: ':'
+        library_path = ConfigStore.send(:"compiler_set_#{@@active_compiler_set_index}")[:library_path]
+        System::Shell.prepend OS.ld_library_path, library_path, separator: ':' if library_path and not library_path.empty?
       end
 
       def set_default_flags
