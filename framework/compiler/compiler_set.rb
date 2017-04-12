@@ -5,6 +5,7 @@ module STARMAN
     def initialize command_hash
       @compilers = {}
       command_hash.each do |language, command|
+        next if [:library_path].include? language
         if language.to_s =~ /^mpi_(c|cxx|fortran)/
           actual_language = language.to_s.gsub('mpi_', '').to_sym
         else

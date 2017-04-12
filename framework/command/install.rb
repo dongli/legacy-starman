@@ -26,8 +26,7 @@ module STARMAN
 
       def self.__run__
         System::Shell.whitelist ['PATH', OS.ld_library_path, 'PKG_CONFIG_PATH'], separator: ':'
-        # If compiler is GNU installed by STARMAN, export some environment variables for it.
-        Gcc.new.export_env if CompilerStore.compiler(:c).command.to_s.include? Gcc.bin
+        CompilerStore.export_env
         CommandLine.packages.each_value do |package|
           if package.has_label? :group_master
             PackageProfile.write_profile package # Record the group master profile.
