@@ -50,7 +50,7 @@ module STARMAN
         case CompilerStore.compiler(:c).vendor
         when :intel
           bin = Pathname.new(CompilerStore.compiler(:c).command).dirname
-          System::Shell.prepend OS.ld_library_path, `source #{bin}/iccvars_intel64.sh && env`.match(/^#{OS.ld_library_path}=(.*)/)[1], separator: ':'
+          System::Shell.prepend OS.ld_library_path, `source #{bin}/iccvars*.sh && env`.match(/^#{OS.ld_library_path}=(.*)/)[1], separator: ':'
         when :gnu
           # If compiler is GNU installed by STARMAN, export some environment variables for it.
           Gcc.new.export_env if CompilerStore.compiler(:c).command.to_s.include? Gcc.bin
@@ -58,7 +58,7 @@ module STARMAN
         case CompilerStore.compiler(:fortran).vendor
         when :intel
           bin = Pathname.new(CompilerStore.compiler(:fortran).command).dirname
-          System::Shell.prepend OS.ld_library_path, `source #{bin}/ifortvars_intel64.sh && env`.match(/^#{OS.ld_library_path}=(.*)/)[1], separator: ':'
+          System::Shell.prepend OS.ld_library_path, `source #{bin}/ifortvars*.sh && env`.match(/^#{OS.ld_library_path}=(.*)/)[1], separator: ':'
         end
         # Check if there is any library_path set in config file.
         System::Shell.prepend OS.ld_library_path, ConfigStore.send(:"compiler_set_#{@@active_compiler_set_index}")[:library_path], separator: ':'
