@@ -30,7 +30,7 @@ module STARMAN
     def install
       decompress resource(:patches).path
       inreplace 'src/basic/vx_config/config_util.cc', {
-        '#include <sys/types.h>' => "#include <sys/syslimits.h>\n#include <sys/types.h>"
+        '#include <sys/types.h>' => "#include <limits.h>\n#include <sys/types.h>"
       }
       args = %W[
         --prefix=#{prefix}
