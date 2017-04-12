@@ -9,9 +9,10 @@ module STARMAN
 
     def install
       inreplace 'makefile', {
-        /INCDIR=.*$/ => "INCDIR=-I#{Jasper.inc} -I#{Libpng.inc}",
-        /FC=.*$/ => "FC=#{CompilerStore.compiler(:fortran).command}",
-        /CC=.*$/ => "CC=#{CompilerStore.compiler(:c).command}"
+        /^INCDIR=.*$/ => "INCDIR=-I#{Jasper.inc} -I#{Libpng.inc}",
+        /^DEFS=-DLINUXG95/ => 'DEFS=-DLINUX', # Avoid underscore problems.
+        /^FC=.*$/ => "FC=#{CompilerStore.compiler(:fortran).command}",
+        /^CC=.*$/ => "CC=#{CompilerStore.compiler(:c).command}"
       }
       run 'make'
       mkdir_p inc
