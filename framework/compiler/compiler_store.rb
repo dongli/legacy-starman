@@ -63,7 +63,7 @@ module STARMAN
           # If compiler is GNU installed by STARMAN, export some environment variables for it.
           Gcc.new.export_env if CompilerStore.compiler(:c).command.to_s.include? Gcc.bin
         end
-        case CompilerStore.compiler(:fortran).vendor
+        case (CompilerStore.compiler(:fortran).vendor rescue nil)
         when :intel
           bin = Pathname.new(CompilerStore.compiler(:fortran).command).dirname
           # Look for ifortvars.sh.

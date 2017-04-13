@@ -1,8 +1,8 @@
 module STARMAN
   class Npm < Package
-    url 'https://registry.npmjs.org/npm/-/npm-3.10.9.tgz'
-    sha256 'fb0871b1aebf4b74717a72289fade356aedca83ee54e7386e38cb51874501dd6'
-    version '3.10.9'
+    url 'https://registry.npmjs.org/npm/-/npm-4.4.4.tgz'
+    sha256 'c63021c67ad86efa9b0d694c158168ec445cfa2b5ad54594ea2adfec180060c1'
+    version '4.4.4'
 
     label :compiler_agnostic
 
