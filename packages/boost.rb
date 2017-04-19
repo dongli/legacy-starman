@@ -71,8 +71,10 @@ module STARMAN
       without_libraries = []
       if with_python2?
         args << "--with-python=#{Python2.bin}/python"
+        args << "--with-python-root=#{Python2.prefix}"
       elsif with_python3?
         args << "--with-python=#{Python3.bin}/python3"
+        args << "--with-python-root=#{Python3.prefix}"
       else
         without_libraries << 'python'
       end
@@ -83,6 +85,8 @@ module STARMAN
       inreplace 'project-config.jam', {
         "using #{toolset} ;" => "using #{toolset} : : #{CompilerStore.compiler(:cxx).command} ;",
       }
+      # B2 cannot find the correct python3 executable!
+      inreplace 'project-config.jam', Python3.prefix, "#{Python3.bin}/python3" if with_python3?
 
       args = %W[
         --prefix=#{prefix}
