@@ -102,7 +102,7 @@ module STARMAN
       end
 
       def self.default_environment_variables
-        System::Shell.set 'PS1', "(starman) [\\u:\\h \\W]#{ENV['USER'] == 'root' ? '#' : '$'} "
+        System::Shell.set 'PS1', "(starman:#{CompilerStore.active_compiler_set_index}) [\\u:\\h \\W]#{ENV['USER'] == 'root' ? '#' : '$'} "
         System::Shell.set 'CLICOLOR', 'xterm-color'
       end
     end
