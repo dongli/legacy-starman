@@ -27,14 +27,14 @@ module STARMAN
         when /^Linux */
           res = `cat /etc/*-release`
           case res
+          when /CentOS/
+            @@os = CentOS.new
           when /Red Hat Enterprise Linux Server/
             @@os = RHEL.new
           when /Ubuntu/
             @@os = Ubuntu.new
           when /Fedora/
             @@os = Fedora.new
-          when /CentOS/
-            @@os = CentOS.new
           when /Debian GNU\/Linux/
             @@os = Debian.new
           when /NeoKylin release/
@@ -75,7 +75,7 @@ module STARMAN
 
       def linux?
         # FIXME: Check if aix can be covered in linux?
-        [:ubuntu, :fedora, :centos, :neokylin, :suse, :scientific_linux, :aix].include? @@os.type
+        [:ubuntu, :fedora, :centos, :rhel, :neokylin, :suse, :scientific_linux, :aix].include? @@os.type
       end
 
       [:ubuntu, :fedora, :centos, :neokylin, :suse, :scientific_linux, :aix].each do |type|
