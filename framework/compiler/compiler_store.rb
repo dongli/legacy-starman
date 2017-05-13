@@ -5,6 +5,11 @@ module STARMAN
       cxx: 'CXX',
       fortran: ['FC', 'F77']
     }.freeze
+    LanguageMpiWrapperVariableNames = {
+      c: 'MPICC',
+      cxx: 'MPICXX',
+      fortran: ['MPIFC', 'MPIF90', 'MPIF77']
+    }.freeze
     LanguageCompilerFlagNames = {
       c: 'CFLAGS',
       cxx: 'CXXFLAGS',
@@ -27,6 +32,17 @@ module STARMAN
         @@active_compiler_set = @@compiler_sets[compiler_set_index]
         @@active_compiler_set.compilers.each do |language, compiler|
           System::Shell.set LanguageCompilerVariableNames[language], compiler.languages[language][:command] rescue nil
+        end
+      end
+
+      def set_mpi_wrappers command_hash_array
+        command_hash_array.zip(@@compiler_sets).each_with_index do |hash_set, index|
+          set_active_compiler_set index
+          hash_set.last.set_mpi_wrappers hash_set.first
+        end
+        set_active_compiler_set ConfigStore.defaults[:compiler_set_index]
+        @@active_compiler_set.compilers.each do |language, compiler|
+          System::Shell.set LanguageMpiWrapperVariableNames[language], compiler.mpi rescue nil
         end
       end
 

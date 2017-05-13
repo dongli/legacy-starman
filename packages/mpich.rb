@@ -4,6 +4,16 @@ module STARMAN
     sha256 '0778679a6b693d7b7caff37ff9d2856dc2bfc51318bf8373859bfa74253da3dc'
     version '3.2'
 
+    def shipped_wrappers
+      return @wrappers if @wrappers
+      @wrappers = {
+        c: "#{bin}/mpicc",
+        cxx: "#{bin}/mpicxx",
+        fortran: "#{bin}/mpifort"
+      }
+      @wrappers
+    end
+
     def install
       args = %W[
         --disable-dependency-tracking

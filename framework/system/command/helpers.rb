@@ -20,7 +20,8 @@ module STARMAN
       end
 
       def full_command_path cmd
-        `which #{cmd}`.chomp
+        res = `which #{cmd}`.chomp
+        res.empty? ? nil : res
       end
 
       def url_exist? url

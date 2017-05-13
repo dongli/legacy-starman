@@ -6,6 +6,7 @@ module STARMAN
     def_delegators :spec, :vendor, :languages, :flags, :feature?
 
     attr_reader :spec
+    attr_accessor :mpi
 
     def initialize active_language
       @active_language = active_language

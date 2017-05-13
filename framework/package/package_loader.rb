@@ -1,6 +1,9 @@
 module STARMAN
   class PackageLoader
     @@packages = {}
+    @@versions = {}
+    @@package_string = []
+
     Dir.glob("#{ENV['STARMAN_ROOT']}/packages/*.rb").each do |file|
       name = File.basename(file, '.rb').to_sym
       @@packages[name] = { :file => file }
@@ -68,7 +71,6 @@ module STARMAN
     def self.run
       return if CommandLine.command == :edit
       # Check version option.
-      @@versions = {}
       if CommandLine.option :version
         CommandLine.option(:version).split(',').each do |version|
           if version.include? '@'
@@ -81,7 +83,6 @@ module STARMAN
         end
       end
       # Load packages in sequence.
-      @@package_string = []
       # Always load gcc ... TODO: This may need check.
       load_package :gcc, not_record: true unless CommandLine.packages.keys.include? :gcc
       CommandLine.packages.keys.each do |name|

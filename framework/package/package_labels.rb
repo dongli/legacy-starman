@@ -1,6 +1,8 @@
 module STARMAN
   class PackageLabels
     Labels = [
+      :compiler,
+      :mpi,
       :compiler_agnostic,
       :external_binary,
       :system_conflict,

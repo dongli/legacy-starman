@@ -17,10 +17,10 @@ module STARMAN
       end
 
       def self.__run__
-        if CommandLine.options[:'compiler-set'].value == -1
+        if CommandLine.option(:'compiler-set') == -1
           CommandLine.options[:'compiler-set'].check ConfigStore.defaults[:compiler_set_index]
         end
-        CompilerStore.set_active_compiler_set CommandLine.options[:'compiler-set'].value
+        CompilerStore.set_active_compiler_set CommandLine.option(:'compiler-set')
         System::Shell.reset_rc_file
         if CommandLine.options[:'update-config'].value
           DirtyWorks.handle_absent_compiler PackageLoader.installed_packages

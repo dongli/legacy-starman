@@ -58,6 +58,7 @@ module STARMAN
         else
           CompilerStore.set_compiler_sets command_hash_array
           CompilerStore.set_active_compiler_set @@config[:defaults][:compiler_set_index]
+          CompilerStore.set_mpi_wrappers command_hash_array
         end
       end
 
