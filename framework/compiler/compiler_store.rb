@@ -69,7 +69,10 @@ module STARMAN
           # Look for iccvars.sh.
           while true
             if bin.entries.index { |x| x.to_s == 'iccvars.sh' }
-              library_path = `source #{bin}/iccvars.sh intel64 && env`.match(/^#{OS.ld_library_path}=(.*)/)[1] rescue nil
+              env_list = `source #{bin}/iccvars.sh intel64 && env`
+              bin_path = env_list.match(/^PATH=(.*)/)[1] rescue nil
+              System::Shell.prepend 'PATH', bin_path, separator: ':' if bin_path and not bin_path.empty?
+              library_path = env_list.match(/^#{OS.ld_library_path}=(.*)/)[1] rescue nil
               System::Shell.prepend OS.ld_library_path, library_path, separator: ':' if library_path and not library_path.empty?
               break
             end
@@ -85,7 +88,10 @@ module STARMAN
           # Look for ifortvars.sh.
           while true
             if bin.entries.index { |x| x.to_s == 'ifortvars.sh' }
-              library_path = `source #{bin}/ifortvars.sh intel64 && env`.match(/^#{OS.ld_library_path}=(.*)/)[1] rescue nil
+              env_list = `source #{bin}/ifortvars.sh intel64 && env`
+              bin_path = env_list.match(/^PATH=(.*)/)[1] rescue nil
+              System::Shell.prepend 'PATH', bin_path, separator: ':' if bin_path and not bin_path.empty?
+              library_path = env_list.match(/^#{OS.ld_library_path}=(.*)/)[1] rescue nil
               System::Shell.prepend OS.ld_library_path, library_path, separator: ':' if library_path and not library_path.empty?
               break
             end
