@@ -1,15 +1,15 @@
 module STARMAN
   class Cdo < Package
-    url 'https://code.zmaw.de/attachments/download/12760/cdo-1.7.2.tar.gz'
-    sha256 '4c43eba7a95f77457bfe0d30fb82382b3b5f2b0cf90aca6f0f0a008f6cc7e697'
-    version '1.7.2'
+    url 'https://code.zmaw.de/attachments/download/14686/cdo-1.8.2.tar.gz'
+    sha256 '6ca6c1263af2237737728ac937a275f8aa27680507636a6b6320f347c69a369a'
+    version '1.8.2'
 
     option :'with-magics', {
       desc: 'Build MAGICS supports.',
       accept_value: { boolean: false }
     }
 
-    depends_on :grib_api
+    depends_on :grib_api, 'with-python': false
     depends_on :hdf5
     depends_on :jasper
     depends_on :libxml2

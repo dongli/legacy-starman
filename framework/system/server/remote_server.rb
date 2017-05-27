@@ -14,7 +14,7 @@ module STARMAN
         @gateway = Net::SSH::Gateway.new @remote[:gateway][:host], @remote[:gateway][:user]
         @server = @gateway.ssh @remote[:host], @remote[:user]
       else
-        @server = Net::SSH.start @remote[:host], @remote[:user]
+        @server = Net::SSH.start @remote[:host], @remote[:user], paranoid: Net::SSH::Verifiers::Null.new
       end
       CLI.report_notice "Connect to server #{CLI.blue @remote[:host]}#{" through gateway #{CLI.blue @remote[:gateway][:host]}" if @remote[:gateway]}."
     end
