@@ -29,7 +29,7 @@ module STARMAN
         PackageLoader.load_package ConfigStore.defaults[:mpi].to_sym, not_record: true
         mpi = Object.const_get("STARMAN::#{ConfigStore.defaults[:mpi].capitalize}").new
         mpi.shipped_wrappers.each do |language, command|
-          @compilers[language].mpi = Pathname.new full_command_path(command) rescue nil
+          (@compilers[language].mpi = Pathname.new full_command_path(command)) rescue nil
         end
       end
     end
