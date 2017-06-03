@@ -35,7 +35,7 @@ module STARMAN
             System::Shell.prepend OS.ld_library_path, package.lib, separator: ':', system: true if Dir.exist? package.lib and not package.has_label? :system_conflict
             System::Shell.prepend OS.ld_library_path, package.lib64, separator: ':', system: true if Dir.exist? package.lib64 and not package.has_label? :system_conflict
             System::Shell.prepend 'PKG_CONFIG_PATH', package.pkg_config, separator: ':', system: true if Dir.exist? package.pkg_config
-            package.export_env
+            package.export_env rescue nil
             # Let slaves have opportunity to export their environment variables.
             package.slaves.each(&:export_env) if package.has_label? :group_master
           end
