@@ -37,6 +37,8 @@ module STARMAN
       args = %W[
         --prefix=#{prefix}
         --with-xz=#{Xz.bin}/xz
+        FORCE_UNSAFE_CONFIGURE=1
+        CPPFLAGS=-fgnu89-inline
       ]
 
       run './configure', *args
