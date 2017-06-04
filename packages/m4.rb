@@ -14,6 +14,7 @@ module STARMAN
       args = %W[
         --prefix=#{prefix}
         --disable-dependency-tracking
+        CPPFLAGS=-fgnu89-inline
       ]
       args << 'ac_cv_type_struct_sched_param=yes' if OS.mac? and CompilerStore.compiler(:c).vendor == :gnu
       run './configure', *args
