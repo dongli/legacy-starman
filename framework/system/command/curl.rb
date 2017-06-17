@@ -34,6 +34,8 @@ module STARMAN
             args << "-u '#{options[:username]}:#{options[:password]}'" if options[:username] and options[:password]
             system "curl #{args.join(' ')} #{url}"
           end
+        else
+          CLI.report_error "There is no #{CLI.red 'curl'} installed! Install it with system package manager or else."
         end
       end
 
