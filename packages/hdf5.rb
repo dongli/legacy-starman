@@ -1,9 +1,9 @@
 module STARMAN
   class Hdf5 < Package
     homepage 'http://www.hdfgroup.org/HDF5'
-    url 'https://support.hdfgroup.org/ftp/HDF5/current18/src/hdf5-1.8.18.tar.bz2'
-    sha256 '01c6deadf4211f86922400da82c7a8b5b50dc8fc1ce0b5912de3066af316a48c'
-    version '1.8.18'
+    url 'https://support.hdfgroup.org/ftp/HDF5/current18/src/hdf5-1.8.19.tar.bz2'
+    sha256 '59c03816105d57990329537ad1049ba22c2b8afe1890085f0c022b75f1727238'
+    version '1.8.19'
 
     option 'with-mpi', {
       desc: 'Build with parallel IO. MPI library is needed.',
