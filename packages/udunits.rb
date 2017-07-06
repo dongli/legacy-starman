@@ -1,9 +1,9 @@
 module STARMAN
   class Udunits < Package
     homepage 'https://www.unidata.ucar.edu/software/udunits/'
-    url 'ftp://ftp.unidata.ucar.edu/pub/udunits/udunits-2.2.20.tar.gz'
-    sha256 'f10a02014bc6a200d50d8719997bb3a6b3d364de688469d2f7d599688dd9d195'
-    version '2.2.20'
+    url 'ftp://ftp.unidata.ucar.edu/pub/udunits/udunits-2.2.25.tar.gz'
+    sha256 'ad486f8f45cba915ac74a38dd15f96a661a1803287373639c17e5a9b59bfd540'
+    version '2.2.25'
 
     depends_on :expat
 
