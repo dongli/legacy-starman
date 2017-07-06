@@ -7,6 +7,7 @@ module STARMAN
     label :compiler_agnostic
     label :system_first, command: 'flex'
 
+    depends_on :bison
     depends_on :gettext
     depends_on :help2man if needs_build?
     depends_on :libiconv
