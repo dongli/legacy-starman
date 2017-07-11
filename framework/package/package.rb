@@ -1,6 +1,7 @@
 module STARMAN
   class Package
     include System::Command
+    extend System::Command
     include FileUtils
     include PackageDSL
     include PackageParams

@@ -8,6 +8,10 @@ module STARMAN
     label :compiler_agnostic
     label :system_first, command: 'xz'
 
+    def self.bin
+      File.dirname(full_command_path 'xz') || "#{prefix}/bin"
+    end
+
     def install
       args = %W[
         --prefix=#{prefix}
