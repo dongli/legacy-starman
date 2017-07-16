@@ -63,6 +63,7 @@ module STARMAN
           System::Shell.append 'CPPFLAGS', "-I#{package.inc}" if Dir.exist? package.inc
           System::Shell.append 'LDFLAGS', "-L#{package.lib}" if Dir.exist? package.lib
         end
+        Command::Shell.update_config
       end
 
       private

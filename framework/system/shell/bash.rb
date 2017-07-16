@@ -12,7 +12,11 @@ module STARMAN
       end
 
       def self.mode
-        @@mode ||= CommandLine.command == :shell ? :file : :env
+        @@mode ||= nil # :file or :env
+      end
+
+      def self.mode= val
+        @@mode = val
       end
 
       def self.init

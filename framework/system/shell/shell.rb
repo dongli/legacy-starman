@@ -28,6 +28,10 @@ module STARMAN
           EOT
         end
 
+        def mode= val
+          @@shell.mode = val
+        end
+
         [:set, :append, :prepend].each do |action|
           class_eval <<-EOT
             def #{action} keys, value, **options
