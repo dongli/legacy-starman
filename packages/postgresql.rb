@@ -1,9 +1,9 @@
 module STARMAN
   class Postgresql < Package
     homepage 'https://www.postgresql.org/'
-    url 'https://ftp.postgresql.org/pub/source/v9.6.0/postgresql-9.6.0.tar.bz2'
-    sha256 '3b5fe9634b80a4511aac1832a087586a7caa8c3413619562bdda009a015863ce'
-    version '9.6.0'
+    url 'https://ftp.postgresql.org/pub/source/v9.6.3/postgresql-9.6.3.tar.bz2'
+    sha256 '1645b3736901f6d854e695a937389e68ff2066ce0cde9d73919d6ab7c995b9c6'
+    version '9.6.3'
 
     label :compiler_agnostic
 
