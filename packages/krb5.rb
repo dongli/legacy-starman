@@ -5,8 +5,10 @@ module STARMAN
     version '1.15'
 
     depends_on :byacc if needs_build?
+    depends_on :openssl
 
     def install
+      System::Shell.append 'LDFLAGS', "-Wl,-rpath,#{Openssl.lib}"
       work_in 'src' do
         run './configure', "--prefix=#{prefix}"
         run 'make'

@@ -6,7 +6,7 @@ module STARMAN
     version '1.6.26'
     filename 'libpng-1.6.26.tar.xz'
 
-    label :system_conflict
+    label :system_conflict if OS.mac?
 
     depends_on :tar if needs_build?
     depends_on :zlib

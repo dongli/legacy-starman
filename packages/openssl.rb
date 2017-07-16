@@ -23,7 +23,7 @@ module STARMAN
 
     resource :cert_file do
       url 'http://curl.haxx.se/ca/cacert.pem'
-      sha256 'e62a07e61e5870effa81b430e1900778943c228bd7da1259dd6a955ee2262b47'
+      sha256 'e78c8ab7b4432bd466e64bb942d988f6c0ac91cd785017e465bdc96d42fe9dd0'
       filename 'cert.pem'
     end
 

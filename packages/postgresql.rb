@@ -64,6 +64,7 @@ module STARMAN
     end
 
     def post_install
+      System::Shell.append OS.ld_library_path, Openssl.lib, separator: ':'
       unless OS.check_user admin_user
         CLI.report_notice "Create system user #{CLI.blue admin_user}."
         OS.create_user(admin_user, :hide_login)
