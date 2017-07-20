@@ -1,9 +1,9 @@
 module STARMAN
   class Python3 < Package
     homepage 'https://www.python.org'
-    url 'https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tgz'
-    sha256 'aa472515800d25a3739833f76ca3735d9f4b2fe77c3cb21f69275e0cce30cb2b'
-    version '3.6.0'
+    url 'https://www.python.org/ftp/python/3.6.1/Python-3.6.1.tgz'
+    sha256 'a01810ddfcec216bcdb357a84bfaafdfaa0ca42bbdaa4cb7ff74f5a9961e4041'
+    version '3.6.1'
 
     label :compiler_agnostic
 

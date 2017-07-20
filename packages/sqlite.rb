@@ -1,9 +1,9 @@
 module STARMAN
   class Sqlite < Package
     homepage 'https://sqlite.org/'
-    url 'https://sqlite.org/2016/sqlite-autoconf-3140100.tar.gz'
-    sha256 'bc7182476900017becb81565ecea7775d46ab747a97281aa610f4f45881c47a6'
-    version '3.14.1'
+    url 'https://sqlite.org/2017/sqlite-autoconf-3190300.tar.gz'
+    sha256 '06129c03dced9f87733a8cba408871bd60673b8f93b920ba8d815efab0a06301'
+    version '3.19.3'
 
     label :system_conflict if OS.mac?
 
@@ -87,9 +87,11 @@ module STARMAN
         install_resource :functions, '.', plain_file: true
         args = %W[
           -fno-common
-          -dynamiclib
+          -fPIC
+          #{OS.mac? ? '-dynamiclib' : '-shared'}
           extension-functions.c
           -o libsqlitefunctions.#{OS.soname}
+          -lm
         ]
         run CompilerStore.compiler(:c).command, *args
         cp "libsqlitefunctions.#{OS.soname}", lib
