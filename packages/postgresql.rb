@@ -83,6 +83,7 @@ module STARMAN
     end
 
     def start
+      System::Shell.append OS.ld_library_path, Openssl.lib, separator: ':'
       cmd = "#{bin}/pg_ctl start -D #{data_root} -l #{persist}/postgres.log"
       if ENV['USER'] != admin_user
         run 'sudo', "-u #{admin_user}", cmd, :screen_output, :skip_error, :preserve_ld_library_path
@@ -92,6 +93,7 @@ module STARMAN
     end
 
     def stop
+      System::Shell.append OS.ld_library_path, Openssl.lib, separator: ':'
       cmd = "#{bin}/pg_ctl stop -D #{data_root}"
       if ENV['USER'] != admin_user
         run 'sudo', "-u #{admin_user}", cmd, :screen_output, :skip_error, :preserve_ld_library_path
@@ -101,6 +103,7 @@ module STARMAN
     end
 
     def status
+      System::Shell.append OS.ld_library_path, Openssl.lib, separator: ':'
       cmd = "#{bin}/pg_ctl status -D #{data_root}"
       if ENV['USER'] != admin_user
         run 'sudo', "-u #{admin_user}", cmd, :screen_output, :skip_error, :preserve_ld_library_path

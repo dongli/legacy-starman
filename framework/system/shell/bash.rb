@@ -12,7 +12,7 @@ module STARMAN
       end
 
       def self.mode
-        @@mode ||= nil # :file or :env
+        @@mode = :env # :file or :env
       end
 
       def self.mode= val
