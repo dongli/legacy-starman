@@ -62,6 +62,7 @@ module STARMAN
           System::Shell.prepend 'PKG_CONFIG_PATH', package.pkg_config, separator: ':' if Dir.exist? package.pkg_config
           System::Shell.append 'CPPFLAGS', "-I#{package.inc}" if Dir.exist? package.inc
           System::Shell.append 'LDFLAGS', "-L#{package.lib}" if Dir.exist? package.lib
+          package.export_env rescue nil
         end
         Command::Shell.update_config
       end

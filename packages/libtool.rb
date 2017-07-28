@@ -10,6 +10,10 @@ module STARMAN
 
     depends_on :m4
 
+    def export_env
+      System::Shell.prepend 'ACLOCAL_PATH', "#{share}/aclocal", separator: ':'
+    end
+
     def install
       args = %W[
         --prefix=#{prefix}
