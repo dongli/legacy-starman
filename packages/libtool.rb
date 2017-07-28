@@ -6,6 +6,7 @@ module STARMAN
     version '2.4.6'
 
     label :compiler_agnostic
+    label :system_first, command: 'libtool'
 
     depends_on :m4
 

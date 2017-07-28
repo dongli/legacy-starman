@@ -6,6 +6,7 @@ module STARMAN
     version '1.15'
 
     label :compiler_agnostic
+    label :system_first, command: 'automake'
 
     depends_on :autoconf
 

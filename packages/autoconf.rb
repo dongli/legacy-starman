@@ -6,6 +6,7 @@ module STARMAN
     version '2.69'
 
     label :compiler_agnostic
+    label :system_first, command: 'autoconf'
 
     depends_on :libtool
 

@@ -5,6 +5,7 @@ module STARMAN
     sha256 '316ddb401745ac5d222d7c529ef1eada12f58f6376a66c1118eee803cb70f83d'
     version '2.1.8'
 
+    depends_on :automake if needs_build?
     depends_on :openssl
 
     def install
