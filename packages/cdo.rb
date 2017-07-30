@@ -9,7 +9,7 @@ module STARMAN
       accept_value: { boolean: false }
     }
 
-    depends_on :grib_api, 'with-python': false
+    depends_on :grib_api, 'with-python' => false
     depends_on :hdf5
     depends_on :jasper
     depends_on :libxml2
