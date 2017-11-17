@@ -50,7 +50,7 @@ module STARMAN
           rm_f "#{persist}/lib/#{lib}" if File.symlink? "#{persist}/lib/#{lib}"
           ln_s "#{Fontconfig.lib}/#{lib}", "#{persist}/lib"
         end
-        files = ['ncl', 'ncargpath']
+        files = ['ncl', 'ncargpath', 'wrapit77']
         files.each do |file|
           run 'install_name_tool', '-add_rpath', "#{persist}/lib", "#{Ncl.bin}/#{file}"
         end
