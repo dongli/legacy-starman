@@ -33,6 +33,8 @@ module STARMAN
             @@os = RHEL.new
           when /Ubuntu/
             @@os = Ubuntu.new
+          when /Mint/
+            @@os = Mint.new  
           when /Fedora/
             @@os = Fedora.new
           when /Debian GNU\/Linux/
@@ -75,10 +77,10 @@ module STARMAN
 
       def linux?
         # FIXME: Check if aix can be covered in linux?
-        [:ubuntu, :fedora, :centos, :rhel, :neokylin, :suse, :scientific_linux, :aix].include? @@os.type
+        [:ubuntu, :mint:, :fedora, :centos, :rhel, :neokylin, :suse, :scientific_linux, :aix].include? @@os.type
       end
 
-      [:ubuntu, :fedora, :centos, :neokylin, :suse, :scientific_linux, :aix].each do |type|
+      [:ubuntu, mint:, :fedora, :centos, :neokylin, :suse, :scientific_linux, :aix].each do |type|
         class_eval <<-RUBY
           def #{type}?
             @@os.type == :#{type}
